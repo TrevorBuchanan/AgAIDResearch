@@ -1,49 +1,49 @@
-Plot,Column,Range,BLOC,ENTRY,Experiment Name,Name1,Pedigree,SQFT,HD,PH,TW,BUAC,SRT1,SRP1,SRT2,SRP2,% italian rye in plots,,kg/ha
-1,1,1,1,1,2022 SAT EXP 6rep 5ft,Rosalyn,NSL 99-4160/Tubbs,50,170,35,60.8,94,0,0,0,0,0,,6301
-2,2,1,1,2,2022 SAT EXP 6rep 5ft,Otto,Eltan//Madsen/Eltan///Eltan,50,174,43,60.4,99,6,5,8,20,0,,6654
-3,3,1,1,3,2022 SAT EXP 6rep 5ft,Puma,(J99C0009/Rod)-p3//J99C0009-1,50,171,44,61.2,115,6,15,3,15,0,,7758
-4,4,1,1,4,2022 SAT EXP 6rep 5ft,Purl,WB528/Madsen,50,171,41,62.2,139,2,2,6,5,0,,9379
-5,4,2,1,5,2022 SAT EXP 6rep 5ft,Jasper,J950081-0001/Brundage 96 - 2,50,172,42,59.7,129,2,2,2,2,0,,8677
-6,3,2,1,6,2022 SAT EXP 6rep 5ft,Inspire,Estica/Finely ssd-51/Finch//Xerpha,50,173,42,62.7,127,0,0,0,0,0,,8569
-7,2,2,1,7,2022 SAT EXP 6rep 5ft,Piranha CL+,OR2070011/(Eltan*3/CL618),50,169,43,62.7,137,0,0,0,0,0,,9193
-8,1,2,1,8,2022 SAT EXP 6rep 5ft,Jameson,Rjames/Bitteroot,50,172,43,63.8,114,2,5,2,2,0,,7640
-9,1,3,2,4,2022 SAT EXP 6rep 5ft,Purl,WB528/Madsen,50,171,41,64.1,132,0,0,2,5,0,,8901
-10,2,3,2,5,2022 SAT EXP 6rep 5ft,Jasper,J950081-0001/Brundage 96 - 2,50,173,41,62.2,132,2,2,0,0,0,,8881
-11,3,3,2,8,2022 SAT EXP 6rep 5ft,Jameson,Rjames/Bitteroot,50,173,45,63.5,124,2,2,0,0,0,,8335
-12,4,3,2,7,2022 SAT EXP 6rep 5ft,Piranha CL+,OR2070011/(Eltan*3/CL618),50,170,44,62.1,149,0,0,0,0,0,,9994
-13,4,4,2,2,2022 SAT EXP 6rep 5ft,Otto,Eltan//Madsen/Eltan///Eltan,50,175,43,61.2,109,6,15,6,25,0,,7358
-14,3,4,2,3,2022 SAT EXP 6rep 5ft,Puma,(J99C0009/Rod)-p3//J99C0009-1,50,169,45,62.7,119,5,10,6,10,0,,8012
-15,2,4,2,1,2022 SAT EXP 6rep 5ft,Rosalyn,NSL 99-4160/Tubbs,50,173,42,61.8,145,0,0,0,0,0,,9732
-16,1,4,2,6,2022 SAT EXP 6rep 5ft,Inspire,Estica/Finely ssd-51/Finch//Xerpha,50,173,42,63.1,134,0,0,0,0,1,,8978
-17,1,5,3,5,2022 SAT EXP 6rep 5ft,Jasper,J950081-0001/Brundage 96 - 2,50,172,41,62.7,155,3,2,2,2,0,,10416
-18,2,5,3,3,2022 SAT EXP 6rep 5ft,Puma,(J99C0009/Rod)-p3//J99C0009-1,50,171,45,62.6,121,6,10,6,10,1,,8148
-19,3,5,3,7,2022 SAT EXP 6rep 5ft,Piranha CL+,OR2070011/(Eltan*3/CL618),50,171,42,63.7,151,0,0,0,0,0,,10143
-20,4,5,3,1,2022 SAT EXP 6rep 5ft,Rosalyn,NSL 99-4160/Tubbs,50,173,39,62.2,139,0,0,0,0,0,,9379
-21,4,6,3,2,2022 SAT EXP 6rep 5ft,Otto,Eltan//Madsen/Eltan///Eltan,50,175,45,61.6,105,6,15,6,25,0,,7063
-22,3,6,3,4,2022 SAT EXP 6rep 5ft,Purl,WB528/Madsen,50,169,42,63.6,130,0,0,0,0,0,,8716
-23,2,6,3,8,2022 SAT EXP 6rep 5ft,Jameson,Rjames/Bitteroot,50,172,45,63.6,132,0,0,0,0,0,,8909
-24,1,6,3,6,2022 SAT EXP 6rep 5ft,Inspire,Estica/Finely ssd-51/Finch//Xerpha,50,173,44,62.9,135,0,0,0,0,0,,9067
-25,1,7,4,8,2022 SAT EXP 6rep 5ft,Jameson,Rjames/Bitteroot,50,173,44,64.1,149,0,0,0,0,0,,10024
-26,2,7,4,5,2022 SAT EXP 6rep 5ft,Jasper,J950081-0001/Brundage 96 - 2,50,172,41,63.0,151,2,2,0,0,0,,10132
-27,3,7,4,6,2022 SAT EXP 6rep 5ft,Inspire,Estica/Finely ssd-51/Finch//Xerpha,50,173,41,62.4,130,0,0,0,0,1,,8754
-28,4,7,4,3,2022 SAT EXP 6rep 5ft,Puma,(J99C0009/Rod)-p3//J99C0009-1,50,171,45,63.0,128,6,10,6,10,2,,8589
-29,4,8,4,7,2022 SAT EXP 6rep 5ft,Piranha CL+,OR2070011/(Eltan*3/CL618),50,171,44,63.5,143,0,0,0,0,1,,9594
-30,3,8,4,2,2022 SAT EXP 6rep 5ft,Otto,Eltan//Madsen/Eltan///Eltan,50,175,45,62.1,99,8,10,6,25,0,,6654
-31,2,8,4,1,2022 SAT EXP 6rep 5ft,Rosalyn,NSL 99-4160/Tubbs,50,170,41,61.8,137,0,0,0,0,1,,9232
-32,1,8,4,4,2022 SAT EXP 6rep 5ft,Purl,WB528/Madsen,50,170,41,64.1,146,0,0,6,2,1,,9820
-33,1,9,5,2,2022 SAT EXP 6rep 5ft,Otto,Eltan//Madsen/Eltan///Eltan,50,175,42,62.5,110,6,10,6,20,0,,7386
-34,2,9,5,6,2022 SAT EXP 6rep 5ft,Inspire,Estica/Finely ssd-51/Finch//Xerpha,50,173,41,62.5,130,0,0,0,0,0,,8754
-35,3,9,5,1,2022 SAT EXP 6rep 5ft,Rosalyn,NSL 99-4160/Tubbs,50,171,40,62.7,143,0,0,0,0,1,,9613
-36,4,9,5,4,2022 SAT EXP 6rep 5ft,Purl,WB528/Madsen,50,169,41,63.4,142,0,0,0,0,1,,9574
-37,4,10,5,3,2022 SAT EXP 6rep 5ft,Puma,(J99C0009/Rod)-p3//J99C0009-1,50,170,47,63.0,131,8,10,6,15,1,,8813
-38,3,10,5,7,2022 SAT EXP 6rep 5ft,Piranha CL+,OR2070011/(Eltan*3/CL618),50,171,45,62.8,150,2,2,0,0,1,,10063
-39,2,10,5,8,2022 SAT EXP 6rep 5ft,Jameson,Rjames/Bitteroot,50,173,45,63.3,137,0,0,0,0,1,,9232
-40,1,10,5,5,2022 SAT EXP 6rep 5ft,Jasper,J950081-0001/Brundage 96 - 2,50,173,42,62.8,155,2,2,0,0,1,,10455
-41,1,11,6,5,2022 SAT EXP 6rep 5ft,Jasper,J950081-0001/Brundage 96 - 2,50,173,40,62.7,148,2,5,0,0,1,,9966
-42,2,11,6,4,2022 SAT EXP 6rep 5ft,Purl,WB528/Madsen,50,169,41,63.9,139,0,0,0,0,0,,9370
-43,3,11,6,3,2022 SAT EXP 6rep 5ft,Puma,(J99C0009/Rod)-p3//J99C0009-1,50,171,44,63.8,125,8,5,8,10,0,,8421
-44,4,11,6,6,2022 SAT EXP 6rep 5ft,Inspire,Estica/Finely ssd-51/Finch//Xerpha,50,173,42,62.8,139,0,0,0,0,0,,9331
-45,4,12,6,8,2022 SAT EXP 6rep 5ft,Jameson,Rjames/Bitteroot,50,173,45,63.5,138,8,2,6,2,0,,9312
-46,3,12,6,7,2022 SAT EXP 6rep 5ft,Piranha CL+,OR2070011/(Eltan*3/CL618),50,172,45,62.9,146,2,2,0,0,1,,9809
-47,2,12,6,2,2022 SAT EXP 6rep 5ft,Otto,Eltan//Madsen/Eltan///Eltan,50,176,44,62.8,110,6,5,6,10,1,,7386
-48,1,12,6,1,2022 SAT EXP 6rep 5ft,Rosalyn,NSL 99-4160/Tubbs,50,172,40,62.5,150,0,0,0,0,1,,10063
+Plot,,,BLOC,ENTRY,Experiment Name,Name1,,Plot Area,Heading Date,PH,Test Wt lb/bu,BUAC,,,,,,,
+1,,,1,1,2022 SAT EXP 6rep 5ft,Rosalyn,,50,170,35,60.8,94,,,,,,,
+2,,,1,2,2022 SAT EXP 6rep 5ft,Otto,,50,174,43,60.4,99,,,,,,,
+3,,,1,3,2022 SAT EXP 6rep 5ft,Puma,,50,171,44,61.2,115,,,,,,,
+4,,,1,4,2022 SAT EXP 6rep 5ft,Purl,,50,171,41,62.2,139,,,,,,,
+5,,,1,5,2022 SAT EXP 6rep 5ft,Jasper,,50,172,42,59.7,129,,,,,,,
+6,,,1,6,2022 SAT EXP 6rep 5ft,Inspire,,50,173,42,62.7,127,,,,,,,
+7,,,1,7,2022 SAT EXP 6rep 5ft,Piranha CL+,,50,169,43,62.7,137,,,,,,,
+8,,,1,8,2022 SAT EXP 6rep 5ft,Jameson,,50,172,43,63.8,114,,,,,,,
+9,,,2,4,2022 SAT EXP 6rep 5ft,Purl,,50,171,41,64.1,132,,,,,,,
+10,,,2,5,2022 SAT EXP 6rep 5ft,Jasper,,50,173,41,62.2,132,,,,,,,
+11,,,2,8,2022 SAT EXP 6rep 5ft,Jameson,,50,173,45,63.5,124,,,,,,,
+12,,,2,7,2022 SAT EXP 6rep 5ft,Piranha CL+,,50,170,44,62.1,149,,,,,,,
+13,,,2,2,2022 SAT EXP 6rep 5ft,Otto,,50,175,43,61.2,109,,,,,,,
+14,,,2,3,2022 SAT EXP 6rep 5ft,Puma,,50,169,45,62.7,119,,,,,,,
+15,,,2,1,2022 SAT EXP 6rep 5ft,Rosalyn,,50,173,42,61.8,145,,,,,,,
+16,,,2,6,2022 SAT EXP 6rep 5ft,Inspire,,50,173,42,63.1,134,,,,,,,
+17,,,3,5,2022 SAT EXP 6rep 5ft,Jasper,,50,172,41,62.7,155,,,,,,,
+18,,,3,3,2022 SAT EXP 6rep 5ft,Puma,,50,171,45,62.6,121,,,,,,,
+19,,,3,7,2022 SAT EXP 6rep 5ft,Piranha CL+,,50,171,42,63.7,151,,,,,,,
+20,,,3,1,2022 SAT EXP 6rep 5ft,Rosalyn,,50,173,39,62.2,139,,,,,,,
+21,,,3,2,2022 SAT EXP 6rep 5ft,Otto,,50,175,45,61.6,105,,,,,,,
+22,,,3,4,2022 SAT EXP 6rep 5ft,Purl,,50,169,42,63.6,130,,,,,,,
+23,,,3,8,2022 SAT EXP 6rep 5ft,Jameson,,50,172,45,63.6,132,,,,,,,
+24,,,3,6,2022 SAT EXP 6rep 5ft,Inspire,,50,173,44,62.9,135,,,,,,,
+25,,,4,8,2022 SAT EXP 6rep 5ft,Jameson,,50,173,44,64.1,149,,,,,,,
+26,,,4,5,2022 SAT EXP 6rep 5ft,Jasper,,50,172,41,63.0,151,,,,,,,
+27,,,4,6,2022 SAT EXP 6rep 5ft,Inspire,,50,173,41,62.4,130,,,,,,,
+28,,,4,3,2022 SAT EXP 6rep 5ft,Puma,,50,171,45,63.0,128,,,,,,,
+29,,,4,7,2022 SAT EXP 6rep 5ft,Piranha CL+,,50,171,44,63.5,143,,,,,,,
+30,,,4,2,2022 SAT EXP 6rep 5ft,Otto,,50,175,45,62.1,99,,,,,,,
+31,,,4,1,2022 SAT EXP 6rep 5ft,Rosalyn,,50,170,41,61.8,137,,,,,,,
+32,,,4,4,2022 SAT EXP 6rep 5ft,Purl,,50,170,41,64.1,146,,,,,,,
+33,,,5,2,2022 SAT EXP 6rep 5ft,Otto,,50,175,42,62.5,110,,,,,,,
+34,,,5,6,2022 SAT EXP 6rep 5ft,Inspire,,50,173,41,62.5,130,,,,,,,
+35,,,5,1,2022 SAT EXP 6rep 5ft,Rosalyn,,50,171,40,62.7,143,,,,,,,
+36,,,5,4,2022 SAT EXP 6rep 5ft,Purl,,50,169,41,63.4,142,,,,,,,
+37,,,5,3,2022 SAT EXP 6rep 5ft,Puma,,50,170,47,63.0,131,,,,,,,
+38,,,5,7,2022 SAT EXP 6rep 5ft,Piranha CL+,,50,171,45,62.8,150,,,,,,,
+39,,,5,8,2022 SAT EXP 6rep 5ft,Jameson,,50,173,45,63.3,137,,,,,,,
+40,,,5,5,2022 SAT EXP 6rep 5ft,Jasper,,50,173,42,62.8,155,,,,,,,
+41,,,6,5,2022 SAT EXP 6rep 5ft,Jasper,,50,173,40,62.7,148,,,,,,,
+42,,,6,4,2022 SAT EXP 6rep 5ft,Purl,,50,169,41,63.9,139,,,,,,,
+43,,,6,3,2022 SAT EXP 6rep 5ft,Puma,,50,171,44,63.8,125,,,,,,,
+44,,,6,6,2022 SAT EXP 6rep 5ft,Inspire,,50,173,42,62.8,139,,,,,,,
+45,,,6,8,2022 SAT EXP 6rep 5ft,Jameson,,50,173,45,63.5,138,,,,,,,
+46,,,6,7,2022 SAT EXP 6rep 5ft,Piranha CL+,,50,172,45,62.9,146,,,,,,,
+47,,,6,2,2022 SAT EXP 6rep 5ft,Otto,,50,176,44,62.8,110,,,,,,,
+48,,,6,1,2022 SAT EXP 6rep 5ft,Rosalyn,,50,172,40,62.5,150,,,,,,,

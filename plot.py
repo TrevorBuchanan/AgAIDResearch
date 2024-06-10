@@ -28,4 +28,3 @@ class Plot:
         :return: None
         """
         self.data_points.append(data_point)
-
