@@ -1,4 +1,5 @@
-# Trevor Buchanan
+# By: Trevor Buchanan
+
 
 # Units and labels:
 # - Temperatures: Celsius
@@ -7,106 +8,60 @@
 # - Plant height: Inches
 # - Plot area: Square feet
 
+
 # Notes:
 # Sprint wheat crop was planted on the 25th of April
 # Vegetation index (vi) formula names: cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
+# Labels in full data and ground truth data: variety <-> ENTRY | replication_variable <-> BLOC
 
+
+# Libraries
 import matplotlib.pyplot as plt
 import numpy as np
 
-from datetime import datetime
-
 from plot import Plot
 import csv
+
+from utility import index_of_variety
 
 winter_data: list[Plot] = []
 spring_data: list[Plot] = []
 
 
-def is_leap_year(year: int) -> bool:
-    """
-    Checks if a given year is a leap year.
-    :param year: int - year to check
-    :return: bool - True if leap year, False otherwise
-    """
-    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
-
-
-def convert_str_to_int_date(str_date: str) -> int:
-    """
-    Converts string date to integer date in the Julian Date Calendar.
-    Ex: 2022-06-07 to 158
-    :param str_date: str - Date in form year-month-day
-    :return: int - number representing the date in the Julian Date Calendar
-    """
-    import datetime
-
-    # Parse the input date string
-    date = datetime.datetime.strptime(str_date, "%Y-%m-%d")
-    year = date.year
-
-    # Determine if the year is a leap year
-    leap = is_leap_year(year)
-
-    # Days in each month
-    days_in_month = [31, 29 if leap else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-
-    # Calculate the Julian day
-    julian_day = sum(days_in_month[:date.month - 1]) + date.day
-
-    return julian_day
-
-
-def convert_int_to_str_date(int_date: int, year: int = 2022) -> str:
-    """
-    Converts integer date in the Julian Date Calendar to string date.
-    Ex: 158 to 2022-06-07
-    :param int_date: int - Date in 1-365 or 366 if leap year
-    :param year: int - Year for the conversion
-    :return: str - str representing the date in the form year-month-day
-    """
-    # Determine if the year is a leap year
-    leap = is_leap_year(year)
-
-    # Days in each month
-    days_in_month = [31, 29 if leap else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-
-    # Find the month and day
-    month = 0
-    while int_date > days_in_month[month]:
-        int_date -= days_in_month[month]
-        month += 1
-
-    day = int_date
-    month += 1  # Adjust month since list is zero-indexed
-
-    return f"{year:04d}-{month:02d}-{day:02d}"
-
-
 def parse_winter_data(vi_formula_target: str):
     # Ground truth winter wheat
-    file_path = "PullmanIOTData/GT_winter_wheat.csv"
+    file_path: str = "PullmanIOTData/GT_winter_wheat.csv"
 
+    # type_name, heading_date, plant_height, test_pounds_per_bushel, plot_area, experiment_name,
+    # year, location, vi_formula, variety_index, replication_variety, crop_yield
     with open(file_path, mode="r") as gt_winter_file:
         csv_reader = csv.DictReader(gt_winter_file)
-
         for row in csv_reader:
-            variety = row["ENTRY"]  # Replace "Date" with the actual column name
-            temperature = row["BLOC"]  # Replace "Temperature" with the actual column name
-            humidity = row["Humidity"]  # Replace "Humidity" with the actual column name
-            print(f"Date: {date}, Temperature: {temperature}, Humidity: {humidity}")
+            type_name = row['Name1']
+            heading_date = int(row['Heading Date'])
+            plant_height = float(row['Plant height inch'])
+            test_pounds_per_bushel = float(row['Test Wt lb/bu'])
+            plot_area = int(row['Plot Area'])
+            experiment_name = row['Experiment Name']
+            year = int(row['Year'])
+            location = row['Locn']
+            vi_formula = vi_formula_target
+            variety_index = int(row['ENTRY'])
+            replication_variety = int(row['BLOC'])
+            crop_yield = int(row['Yield bu/a'])
+            plot = Plot(type_name, heading_date, plant_height, test_pounds_per_bushel, plot_area, experiment_name,
+                        year, location, vi_formula, variety_index, replication_variety, crop_yield)
+            winter_data.append(plot)
+            print(plot)
+
 
     # Full Winter Wheat Data
     file_path = "PullmanIOTData/Final_Spring_Wheat_Weather.csv"
 
     with open(file_path, mode="r") as winter_file:
         csv_reader = csv.DictReader(winter_file)
-
         for row in csv_reader:
-            date = row["date"]  # Replace "Date" with the actual column name
-            temperature = row["Temperature"]  # Replace "Temperature" with the actual column name
-            humidity = row["Humidity"]  # Replace "Humidity" with the actual column name
-            print(f"Date: {date}, Temperature: {temperature}, Humidity: {humidity}")
+            pass
 
 
 def parse_sprint_data(vi_formula_target: str):
@@ -115,3 +70,4 @@ def parse_sprint_data(vi_formula_target: str):
 
 if __name__ == '__main__':
     print("AgAID Project")
+    parse_winter_data("ndvi")

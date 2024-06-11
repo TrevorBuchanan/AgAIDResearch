@@ -1,10 +1,6 @@
 from conditions_state import ConditionsState
+from utility import spring_variety_map
 from vi_state import VIState
-
-spring_variety_map: list = ["Glee", "Kelse", "Alum", "Chet", "Louise", "Ryan", "Seahawk",
-                            "Whit", "Dayn", "Tekoa", "Net CL+", "Jedd"]
-
-winter_variety_map: list = ["Rosalyn", "Otto", "Puma", "Purl", "Jasper", "Inspire", "Piranha CL+", "Jameson"]
 
 
 class DataPoint:
@@ -29,6 +25,6 @@ class DataPoint:
     def get_variety_name(self) -> str:
         """
         Gets the variety name
-        :return: str = Name of the wheat variety
+        :return: str - Name of the wheat variety
         """
         return spring_variety_map[self.variety_index - 1]
