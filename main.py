@@ -1,33 +1,15 @@
 # By: Trevor Buchanan
 
-
-# Units and labels:
-# - Temperatures: Celsius
-# - Yield: Bushels/Acre
-# - Soil temperature depth: Inches
-# - Plant height: Inches
-# - Plot area: Square feet
-
-
-# Notes:
-# - Sprint wheat crop was planted on the 25th of April
-# - Vegetation index (vi) formula names: cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
-# - The vi used will only be the 'mean' value for each data point
-# - Labels in full data and ground truth data: variety_index <-> variety <-> ENTRY | replication_variable <-> BLOC
-# - The soil temperature measurement used is the 8-inch average
-# - Missing data points for plot Block: 3, Entry: 2 | Block: 3, Entry: 4 | Block: 3, Entry: 8 | Block: 3, Entry: 6
-
-
-# Libraries
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 from conditions_state import ConditionsState
 from data_point import DataPoint
 from plot import Plot
-import csv
 
-from utility import convert_str_to_int_date, get_data_point_index
+
+from utility import convert_str_to_int_date, get_data_point_index, show_plot_data_missing_dates, convert_int_to_str_date
 from vi_state import VIState
 
 winter_plots: list[Plot] = []
@@ -70,8 +52,8 @@ def parse_winter_data(vi_formula_target: str):
     # vegetation_formula, vegetation_index_mean --> VI class in DataPoint
     # air_temp, dewpoint, relative_humidity, soil_temp_8in,
     # precipitation, solar_radiation --> Conditions class in DataPoint
-    with open(file_path, mode="r") as winter_file:
-        csv_reader = csv.DictReader(winter_file)
+    with open(file_path, mode="r") as dp_winter_file:
+        csv_reader = csv.DictReader(dp_winter_file)
         for row in csv_reader:
             # DataPoint specific
             date = convert_str_to_int_date(row['date'])
@@ -81,6 +63,8 @@ def parse_winter_data(vi_formula_target: str):
             replication_variety = int(row['rep_var'])
             # VI class in DataPoint
             vegetation_formula = row['vi']
+            if vegetation_formula != vi_formula_target:  # Only get values on one type of vegetation index formula
+                continue
             vegetation_index_mean = float(row['mean'])
             vi_state = VIState(vegetation_formula, vegetation_index_mean)
             # Conditions class in DataPoint
@@ -100,9 +84,12 @@ def parse_winter_data(vi_formula_target: str):
     # Filter faulty plots:
     for plot in winter_plots:
         if len(plot.data_points) == 0:
-            print(f'Missing data points for plot Block: {plot.replication_variety}, Entry: {plot.variety_index}')
+            print(f'\n**Missing data points for plot Block: {plot.replication_variety}, Entry: {plot.variety_index}**')
         else:
-            print(f'Data points length: {len(plot.data_points)}')
+            print(f'\n**Block: {plot.replication_variety}, Entry: {plot.variety_index} '
+                  f'data points length: {len(plot.data_points)}**')
+            print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
+            show_plot_data_missing_dates(plot)
 
 
 def parse_sprint_data(vi_formula_target: str):
@@ -110,5 +97,5 @@ def parse_sprint_data(vi_formula_target: str):
 
 
 if __name__ == '__main__':
-    print("AgAID Project")
+    print("AgAID Project\n")
     parse_winter_data("ndvi")

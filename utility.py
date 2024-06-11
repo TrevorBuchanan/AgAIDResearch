@@ -1,6 +1,7 @@
 import datetime
 
 from plot import Plot
+from colorama import Fore, Back, Style
 
 # ______________________________ Utility containers _________________________________
 
@@ -95,10 +96,6 @@ def get_data_point_index(data_point, plots: list[Plot]) -> int:
     index = 0
 
     for i, plot in enumerate(plots):
-        p_var_i = plot.variety_index
-        p_rep_var = plot.replication_variety
-        dp_var_i = data_point.variety_index
-        dp_rep_var = data_point.replication_variety
         if plot.replication_variety == data_point.replication_variety and \
                 plot.variety_index == data_point.variety_index:
             count += 1
@@ -110,3 +107,57 @@ def get_data_point_index(data_point, plots: list[Plot]) -> int:
         return -2
     else:
         return index
+
+
+def show_plot_data_missing_dates(plot: Plot) -> None:
+    """
+    Shows missing dates for a plot's data points
+    :param plot: Plot - Plot to be checked
+    :return: None
+    """
+    dates = []
+    for data_point in plot.data_points:
+        dates.append(data_point.date)
+    dates.sort()
+    missing_dates = find_missing(dates)
+    for missing_date in missing_dates:
+        print("\t*", end="")
+        if abs(plot.heading_date - missing_date) < 14:
+            print_red('*' + convert_int_to_str_date(missing_date, 2022))
+        else:
+            print_green(convert_int_to_str_date(missing_date, 2022))
+
+
+def find_missing(lst: list[int]) -> list[int]:
+    """
+    Finds the missing numbers in a sequence of in order numbers
+    :param lst: list[int] - List of numbers to find missing from
+    :return: List[int] - List of missing numbers in order
+    """
+    max_item = lst[len(lst) - 1]
+    min_item = lst[0]
+    missing_nums = []
+    for num in range(min_item + 1, max_item):
+        if num not in lst:
+            missing_nums.append(num)
+    return missing_nums
+
+
+def print_red(string: str) -> None:
+    """
+    Prints text in red
+    :param string: str - text to be printed
+    :return: None
+    """
+    print(Fore.RED, string)
+    print(Style.RESET_ALL, end="")
+
+
+def print_green(string: str) -> None:
+    """
+    Prints text in green
+    :param string: str - text to be printed
+    :return: None
+    """
+    print(Fore.GREEN, string)
+    print(Style.RESET_ALL, end="")
