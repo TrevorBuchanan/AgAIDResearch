@@ -4,7 +4,7 @@ class Plot:
     """
     def __init__(self, type_name: str, heading_date: int, plant_height: float,
                  test_pounds_per_bushel: float, plot_area: int, experiment_name: str, year: int,
-                 location: str, vi_formula: str, variety_index: int, replication_variety: int, crop_yield: int):
+                 location: str, vi_formula: str, variety_index: int, replication_variety: int, crop_yield: float):
         self.type_name: str = type_name
         self.heading_date: int = heading_date
         self.plant_height: float = plant_height
@@ -16,7 +16,7 @@ class Plot:
         self.vi_formula: str = vi_formula
         self.variety_index: int = variety_index
         self.replication_variety: int = replication_variety
-        self.crop_yield: int = crop_yield
+        self.crop_yield: float = crop_yield
         self.data_points: list = []
 
     def __repr__(self):

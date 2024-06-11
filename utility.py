@@ -2,6 +2,7 @@ import datetime
 
 from plot import Plot
 from colorama import Fore, Back, Style
+import matplotlib.pyplot as plt
 
 # ______________________________ Utility containers _________________________________
 
@@ -161,3 +162,37 @@ def print_green(string: str) -> None:
     """
     print(Fore.GREEN, string)
     print(Style.RESET_ALL, end="")
+
+
+def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
+    def check_same_plot(plot: 'Plot') -> bool:
+        return plot.variety_index == variety_index and plot.replication_variety == replication_variety
+
+    same_plots = list(filter(check_same_plot, plots))
+    if len(same_plots) > 1:
+        print("More than 1 same plot")
+    return same_plots[0]
+
+
+def visualize_plot(plot: Plot, vi_formula: str, var_ind: int, rep_var: int) -> None:
+    """
+    Visualization for plot
+    :return: None
+    """
+    winter_vi_for_plot = []
+    winter_precipitation_for_plot = []
+
+    for dp in plot.data_points:
+        winter_vi_for_plot.append(dp.vi_state.vi_mean)
+        winter_precipitation_for_plot.append(dp.conditions_state.precipitation)
+
+    plt.figure()
+    plt.plot(winter_vi_for_plot, label=f'VI ({vi_formula}) History')
+    plt.plot(winter_precipitation_for_plot, label=f'Precipitation History')
+    plt.bar(len(plot.data_points) - 1, plot.crop_yield, color='orange', label='Yield')
+    plt.title(f'Values for Plot ({var_ind}, {rep_var})')
+    plt.xlabel('Data Point Index')
+    plt.ylabel('Mean')
+    plt.grid(True)
+    plt.legend()
+    plt.show()

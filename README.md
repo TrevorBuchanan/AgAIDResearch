@@ -26,10 +26,8 @@ By: **Trevor Buchanan**
 - Sprint wheat crop was planted on the 25th of April
 - Vegetation index (vi) formula names: cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
 - The vi used will only be the 'mean' value for each data point
-- Labels in full data and ground truth data: variety_index <-> variety <-> ENTRY | replication_variable <-> BLOC
+- Labels in full data and ground truth data: variety_index <-> variety <-> ENTRY | replication_variety <-> BLOC
 - The soil temperature measurement used is the 8-inch average
-- Missing data points for plot Block: 3, Entry: 2 | Block: 3, Entry: 4 | Block: 3, Entry: 8 | Block: 3, Entry: 6
-
 
 
 ### Missing Data Points Notes For Winter Wheat:

@@ -1,4 +1,4 @@
-Plot,ENTRY,BLOC,Name1,Heading date,Plant height inch,Test Wt lb/bu,Plot Area,Experiment Name,Year,Locn,Yield bu/a
+Plot,ENTRY,BLOC,Name1,Heading Date,Plant height inch,Test Wt lb/bu,Plot Area,Experiment Name,Year,Locn,Yield bu/a
 4101,12,1,Jedd,176,29,62.7,360,2022 Satellite 10x40,2022,PUL,68.6
 4102,3,1,Alum,180,36,58.3,360,2022 Satellite 10x40,2022,PUL,63.4
 4103,10,1,Tekoa,182,33,61.7,355,2022 Satellite 10x40,2022,PUL,60.4
