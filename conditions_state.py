@@ -7,3 +7,8 @@ class ConditionsState:
         self.soil_temp_8in: float = soil_temp_8in
         self.precipitation: float = precipitation
         self.solar_radiation: float = solar_radiation
+
+    def __repr__(self):
+        return (f"ConditionsState(air_temp={self.air_temp}, dewpoint={self.dewpoint}, "
+                f"relative_humidity={self.relative_humidity}, soil_temp_8in={self.soil_temp_8in}, "
+                f"precipitation={self.precipitation}, solar_radiation={self.solar_radiation})")

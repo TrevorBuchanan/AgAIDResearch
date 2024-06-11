@@ -1,5 +1,7 @@
 import datetime
 
+from plot import Plot
+
 # ______________________________ Utility containers _________________________________
 
 spring_variety_map: list = ["Glee", "Kelse", "Alum", "Chet", "Louise", "Ryan", "Seahawk",
@@ -80,3 +82,31 @@ def index_of_variety(variety_name: str) -> int:
     if variety_name in spring_variety_map:
         return spring_variety_map.index(variety_name) + 1
     return 0
+
+
+def get_data_point_index(data_point, plots: list[Plot]) -> int:
+    """
+    Gets the index of the plot that should hold the specific given data point
+    :param plots: List[Plots] - List to find the index in
+    :param data_point: DataPoint
+    :return: int - index for data_point, -1 if none found, or -2 if multiple found
+    """
+    count = 0
+    index = 0
+
+    for i, plot in enumerate(plots):
+        p_var_i = plot.variety_index
+        p_rep_var = plot.replication_variety
+        dp_var_i = data_point.variety_index
+        dp_rep_var = data_point.replication_variety
+        if plot.replication_variety == data_point.replication_variety and \
+                plot.variety_index == data_point.variety_index:
+            count += 1
+            index = i
+
+    if count == 0:
+        return -1
+    elif count > 1:
+        return -2
+    else:
+        return index

@@ -7,20 +7,20 @@ class DataPoint:
     """
     One day data point of states and conditions of crops
     """
-
-    def __init__(self, date: int, season: str, sensor_name: str,  # This class
-                 variety_index: int, replication_variety: int,
-                 vegetation_formula: str, vegetation_index_mean: float,  # VI class
-                 air_temp: float, dewpoint: float, relative_humidity: float,  # Conditions class
-                 soil_temp_8in: float, precipitation: float, solar_radiation: float):
+    def __init__(self, date: int, season_type: str, sensor_name: str, variety_index: int,
+                 replication_variety: int, vi_state: VIState, conditions_state: ConditionsState):
         self.date: int = date
-        self.season: str = season
+        self.season_type: str = season_type
         self.sensor_name: str = sensor_name
         self.variety_index: int = variety_index
         self.replication_variety: int = replication_variety
-        self.vi_state = VIState(vegetation_formula, vegetation_index_mean)
-        self.conditions_state = ConditionsState(air_temp, dewpoint, relative_humidity, soil_temp_8in,
-                                                precipitation, solar_radiation)
+        self.vi_state = vi_state
+        self.conditions_state = conditions_state
+
+    def __repr__(self):
+        return (f"DataPoint(date={self.date}, season_type={self.season_type}, sensor_name={self.sensor_name}, "
+                f"variety_index={self.variety_index}, replication_variety={self.replication_variety}, "
+                f"vi_state={self.vi_state}, conditions_state={self.conditions_state})")
 
     def get_variety_name(self) -> str:
         """

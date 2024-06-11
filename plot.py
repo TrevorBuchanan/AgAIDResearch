@@ -1,6 +1,3 @@
-from data_point import DataPoint
-
-
 class Plot:
     """
     One individual plot with a unique variety index and replication variety
@@ -20,7 +17,7 @@ class Plot:
         self.variety_index: int = variety_index
         self.replication_variety: int = replication_variety
         self.crop_yield: int = crop_yield
-        self.data_points: list[DataPoint] = []
+        self.data_points: list = []
 
     def __repr__(self):
         return (f"Plot(type_name={self.type_name}, heading_date={self.heading_date}, plant_height={self.plant_height}, "
