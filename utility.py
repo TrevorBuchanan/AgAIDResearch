@@ -102,9 +102,11 @@ def get_data_point_index(data_point, plots: list[Plot]) -> int:
             index = i
 
     if count == 0:
-        return -1
+        raise Exception("No data points with given parameters in plots")
+        # return -1
     elif count > 1:
-        return -2
+        raise Exception("More than one data point with given parameters in plots")
+        # return -2
     else:
         return index
 

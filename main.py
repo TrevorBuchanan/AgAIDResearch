@@ -7,12 +7,12 @@ from conditions_state import ConditionsState
 from data_point import DataPoint
 from plot import Plot
 
-
 from utility import convert_str_to_int_date, get_data_point_index, show_plot_data_missing_dates, \
-    convert_int_to_str_date, get_plot
+    convert_int_to_str_date, get_plot, sort_data_points_by_date
 from vi_state import VIState
 from visualizer import Visualizer
 
+# cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
 winter_plots: list[Plot] = []
 spring_plots: list[Plot] = []
 
@@ -96,7 +96,7 @@ def parse_winter_data(vi_formula_target: str):
     #         print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
     #         show_plot_data_missing_dates(plot)
     for plot in winter_plots:
-        plot.sort_points()
+        sort_data_points_by_date(plot.data_points)
 
 
 def parse_spring_data(vi_formula_target: str):
@@ -178,22 +178,54 @@ def parse_spring_data(vi_formula_target: str):
     #         print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
     #         show_plot_data_missing_dates(plot)
     for plot in spring_plots:
-        plot.sort_points()
+        sort_data_points_by_date(plot.data_points)
 
 
 if __name__ == '__main__':
     print("AgAID Project\n")
+
+    # Parsing selections
+    season = "spring"
     vi_formula = "ndvi"
-    parse_spring_data(vi_formula)
-    # parse_winter_data(vi_formula)
+    target_variety = "Seahawk"
+
+    # Perform parsing based on selections
+    if season == "spring":
+        parse_spring_data(vi_formula)
+    elif season == "winter":
+        parse_winter_data(vi_formula)
 
     # Visualize
     visualizer = Visualizer()
-    var_ind = 2  # Entry
-    rep_var = 1  # Block 1 - 3
-    ex_plot = get_plot(var_ind, rep_var, spring_plots)
-    # ex_plot = get_plot(var_ind, rep_var, winter_plots)
+    # Visual settings
+    visualizer.line_mode = True
+    visualizer.point_mode = True
+    # Data selection
+    visualizer.show_missing_dates = True
+    visualizer.show_vi_mean = True
+    # visualizer.show_air_temp = True
+    # visualizer.show_dew_point = True
+    # visualizer.show_relative_humidity = True
+    # visualizer.show_soil_temp_2in = True
+    # visualizer.show_soil_temp_8in = True
+    # visualizer.show_precipitation = True
+    # visualizer.show_solar_radiation = True
+    # Result data selection
+    visualizer.show_heading_date = True
+    # visualizer.show_plant_height = True
+    # visualizer.show_test_pounds_per_bushel = True
+    # visualizer.show_yield = True
 
-    # visualizer.visualize_plot(ex_plot, vi_formula, var_ind, rep_var)
-    visualizer.visualize_variety(ex_plot, vi_formula, var_ind, rep_var)
+    # Individual plot visualization
+    # Entry, Block (1-3)
+    # entry_bloc_pairs = [(1, 1), (3, 3)]
+    # if season == "spring":
+    #     visualizer.visualize_plots(spring_plots, entry_bloc_pairs)
+    # elif season == "winter":
+    #     visualizer.visualize_plots(winter_plots, entry_bloc_pairs)
 
+    # Variety plot visualization
+    if season == "spring":
+        visualizer.visualize_variety(spring_plots, target_variety)
+    elif season == "winter":
+        visualizer.visualize_variety(winter_plots, target_variety)

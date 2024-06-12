@@ -1,6 +1,3 @@
-from utility import sort_data_points_by_date
-
-
 class Plot:
     """
     One individual plot with a unique variety index and replication variety
@@ -37,10 +34,3 @@ class Plot:
         :return: None
         """
         self.data_points.append(data_point)
-
-    def sort_points(self) -> None:
-        """
-        Sorts the data points in plot
-        :return: None
-        """
-        sort_data_points_by_date(self.data_points)

@@ -20,15 +20,46 @@ By: **Trevor Buchanan**
  - Soil temperature depth: Inches
  - Plant height: Inches
  - Plot area: Square feet
+ - IoT: Internet of Things
+
+## Project progress summary:
+* 06/10/2024 - Familiarization with data and begin to parse
+* 06/11/2024 - Continue to parse data and begin create visualizations for it
+* 06/12/2024 - Expand and refine visualizations and interpolate between missing 
+data with multiple techniques depending on the data type (e.i. vi and temperature 
+have very different trajectory paths, so the same interpolation cannot be used 
+for both. Furthermore, some information can be filled from other IoT units at the 
+site, and other online resources such as weather data)
 
 
 ## Notes:
-- Sprint wheat crop was planted on the 25th of April
-- Vegetation index (vi) formula names: cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
-- The vi used will only be the 'mean' value for each data point
-- Labels in full data and ground truth data: variety_index <-> variety <-> ENTRY | replication_variety <-> BLOC
-- The soil temperature measurement used is the 8-inch average
-
+* Spring wheat crop was planted on the 25th of April
+* Vegetation index (vi) formula names: cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
+* The vi used will only be the 'mean' value for each data point
+* Labels in full data and ground truth data: variety_index <-> variety <-> ENTRY | replication_variety <-> BLOC
+* The soil temperature measurement used is the 8-inch average
+* Winter varieties:
+1. Rosalyn
+2. Otto
+3. Puma
+4. Purl
+5. Jasper
+6. Inspire
+7. Piranha CL+
+8. Jameson
+* Spring varieties:
+1. Glee
+2. Kelse 
+3. Alum
+4. Chet
+5. Louise
+6. Ryan
+7. Seahawk
+8. Whit
+9. Dayn
+10. Tekoa
+11. Net CL+
+12. Jedd
 
 ### Missing Data Points Notes For Winter Wheat:
 (Dates with * marker are within 2 weeks of heading date)

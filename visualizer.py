@@ -1,67 +1,220 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 from plot import Plot
-from utility import get_plot_missing_dates, convert_int_to_str_date
+from utility import get_plot_missing_dates, convert_int_to_str_date, get_plot, spring_variety_map, winter_variety_map
 
 
 class Visualizer:
     def __init__(self):
+        # Visual settings
+        self.line_mode = False
+        self.point_mode = False
+        # Data selection
+        self.show_missing_dates = False
+        self.show_vi_mean = False
+        self.show_air_temp = False
+        self.show_dew_point = False
+        self.show_relative_humidity = False
+        self.show_soil_temp_2in = False
+        self.show_soil_temp_8in = False
+        self.show_precipitation = False
+        self.show_solar_radiation = False
+        # Result data selection
+        self.show_heading_date = False
+        self.show_plant_height = False
+        self.show_test_pounds_per_bushel = False
         self.show_yield = False
 
-    def visualize_plot(self, plot: Plot, vi_formula: str, var_ind: int, rep_var: int) -> None:
+    def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple]) -> None:
         """
-        Visualization for plot
+        Visualization for plots
         :return: None
         """
 
-        dates = []
-        vi_means = []
-        precip_means = []
-        soil_temp_2ins = []
-        soil_temp_8ins = []
-        air_temps = []
+        # Start graph figure
+        # plt.style.use('dark_background')
+        plt.figure(figsize=(16, 8))
+        missing_dates_patch = mpatches.Patch(color='red', label='Missing dates')
+        vi_patch = mpatches.Patch(color='purple', label='VI Mean')
+        air_temp_patch = mpatches.Patch(color='orange', label='Air Temp')
+        dew_point_patch = mpatches.Patch(color='cyan', label='Dew point')
+        relative_hum_patch = mpatches.Patch(color='teal', label='Relative humidity')
+        soil_temp_2in_patch = mpatches.Patch(color='brown', label='Soil Temp 2in')
+        soil_temp_8in_patch = mpatches.Patch(color='yellow', label='Soil Temp 8in')
+        precip_patch = mpatches.Patch(color='gray', label='Precipitation')
+        solar_rad_patch = mpatches.Patch(color='pink', label='Solar radiation')
+        heading_date_patch = mpatches.Patch(color='blue', label='Heading date')
+        plant_height_patch = mpatches.Patch(color='green', label='Plant height')
+        test_pounds_per_bushel_patch = mpatches.Patch(color='coral', label='Lbs/bushel')
+        yield_patch = mpatches.Patch(color='goldenrod', label='Yield')
+        handles = []
+        if self.show_missing_dates:
+            handles.append(missing_dates_patch)
+        if self.show_vi_mean:
+            handles.append(vi_patch)
+        if self.show_air_temp:
+            handles.append(air_temp_patch)
+        if self.show_dew_point:
+            handles.append(dew_point_patch)
+        if self.show_relative_humidity:
+            handles.append(relative_hum_patch)
+        if self.show_soil_temp_2in:
+            handles.append(soil_temp_2in_patch)
+        if self.show_soil_temp_8in:
+            handles.append(soil_temp_8in_patch)
+        if self.show_precipitation:
+            handles.append(precip_patch)
+        if self.show_solar_radiation:
+            handles.append(solar_rad_patch)
+        if self.show_heading_date:
+            handles.append(heading_date_patch)
+        if self.show_plant_height:
+            handles.append(plant_height_patch)
+        if self.show_test_pounds_per_bushel:
+            handles.append(test_pounds_per_bushel_patch)
+        if self.show_yield:
+            handles.append(yield_patch)
 
-        min_date = plot.data_points[0].date
-        print(convert_int_to_str_date(min_date))
-        max_date = plot.data_points[len(plot.data_points) - 1].date
+        # Initialize vars
+        min_date = 0
+        max_date = 0
 
-        for dp in plot.data_points:
-            dates.append(dp.date)
-            vi_means.append(dp.vi_state.vi_mean)
-            precip_means.append(dp.conditions_state.precipitation)
-            soil_temp_2ins.append(dp.conditions_state.soil_temp_2in)
-            soil_temp_8ins.append(dp.conditions_state.soil_temp_8in)
-            air_temps.append(dp.conditions_state.air_temp)
+        for pair in entry_bloc_pairs:
+            # Get correct plot
+            plot = get_plot(pair[0], pair[1], plots)
 
-        plt.figure()
+            # Lists to hold each data values
+            dates = []
+            vi_means = []
+            air_temps = []
+            dew_points = []
+            relative_hums = []
+            soil_temp_2ins = []
+            soil_temp_8ins = []
+            precip_means = []
+            solar_rads = []
 
-        plt.xlim(min_date, max_date)
+            # Get min and max range dates of graph
+            min_date = plot.data_points[0].date
+            max_date = plot.data_points[len(plot.data_points) - 1].date
+            print(convert_int_to_str_date(min_date))
 
-        # Missing days
-        for day in get_plot_missing_dates(plot):
-            plt.scatter(day, 0, color='red')
+            # Get plot data
+            for dp in plot.data_points:
+                dates.append(dp.date)
+                vi_means.append(dp.vi_state.vi_mean)
+                air_temps.append(dp.conditions_state.air_temp)
+                dew_points.append(dp.conditions_state.dewpoint)
+                relative_hums.append(dp.conditions_state.relative_humidity)
+                soil_temp_2ins.append(dp.conditions_state.soil_temp_2in)
+                soil_temp_8ins.append(dp.conditions_state.soil_temp_8in)
+                precip_means.append(dp.conditions_state.precipitation)
+                solar_rads.append(dp.conditions_state.solar_radiation)
 
-        for date in dates:
-            plt.scatter(date, vi_means[dates.index(date)], color='purple')
-            plt.scatter(date, precip_means[dates.index(date)], color='gray')
-            plt.scatter(date, soil_temp_2ins[dates.index(date)], color='brown')
-            plt.scatter(date, soil_temp_8ins[dates.index(date)], color='yellow')
-            plt.scatter(date, air_temps[dates.index(date)], color='orange')
+            # Point graphs
+            if self.point_mode:
+                for date in dates:
+                    index = dates.index(date)
+                    # VI mean
+                    if self.show_vi_mean:
+                        plt.scatter(date, vi_means[index], color='purple')
+                    # Air temp
+                    if self.show_air_temp:
+                        plt.scatter(date, air_temps[index], color='orange')
+                    # Dew point
+                    if self.show_dew_point:
+                        plt.scatter(date, dew_points[index], color='cyan')
+                    # Relative humidity
+                    if self.show_relative_humidity:
+                        plt.scatter(date, relative_hums[index], color='teal')
+                    # Soil temp 2 in
+                    if self.show_soil_temp_2in:
+                        plt.scatter(date, soil_temp_2ins[index], color='brown')
+                    # Soil temp 8 in
+                    if self.show_soil_temp_8in:
+                        plt.scatter(date, soil_temp_8ins[index], color='yellow')
+                    # Precipitation
+                    if self.show_precipitation:
+                        plt.scatter(date, precip_means[index], color='gray')
+                    # Solar radiation
+                    if self.show_solar_radiation:
+                        plt.scatter(date, solar_rads[index], color='pink')
 
-        # Heading date
-        plt.scatter(plot.heading_date, vi_means[dates.index(plot.heading_date)], color='blue', label='Heading date')
+            # Line graphs
+            if self.line_mode:
+                if self.show_vi_mean:
+                    plt.plot(dates, vi_means, color='purple')
+                if self.show_air_temp:
+                    plt.plot(dates, air_temps, color='orange')
+                if self.show_dew_point:
+                    plt.plot(dates, dew_points, color='cyan')
+                if self.show_relative_humidity:
+                    plt.plot(dates, relative_hums, color='teal')
+                if self.show_soil_temp_2in:
+                    plt.plot(dates, soil_temp_2ins, color='brown')
+                if self.show_soil_temp_8in:
+                    plt.plot(dates, soil_temp_8ins, color='pink')
+                if self.show_precipitation:
+                    plt.plot(dates, precip_means, color='gray')
+                if self.show_solar_radiation:
+                    plt.plot(dates, solar_rads, color='pink')
 
-        # Line graphs
-        plt.plot(dates, vi_means, color='purple', label=f'VI ({vi_formula}) History')
-        plt.plot(dates, precip_means, color='gray', label=f'Precipitation History')
-        plt.plot(dates, soil_temp_2ins, color='brown', label=f'Soil 2 in')
-        plt.plot(dates, soil_temp_8ins, color='yellow', label=f'Soil 8 in')
-        plt.plot(dates, air_temps, color='orange', label=f'Air temps')
+            # Missing dates
+            if self.show_missing_dates:
+                for day in get_plot_missing_dates(plot):
+                    plt.scatter(day, 0, color='red')
 
-        # plt.bar(max_date, plot.crop_yield, color='orange', label='Yield')
-        plt.title(f'Values for Plot ({var_ind}, {rep_var})')
+            # Heading date
+            if self.show_heading_date:
+                plt.scatter(plot.heading_date, vi_means[dates.index(plot.heading_date)], color='blue')
+
+            # Plant height
+            if self.show_plant_height:
+                plt.bar(max_date + 20, plot.plant_height, color='green')
+
+            # Test pounds per bushel
+            if self.show_test_pounds_per_bushel:
+                plt.bar(max_date + 10, plot.test_pounds_per_bushel, color='coral')
+
+            # Yield
+            if self.show_yield:
+                plt.bar(max_date, plot.crop_yield, color='goldenrod')
+
+        # Graph logic
+        if self.show_plant_height:
+            plt.xlim(min_date, max_date + 21)
+        elif self.show_test_pounds_per_bushel:
+            plt.xlim(min_date, max_date + 11)
+        else:
+            plt.xlim(min_date, max_date)
+        # Make title string
+        title_str: str = "Values for Plots: "
+        for pair in entry_bloc_pairs:
+            title_str += str(pair) + " "
+        plt.title(title_str)
         plt.xlabel('Data Point Index')
         plt.ylabel('Mean')
         plt.grid(True)
-        plt.legend()
+        plt.legend(handles=handles)
+        plt.tight_layout()
         plt.show()
+
+    def visualize_variety(self, plots: list[Plot], target_variety: str) -> None:
+        """
+        Visualize all plots of a given variety
+        :param plots:
+        :param target_variety:
+        :return: None
+        """
+        season = plots[0].data_points[0].season_type
+        entry_bloc_pairs = []
+        for plot in plots:
+            if season == 'spring':
+                variety_str = spring_variety_map[plot.variety_index - 1]
+            else:
+                variety_str = winter_variety_map[plot.variety_index - 1]
+            if variety_str == target_variety:
+                entry_bloc_pairs.append((plot.variety_index, plot.replication_variety))
+
+        self.visualize_plots(plots, entry_bloc_pairs)
