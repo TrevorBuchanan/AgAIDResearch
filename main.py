@@ -9,8 +9,9 @@ from plot import Plot
 
 
 from utility import convert_str_to_int_date, get_data_point_index, show_plot_data_missing_dates, \
-    convert_int_to_str_date, get_plot, visualize_plot
+    convert_int_to_str_date, get_plot
 from vi_state import VIState
+from visualizer import Visualizer
 
 winter_plots: list[Plot] = []
 spring_plots: list[Plot] = []
@@ -72,10 +73,11 @@ def parse_winter_data(vi_formula_target: str):
             air_temp = float(row['air_temp'])
             dew_point = float(row['dewpoint'])
             relative_humidity = float(row['rel_humidity'])
+            soil_temp_2in = float(row['soil_temp_2_in'])
             soil_temp_8in = float(row['avg_soil_temp_8_in'])
             precipitation = float(row['precip'])
             solar_radiation = float(row['solar_rad'])
-            conditions_state = ConditionsState(air_temp, dew_point, relative_humidity,
+            conditions_state = ConditionsState(air_temp, dew_point, relative_humidity, soil_temp_2in,
                                                soil_temp_8in, precipitation, solar_radiation)
             # Add the DataPoint to the Plots data
             data_point = DataPoint(date, season_type, sensor_name, variety_index,
@@ -93,6 +95,8 @@ def parse_winter_data(vi_formula_target: str):
     #               f'data points length: {len(plot.data_points)}**')
     #         print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
     #         show_plot_data_missing_dates(plot)
+    for plot in winter_plots:
+        plot.sort_points()
 
 
 def parse_spring_data(vi_formula_target: str):
@@ -151,10 +155,11 @@ def parse_spring_data(vi_formula_target: str):
             air_temp = float(row['air_temp'])
             dew_point = float(row['dewpoint'])
             relative_humidity = float(row['rel_humidity'])
+            soil_temp_2in = float(row['soil_temp_2_in'])
             soil_temp_8in = float(row['avg_soil_temp_8_in'])
             precipitation = float(row['precip'])
             solar_radiation = float(row['solar_rad'])
-            conditions_state = ConditionsState(air_temp, dew_point, relative_humidity,
+            conditions_state = ConditionsState(air_temp, dew_point, relative_humidity, soil_temp_2in,
                                                soil_temp_8in, precipitation, solar_radiation)
             # Add the DataPoint to the Plots data
             data_point = DataPoint(date, season_type, sensor_name, variety_index,
@@ -162,26 +167,33 @@ def parse_spring_data(vi_formula_target: str):
             spring_plots[get_data_point_index(data_point, spring_plots)].add_data_point(data_point)
 
     # Filter faulty plots:
-    # spring_plots = list(filter(lambda a_plot: len(a_plot.data_points) > 0, spring_plots))
+    spring_plots = list(filter(lambda a_plot: len(a_plot.data_points) > 0, spring_plots))
+    # for plot in spring_plots:
+    #     if len(plot.data_points) == 0:
+    #         print(f'\n**Missing all data points for plot Block: {plot.replication_variety}, '
+    #               f'Entry: {plot.variety_index}**')
+    #     else:
+    #         print(f'\n**Block: {plot.replication_variety}, Entry: {plot.variety_index} '
+    #               f'data points length: {len(plot.data_points)}**')
+    #         print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
+    #         show_plot_data_missing_dates(plot)
     for plot in spring_plots:
-        if len(plot.data_points) == 0:
-            print(f'\n**Missing all data points for plot Block: {plot.replication_variety}, '
-                  f'Entry: {plot.variety_index}**')
-        else:
-            print(f'\n**Block: {plot.replication_variety}, Entry: {plot.variety_index} '
-                  f'data points length: {len(plot.data_points)}**')
-            print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
-            show_plot_data_missing_dates(plot)
+        plot.sort_points()
 
 
 if __name__ == '__main__':
     print("AgAID Project\n")
     vi_formula = "ndvi"
     parse_spring_data(vi_formula)
+    # parse_winter_data(vi_formula)
 
     # Visualize
-    # var_ind = 2
-    # rep_var = 2
+    visualizer = Visualizer()
+    var_ind = 2  # Entry
+    rep_var = 1  # Block 1 - 3
+    ex_plot = get_plot(var_ind, rep_var, spring_plots)
     # ex_plot = get_plot(var_ind, rep_var, winter_plots)
-    # visualize_plot(ex_plot, vi_formula, var_ind, rep_var)
+
+    # visualizer.visualize_plot(ex_plot, vi_formula, var_ind, rep_var)
+    visualizer.visualize_variety(ex_plot, vi_formula, var_ind, rep_var)
 

@@ -2,7 +2,6 @@ import datetime
 
 from plot import Plot
 from colorama import Fore, Back, Style
-import matplotlib.pyplot as plt
 
 # ______________________________ Utility containers _________________________________
 
@@ -110,17 +109,21 @@ def get_data_point_index(data_point, plots: list[Plot]) -> int:
         return index
 
 
+def get_plot_missing_dates(plot: Plot) -> list:
+    dates = []
+    for data_point in plot.data_points:
+        dates.append(data_point.date)
+    dates.sort()
+    return find_missing(dates)
+
+
 def show_plot_data_missing_dates(plot: Plot) -> None:
     """
     Shows missing dates for a plot's data points
     :param plot: Plot - Plot to be checked
     :return: None
     """
-    dates = []
-    for data_point in plot.data_points:
-        dates.append(data_point.date)
-    dates.sort()
-    missing_dates = find_missing(dates)
+    missing_dates = get_plot_missing_dates(plot)
     for missing_date in missing_dates:
         print("\t*", end="")
         if abs(plot.heading_date - missing_date) < 14:
@@ -174,25 +177,22 @@ def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
     return same_plots[0]
 
 
-def visualize_plot(plot: Plot, vi_formula: str, var_ind: int, rep_var: int) -> None:
-    """
-    Visualization for plot
-    :return: None
-    """
-    winter_vi_for_plot = []
-    winter_precipitation_for_plot = []
+def sort_data_points_by_date(data_points: list) -> list:
+    def partition(lst, low, high):
+        pivot = lst[high].date
+        i = low - 1
+        for j in range(low, high):
+            if lst[j].date <= pivot:
+                i += 1
+                lst[i], lst[j] = lst[j], lst[i]
+        lst[i + 1], lst[high] = lst[high], lst[i + 1]
+        return i + 1
 
-    for dp in plot.data_points:
-        winter_vi_for_plot.append(dp.vi_state.vi_mean)
-        winter_precipitation_for_plot.append(dp.conditions_state.precipitation)
+    def quick_sort(lst, low, high):
+        if low < high:
+            pi = partition(lst, low, high)
+            quick_sort(lst, low, pi - 1)
+            quick_sort(lst, pi + 1, high)
 
-    plt.figure()
-    plt.plot(winter_vi_for_plot, label=f'VI ({vi_formula}) History')
-    plt.plot(winter_precipitation_for_plot, label=f'Precipitation History')
-    plt.bar(len(plot.data_points) - 1, plot.crop_yield, color='orange', label='Yield')
-    plt.title(f'Values for Plot ({var_ind}, {rep_var})')
-    plt.xlabel('Data Point Index')
-    plt.ylabel('Mean')
-    plt.grid(True)
-    plt.legend()
-    plt.show()
+    quick_sort(data_points, 0, len(data_points) - 1)
+    return data_points
