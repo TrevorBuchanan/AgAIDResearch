@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-from plot import Plot
-from utility import get_plot_missing_dates, convert_int_to_str_date, get_plot, spring_variety_map, winter_variety_map
+from DataStructures.plot import Plot
+from Helpers.utility import get_plot_missing_dates, convert_int_to_str_date, get_plot, spring_variety_map, winter_variety_map
 
 
 class Visualizer:

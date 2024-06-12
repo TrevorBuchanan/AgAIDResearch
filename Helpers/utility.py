@@ -1,7 +1,7 @@
 import datetime
 
-from plot import Plot
-from colorama import Fore, Back, Style
+from DataStructures.plot import Plot
+from colorama import Fore, Style
 
 # ______________________________ Utility containers _________________________________
 

@@ -1,6 +1,6 @@
-from conditions_state import ConditionsState
-from utility import spring_variety_map
-from vi_state import VIState
+from DataStructures.conditions_state import ConditionsState
+from Helpers.utility import spring_variety_map
+from DataStructures.vi_state import VIState
 
 
 class DataPoint:

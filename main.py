@@ -1,16 +1,14 @@
 # By: Trevor Buchanan
 
-import numpy as np
 import csv
 
-from conditions_state import ConditionsState
-from data_point import DataPoint
-from plot import Plot
+from DataStructures.conditions_state import ConditionsState
+from DataStructures.data_point import DataPoint
+from DataStructures.plot import Plot
 
-from utility import convert_str_to_int_date, get_data_point_index, show_plot_data_missing_dates, \
-    convert_int_to_str_date, get_plot, sort_data_points_by_date
-from vi_state import VIState
-from visualizer import Visualizer
+from Helpers.utility import convert_str_to_int_date, get_data_point_index, sort_data_points_by_date
+from DataStructures.vi_state import VIState
+from Helpers.visualizer import Visualizer
 
 # cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
 winter_plots: list[Plot] = []
