@@ -98,6 +98,7 @@ class Visualizer:
             # Get min and max range dates of graph
             min_date = plot.data_points[0].date
             max_date = plot.data_points[len(plot.data_points) - 1].date
+            print("Heading date: ", end="")
             print(convert_int_to_str_date(min_date))
 
             # Get plot data
@@ -154,7 +155,7 @@ class Visualizer:
                 if self.show_soil_temp_2in:
                     plt.plot(dates, soil_temp_2ins, color='brown')
                 if self.show_soil_temp_8in:
-                    plt.plot(dates, soil_temp_8ins, color='pink')
+                    plt.plot(dates, soil_temp_8ins, color='yellow')
                 if self.show_precipitation:
                     plt.plot(dates, precip_means, color='gray')
                 if self.show_solar_radiation:
@@ -193,8 +194,8 @@ class Visualizer:
         for pair in entry_bloc_pairs:
             title_str += str(pair) + " "
         plt.title(title_str)
-        plt.xlabel('Data Point Index')
-        plt.ylabel('Mean')
+        plt.xlabel('Dates')
+        plt.ylabel('Plot Values')
         plt.grid(True)
         plt.legend(handles=handles)
         plt.tight_layout()

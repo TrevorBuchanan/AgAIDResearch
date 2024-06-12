@@ -594,3 +594,17 @@ site, and other online resources such as weather data)
 	* *2022-06-16
 	* *2022-06-17
 	* *2022-06-21
+
+### Missing data interpolation techniques
+(Note: The first technique used to fill the missing data was to pull the data from 
+another plot of the same variety. If there was still missing data, then the next technique 
+was to pull data from external weather sources nearby (to the site location). If there was still
+missing data, then the below techniques were used.)
+* VI - Linear
+* Air temp - 
+* Dewpoint - 
+* Relative humidity - 
+* Soil temp 2 in - 
+* Soil temp 8 in - 
+* Precipitation -
+* Solar radiation - 

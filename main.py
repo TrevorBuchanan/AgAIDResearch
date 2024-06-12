@@ -5,17 +5,26 @@ import csv
 from DataStructures.conditions_state import ConditionsState
 from DataStructures.data_point import DataPoint
 from DataStructures.plot import Plot
+from DataStructures.vi_state import VIState
 
 from Helpers.utility import convert_str_to_int_date, get_data_point_index, sort_data_points_by_date
-from DataStructures.vi_state import VIState
+from Helpers.interpolator import Interpolator
 from Helpers.visualizer import Visualizer
 
 # cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
 winter_plots: list[Plot] = []
 spring_plots: list[Plot] = []
 
+# Create interpolator
+interpolator = Interpolator()
 
-def parse_winter_data(vi_formula_target: str):
+
+def parse_winter_data(vi_formula_target: str) -> None:
+    """
+    Parses the winter data provided in PullmanIOTData
+    :param vi_formula_target: The type of vi to take values for
+    :return: None
+    """
     global winter_plots
     # Ground truth winter wheat
     file_path: str = "PullmanIOTData/GT_winter_wheat.csv"
@@ -95,9 +104,15 @@ def parse_winter_data(vi_formula_target: str):
     #         show_plot_data_missing_dates(plot)
     for plot in winter_plots:
         sort_data_points_by_date(plot.data_points)
+    interpolator.fill_missing_data(winter_plots)
 
 
-def parse_spring_data(vi_formula_target: str):
+def parse_spring_data(vi_formula_target: str) -> None:
+    """
+    Parses the spring data provided in PullmanIOTData
+    :param vi_formula_target: The type of vi to take values for
+    :return: None
+    """
     global spring_plots
     # Ground truth spring wheat
     file_path: str = "PullmanIOTData/GT_spring_wheat.csv"
@@ -177,6 +192,7 @@ def parse_spring_data(vi_formula_target: str):
     #         show_plot_data_missing_dates(plot)
     for plot in spring_plots:
         sort_data_points_by_date(plot.data_points)
+    interpolator.fill_missing_data(spring_plots)
 
 
 if __name__ == '__main__':
@@ -200,30 +216,30 @@ if __name__ == '__main__':
     visualizer.point_mode = True
     # Data selection
     visualizer.show_missing_dates = True
-    visualizer.show_vi_mean = True
+    # visualizer.show_vi_mean = True
     # visualizer.show_air_temp = True
     # visualizer.show_dew_point = True
     # visualizer.show_relative_humidity = True
     # visualizer.show_soil_temp_2in = True
-    # visualizer.show_soil_temp_8in = True
+    visualizer.show_soil_temp_8in = True
     # visualizer.show_precipitation = True
     # visualizer.show_solar_radiation = True
     # Result data selection
-    visualizer.show_heading_date = True
+    # visualizer.show_heading_date = True
     # visualizer.show_plant_height = True
     # visualizer.show_test_pounds_per_bushel = True
     # visualizer.show_yield = True
 
     # Individual plot visualization
     # Entry, Block (1-3)
-    # entry_bloc_pairs = [(1, 1), (3, 3)]
-    # if season == "spring":
-    #     visualizer.visualize_plots(spring_plots, entry_bloc_pairs)
-    # elif season == "winter":
-    #     visualizer.visualize_plots(winter_plots, entry_bloc_pairs)
+    entry_bloc_pairs = [(7, 1)]
+    if season == "spring":
+        visualizer.visualize_plots(spring_plots, entry_bloc_pairs)
+    elif season == "winter":
+        visualizer.visualize_plots(winter_plots, entry_bloc_pairs)
 
     # Variety plot visualization
-    if season == "spring":
-        visualizer.visualize_variety(spring_plots, target_variety)
-    elif season == "winter":
-        visualizer.visualize_variety(winter_plots, target_variety)
+    # if season == "spring":
+    #     visualizer.visualize_variety(spring_plots, target_variety)
+    # elif season == "winter":
+    #     visualizer.visualize_variety(winter_plots, target_variety)

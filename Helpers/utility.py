@@ -180,6 +180,11 @@ def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
 
 
 def sort_data_points_by_date(data_points: list) -> list:
+    """
+    Sorts data points by their date
+    :param data_points: list[DataPoint] - data point list to sort
+    :return: list[DataPoint] - sorted list of data points
+    """
     def partition(lst, low, high):
         pivot = lst[high].date
         i = low - 1
@@ -198,3 +203,18 @@ def sort_data_points_by_date(data_points: list) -> list:
 
     quick_sort(data_points, 0, len(data_points) - 1)
     return data_points
+
+
+def insert_data_point(data_point, plot: Plot) -> None:
+    """
+    Inserts a new data point into a plot's data points in order (according to date)
+    :param data_point: DataPoint - new data point to insert
+    :param plot: Plot - plot with data points to insert into
+    :return: None
+    """
+    insert_index = 0
+    for i, dp in enumerate(plot.data_points):
+        if data_point.date < dp.date:
+            insert_index = i
+            break
+    plot.data_points.insert(insert_index, data_point)
