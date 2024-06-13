@@ -30,6 +30,7 @@ data with multiple techniques depending on the data type (e.i. vi and temperatur
 have very different trajectory paths, so the same interpolation cannot be used 
 for both. Furthermore, some information can be filled from other IoT units at the 
 site, and other online resources such as weather data)
+* 06/13/2024 - Refactor and begin to use time series learning models
 
 
 ## Notes:
