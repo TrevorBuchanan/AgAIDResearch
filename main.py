@@ -7,7 +7,8 @@ from DataStructures.data_point import DataPoint
 from DataStructures.plot import Plot
 from DataStructures.vi_state import VIState
 
-from Helpers.utility import convert_str_to_int_date, get_data_point_index, sort_data_points_by_date
+from Helpers.utility import convert_str_to_int_date, get_data_point_index, sort_data_points_by_date, \
+    get_plot_missing_dates
 from Helpers.interpolator import Interpolator
 from Helpers.visualizer import Visualizer
 
@@ -17,6 +18,9 @@ spring_plots: list[Plot] = []
 
 # Create interpolator
 interpolator = Interpolator()
+
+# Create visualizer
+visualizer = Visualizer()
 
 
 def parse_winter_data(vi_formula_target: str) -> None:
@@ -104,6 +108,7 @@ def parse_winter_data(vi_formula_target: str) -> None:
     #         show_plot_data_missing_dates(plot)
     for plot in winter_plots:
         sort_data_points_by_date(plot.data_points)
+        visualizer.saved_missing = get_plot_missing_dates(plot)
     interpolator.fill_missing_data(winter_plots)
 
 
@@ -192,6 +197,7 @@ def parse_spring_data(vi_formula_target: str) -> None:
     #         show_plot_data_missing_dates(plot)
     for plot in spring_plots:
         sort_data_points_by_date(plot.data_points)
+        visualizer.saved_missing = get_plot_missing_dates(plot)
     interpolator.fill_missing_data(spring_plots)
 
 
@@ -209,21 +215,19 @@ if __name__ == '__main__':
     elif season == "winter":
         parse_winter_data(vi_formula)
 
-    # Visualize
-    visualizer = Visualizer()
     # Visual settings
     visualizer.line_mode = True
     visualizer.point_mode = True
     # Data selection
     visualizer.show_missing_dates = True
-    visualizer.show_vi_mean = True
-    visualizer.show_air_temp = True
+    # visualizer.show_vi_mean = True
+    # visualizer.show_air_temp = True
     visualizer.show_dew_point = True
-    visualizer.show_relative_humidity = True
+    # visualizer.show_relative_humidity = True
     visualizer.show_soil_temp_2in = True
     visualizer.show_soil_temp_8in = True
-    visualizer.show_precipitation = True
-    visualizer.show_solar_radiation = True
+    # visualizer.show_precipitation = True
+    # visualizer.show_solar_radiation = True
     # Result data selection
     # visualizer.show_heading_date = True
     # visualizer.show_plant_height = True

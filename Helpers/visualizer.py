@@ -26,6 +26,8 @@ class Visualizer:
         self.show_test_pounds_per_bushel = False
         self.show_yield = False
 
+        self.saved_missing = []
+
     def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple]) -> None:
         """
         Visualization for plots
@@ -163,7 +165,7 @@ class Visualizer:
 
             # Missing dates
             if self.show_missing_dates:
-                for day in get_plot_missing_dates(plot):
+                for day in self.saved_missing:
                     plt.scatter(day, 0, color='red')
 
             # Heading date
