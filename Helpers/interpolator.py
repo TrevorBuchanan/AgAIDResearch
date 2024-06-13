@@ -8,6 +8,9 @@ from Helpers.utility import get_plot_missing_dates, insert_data_point, convert_s
 
 
 class Interpolator:
+    def __init__(self):
+        pass
+
     def fill_missing_data(self, plots: list[Plot]) -> None:
         for plot in plots:
             missing = get_plot_missing_dates(plot)
@@ -89,8 +92,6 @@ class Interpolator:
         x2 = find_right_index()
         y1 = find_val(x1)
         y2 = find_val(x2)
-        if y1 == None:
-            pass
         if x2 == x1:
             return y1
         slope = (y2 - y1) / (x2 - x1)

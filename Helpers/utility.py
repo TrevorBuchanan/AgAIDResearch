@@ -218,3 +218,18 @@ def insert_data_point(data_point, plot: Plot) -> None:
             insert_index = i
             break
     plot.data_points.insert(insert_index, data_point)
+
+
+
+def singleton(cls):
+    """
+    Decorator for making a class a singleton
+    Returns: Instance of decorated class 
+    """
+    instances = {}
+
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return get_instance

@@ -2,9 +2,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 from DataStructures.plot import Plot
-from Helpers.utility import get_plot_missing_dates, convert_int_to_str_date, get_plot, spring_variety_map, winter_variety_map
+from Helpers.utility import get_plot_missing_dates, convert_int_to_str_date, get_plot, \
+                            spring_variety_map, winter_variety_map, singleton
 
-
+@singleton
 class Visualizer:
     def __init__(self):
         # Visual settings
@@ -25,7 +26,7 @@ class Visualizer:
         self.show_plant_height = False
         self.show_test_pounds_per_bushel = False
         self.show_yield = False
-
+        # Saved missing
         self.saved_missing = []
 
     def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple]) -> None:
@@ -49,7 +50,7 @@ class Visualizer:
         heading_date_patch = mpatches.Patch(color='blue', label='Heading date')
         plant_height_patch = mpatches.Patch(color='green', label='Plant height')
         test_pounds_per_bushel_patch = mpatches.Patch(color='coral', label='Lbs/bushel')
-        yield_patch = mpatches.Patch(color='goldenrod', label='Yield')
+        yield_patch = mpatches.Patch(color='wheat', label='Yield')
         handles = []
         if self.show_missing_dates:
             handles.append(missing_dates_patch)
@@ -101,7 +102,7 @@ class Visualizer:
             min_date = plot.data_points[0].date
             max_date = plot.data_points[len(plot.data_points) - 1].date
             print("Heading date: ", end="")
-            print(convert_int_to_str_date(min_date))
+            print(convert_int_to_str_date(plot.heading_date))
 
             # Get plot data
             for dp in plot.data_points:
@@ -182,7 +183,7 @@ class Visualizer:
 
             # Yield
             if self.show_yield:
-                plt.bar(max_date, plot.crop_yield, color='goldenrod')
+                plt.bar(max_date, plot.crop_yield, color='wheat')
 
         # Graph logic
         if self.show_plant_height:
