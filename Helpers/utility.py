@@ -170,6 +170,13 @@ def print_green(string: str) -> None:
 
 
 def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
+    """
+    Gets the plot with given variety and replication variety (Block)
+    variety_index (int): Index of variety type in variety map
+    replication_variety (int): Number representing the replication variety or Block
+    plots (list): List of plots to search from
+    Returns (Plot): The plot with given values if found
+    """
     def check_same_plot(plot: 'Plot') -> bool:
         return plot.variety_index == variety_index and plot.replication_variety == replication_variety
 
