@@ -8,10 +8,13 @@ from Helpers.utility import get_plot_missing_dates, insert_data_point, convert_s
 
 
 class Interpolator:
-    def __init__(self):
-        pass
-
     def fill_missing_data(self, plots: list[Plot]) -> None:
+        # TODO: Function description
+        """
+
+        :param plots:
+        :return:
+        """
         for plot in plots:
             missing = get_plot_missing_dates(plot)
             new_data_points = self.generate_data_points(missing, plot, plots)
@@ -19,6 +22,14 @@ class Interpolator:
                 insert_data_point(dp, plot)
 
     def generate_data_points(self, dates: list[int], plot: Plot, plots: list[Plot]) -> list:
+        # TODO: Function description
+        """
+
+        :param dates:
+        :param plot:
+        :param plots:
+        :return:
+        """
         new_data_points = []
         for date in dates:
             lerped_vi_mean: float = self.lerp_fill(date, dates, plot.data_points, "vi_mean")
@@ -46,7 +57,7 @@ class Interpolator:
         :param date: int - The date that needs an interpolated value
         :param dates: list[int] - List of missing dates
         :param data_points: list[DataPoints] - Datapoints to reference values from
-        :return: flaot - interpolated value for given date
+        :return: float - interpolated value for given date
         """
 
         def find_left_index():
@@ -60,7 +71,7 @@ class Interpolator:
 
         def find_right_index():
             current_i = dates.index(date)
-            # Iterate over the previous dates in reverse order
+            # Iterate over the previous dates
             for i in range(current_i, len(dates) - 1):
                 if dates[i + 1] - dates[i] > 1:
                     # Found a gap of more than 1 day
@@ -70,21 +81,12 @@ class Interpolator:
 
         def find_val(index):
             for dp in data_points:
-                if goal_val == "vi_mean":
+                value = getattr(dp.conditions_state, goal_val, None)
+                if value is None:
+                    value = getattr(dp.vi_state, goal_val, None)
+                if value is not None:
                     if dp.date == index:
-                        return dp.vi_state.vi_mean
-                if goal_val == "dewpoint":
-                    if dp.date == index:
-                        return dp.conditions_state.dewpoint
-                if goal_val == "soil_temp_2in":
-                    if dp.date == index:
-                        return dp.conditions_state.soil_temp_2in
-                if goal_val == "soil_temp_8in":
-                    if dp.date == index:
-                        return dp.conditions_state.soil_temp_8in
-                if goal_val == "solar_radiation":
-                    if dp.date == index:
-                        return dp.conditions_state.soil_temp_8in
+                        return value
             return None
 
         x = date
@@ -101,26 +103,35 @@ class Interpolator:
         return y_to_find
 
     def other_data_point_fill(self, date: int, dates, data_points, goal_val: str, plots: list[Plot]) -> float:
+        # TODO: Function description
+        """
+
+        :param date:
+        :param dates:
+        :param data_points:
+        :param goal_val:
+        :param plots:
+        :return:
+        """
         for plot in plots:
             for dp in plot.data_points:
                 if dp.date == date:
-                    if goal_val == "air_temp":
-                        return dp.conditions_state.air_temp
-                    if goal_val == "dewpoint":
-                        return dp.conditions_state.dewpoint
-                    if goal_val == "relative_humidity":
-                        return dp.conditions_state.relative_humidity
-                    if goal_val == "soil_temp_2in":
-                        return dp.conditions_state.soil_temp_2in
-                    if goal_val == "soil_temp_8in":
-                        return dp.conditions_state.soil_temp_8in
-                    if goal_val == "precipitation":
-                        return dp.conditions_state.precipitation
-                    if goal_val == "solar_radiation":
-                        return dp.conditions_state.solar_radiation
+                    value = getattr(dp.conditions_state, goal_val, None)
+                    if value is not None:
+                        return value
         return self.external_weather_data_fill(plots[0].data_points[0].season_type, date, dates, data_points, goal_val)
 
     def external_weather_data_fill(self, season: str, date: int, dates, data_points, goal_val: str) -> float:
+        # TODO: Function description
+        """
+
+        :param season:
+        :param date:
+        :param dates:
+        :param data_points:
+        :param goal_val:
+        :return:
+        """
         if season == "winter":
             file_path: str = "GapFillWeatherData/22PULSATW.csv"
         else:
@@ -131,7 +142,7 @@ class Interpolator:
             for row in csv_reader:
                 fill_date: int = convert_str_to_int_date(row['date'])
                 if fill_date == date:
-                    if goal_val == "solar_radiation":
+                    if goal_val == "solar_radiation":  # Solar radiation units are different so skip
                         continue
                     if goal_val in row:
                         return float(row[goal_val])

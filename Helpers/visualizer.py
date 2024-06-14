@@ -30,6 +30,7 @@ class Visualizer:
         self.saved_missing = []
 
     def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple]) -> None:
+        # TODO: Function description
         """
         Visualization for plots
         :return: None
@@ -205,6 +206,7 @@ class Visualizer:
         plt.show()
 
     def visualize_variety(self, plots: list[Plot], target_variety: str) -> None:
+        # TODO: Function description
         """
         Visualize all plots of a given variety
         :param plots:
