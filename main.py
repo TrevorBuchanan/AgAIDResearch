@@ -11,15 +11,14 @@ from MachineLearningModule.data_handler import DataHandler
 from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
 from MachineLearningModule.LSTM.Univariate.vanillaLSTM import VanillaLSTM
 
-# cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
-winter_plots: list[Plot] = []
-spring_plots: list[Plot] = []
-
-# Create visualizer
-visualizer = Visualizer()
 
 if __name__ == '__main__':
     print("AgAID Project\n")
+
+    # cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
+    # Plots:
+    winter_plots: list[Plot] = []
+    spring_plots: list[Plot] = []
 
     # Parsing selections
     season = "spring"
@@ -38,57 +37,26 @@ if __name__ == '__main__':
         data_handler = DataHandler(winter_plots)
 
     # Data preparation for machine learning
-    data_handler.make_univariate_training_sets(target_variate)
+    data_handler.make_uni_lstm_training_sets(target_variate)
 
     # Create model
-    uni_lstm_learning_model: UnivariateLSTM = VanillaLSTM()
+    uni_lstm_learning_model = VanillaLSTM(num_epochs=100)
+    uni_lstm_learning_model.load_trained_model()
 
     # Train model
-    data_handler.univariate_training_on_test_sets(uni_lstm_learning_model)
+    # data_handler.uni_lstm_training_on_test_sets(uni_lstm_learning_model)
+    # uni_lstm_learning_model.save_trained_model()
 
-    untested_tup = data_handler.get_univariate_untested_sets()[0]
-    to_predict_set: list = untested_tup[0]
-    actual_yield: float = untested_tup[1]
-    prediction = uni_lstm_learning_model.predict(to_predict_set)
+    # Test the model
+    untested_tup = data_handler.get_uni_lstm_untested_sets()[0]
+    predictions = data_handler.get_uni_lstm_predictions_for_set(uni_lstm_learning_model, untested_tup[0])
 
-    print(f'Actual: {actual_yield}')
-    print(f'Prediction: {prediction[0][0]}')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ## Visual settings
-    # visualizer.line_mode = True
-    # visualizer.point_mode = True
-    ## Data selection
+    # Create visualizer
+    visualizer = Visualizer()
+    # Visual settings
+    visualizer.line_mode = True
+    visualizer.point_mode = True
+    # Data selection
     # visualizer.show_missing_dates = True
     # visualizer.show_vi_mean = True
     # visualizer.show_air_temp = True
@@ -98,21 +66,23 @@ if __name__ == '__main__':
     # visualizer.show_soil_temp_8in = True
     # visualizer.show_precipitation = True
     # visualizer.show_solar_radiation = True
-    ## Result data selection
+    # Result data selection
     # visualizer.show_heading_date = True
     # visualizer.show_plant_height = True
     # visualizer.show_test_pounds_per_bushel = True
-    # visualizer.show_yield = True
+    visualizer.show_yield = True
+    visualizer.show_prediction = True
 
-    ## Individual plot visualization
-    ## Entry, Block (1-3)
+    # Individual plot visualization
+    # Entry, Block (1-3)
     # entry_bloc_pairs = [(7, 1)]
-    # if season == "spring":
-    #     visualizer.visualize_plots(spring_plots, entry_bloc_pairs)
-    # elif season == "winter":
-    #     visualizer.visualize_plots(winter_plots, entry_bloc_pairs)
+    entry_bloc_pairs = [(untested_tup[1].variety_index, untested_tup[1].replication_variety)]
+    if season == "spring":
+        visualizer.visualize_plots(spring_plots, entry_bloc_pairs, predictions)
+    elif season == "winter":
+        visualizer.visualize_plots(winter_plots, entry_bloc_pairs, predictions)
 
-    ## Variety plot visualization
+    # Variety plot visualization
     # if season == "spring":
     #     visualizer.visualize_variety(spring_plots, target_variety)
     # elif season == "winter":

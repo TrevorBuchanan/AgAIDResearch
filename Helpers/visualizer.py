@@ -26,10 +26,11 @@ class Visualizer:
         self.show_plant_height = False
         self.show_test_pounds_per_bushel = False
         self.show_yield = False
+        self.show_prediction = False
         # Saved missing
         self.saved_missing = []
 
-    def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple]) -> None:
+    def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple], predictions=None) -> None:
         # TODO: Function description
         """
         Visualization for plots
@@ -38,7 +39,10 @@ class Visualizer:
 
         # Start graph figure
         # plt.style.use('dark_background')
+        if predictions is None:
+            predictions = []
         plt.figure(figsize=(16, 8))
+        predictions_patch = mpatches.Patch(color='papayawhip', label='Yield predictions')
         missing_dates_patch = mpatches.Patch(color='red', label='Missing dates')
         vi_patch = mpatches.Patch(color='purple', label='VI Mean')
         air_temp_patch = mpatches.Patch(color='orange', label='Air Temp')
@@ -51,8 +55,10 @@ class Visualizer:
         heading_date_patch = mpatches.Patch(color='blue', label='Heading date')
         plant_height_patch = mpatches.Patch(color='green', label='Plant height')
         test_pounds_per_bushel_patch = mpatches.Patch(color='coral', label='Lbs/bushel')
-        yield_patch = mpatches.Patch(color='wheat', label='Yield')
+        yield_patch = mpatches.Patch(color='olive', label='Yield')
         handles = []
+        if self.show_prediction:
+            handles.append(predictions_patch)
         if self.show_missing_dates:
             handles.append(missing_dates_patch)
         if self.show_vi_mean:
@@ -102,23 +108,30 @@ class Visualizer:
             # Get min and max range dates of graph
             min_date = plot.data_points[0].date
             max_date = plot.data_points[len(plot.data_points) - 1].date
-            print("Heading date: ", end="")
-            print(convert_int_to_str_date(plot.heading_date))
 
             # Get plot data
             for dp in plot.data_points:
                 dates.append(dp.date)
-                vi_means.append(dp.vi_state.vi_mean)
-                air_temps.append(dp.conditions_state.air_temp)
-                dew_points.append(dp.conditions_state.dewpoint)
-                relative_hums.append(dp.conditions_state.relative_humidity)
-                soil_temp_2ins.append(dp.conditions_state.soil_temp_2in)
-                soil_temp_8ins.append(dp.conditions_state.soil_temp_8in)
-                precip_means.append(dp.conditions_state.precipitation)
-                solar_rads.append(dp.conditions_state.solar_radiation)
+                if self.show_vi_mean:
+                    vi_means.append(dp.vi_state.vi_mean)
+                if self.show_air_temp:
+                    air_temps.append(dp.conditions_state.air_temp)
+                if self.show_dew_point:
+                    dew_points.append(dp.conditions_state.dewpoint)
+                if self.show_relative_humidity:
+                    relative_hums.append(dp.conditions_state.relative_humidity)
+                if self.show_soil_temp_2in:
+                    soil_temp_2ins.append(dp.conditions_state.soil_temp_2in)
+                if self.show_soil_temp_8in:
+                    soil_temp_8ins.append(dp.conditions_state.soil_temp_8in)
+                if self.show_precipitation:
+                    precip_means.append(dp.conditions_state.precipitation)
+                if self.show_solar_radiation:
+                    solar_rads.append(dp.conditions_state.solar_radiation)
 
             # Point graphs
             if self.point_mode:
+                last_working_i = 0
                 for date in dates:
                     index = dates.index(date)
                     # VI mean
@@ -145,6 +158,13 @@ class Visualizer:
                     # Solar radiation
                     if self.show_solar_radiation:
                         plt.scatter(date, solar_rads[index], color='pink')
+                    # Yield prediction
+                    if self.show_prediction and len(predictions) > 0:
+                        if index >= len(predictions):
+                            plt.bar(date, predictions[last_working_i], color='papayawhip')
+                        else:
+                            plt.bar(date, predictions[index], color='papayawhip')
+                            last_working_i = index
 
             # Line graphs
             if self.line_mode:
@@ -173,6 +193,8 @@ class Visualizer:
             # Heading date
             if self.show_heading_date:
                 plt.scatter(plot.heading_date, vi_means[dates.index(plot.heading_date)], color='blue')
+                print("Heading date: ", end="")
+                print(convert_int_to_str_date(plot.heading_date))
 
             # Plant height
             if self.show_plant_height:
@@ -184,7 +206,9 @@ class Visualizer:
 
             # Yield
             if self.show_yield:
-                plt.bar(max_date, plot.crop_yield, color='wheat')
+                plt.bar(max_date, plot.crop_yield, color='olive')
+                print(f'Actual yield: {plot.crop_yield}')
+                print(f'Final expected yield: {predictions[len(predictions) - 1]}')
 
         # Graph logic
         if self.show_plant_height:
@@ -192,7 +216,7 @@ class Visualizer:
         elif self.show_test_pounds_per_bushel:
             plt.xlim(min_date, max_date + 11)
         else:
-            plt.xlim(min_date, max_date)
+            plt.xlim(min_date, max_date + 1)
         # Make title string
         title_str: str = "Values for Plots: "
         for pair in entry_bloc_pairs:

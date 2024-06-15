@@ -91,16 +91,13 @@ class Parser:
                 winter_plots[get_data_point_index(data_point, winter_plots)].add_data_point(data_point)
 
         # Filter faulty plots:
-        winter_plots = list(filter(lambda a_plot: len(a_plot.data_points) > 0, winter_plots))
-        # for plot in winter_plots:
-        #     if len(plot.data_points) == 0:
-        #          print(f'\n**Missing data points for plot Block: {plot.replication_variety}, '
-        #                f'Entry: {plot.variety_index}**')
-        #     else:
-        #         print(f'\n**Block: {plot.replication_variety}, Entry: {plot.variety_index} '
-        #               f'data points length: {len(plot.data_points)}**')
-        #         print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
-        #         show_plot_data_missing_dates(plot)
+        plots_to_rm = []
+        for plot in winter_plots:
+            if len(plot.data_points) == 0:
+                plots_to_rm.append(plot)
+        for p in plots_to_rm:
+            winter_plots.remove(p)
+
         for plot in winter_plots:
             sort_data_points_by_date(plot.data_points)
             visualizer.saved_missing = get_plot_missing_dates(plot)
@@ -178,18 +175,15 @@ class Parser:
                                        replication_variety, vi_state, conditions_state)
                 spring_plots[get_data_point_index(data_point, spring_plots)].add_data_point(data_point)
 
-        # Filter faulty plots:
-        spring_plots = list(filter(lambda a_plot: len(a_plot.data_points) > 0, spring_plots))
-        # for plot in spring_plots:
-        #     if len(plot.data_points) == 0:
-        #         print(f'\n**Missing all data points for plot Block: {plot.replication_variety}, '
-        #               f'Entry: {plot.variety_index}**')
-        #     else:
-        #         print(f'\n**Block: {plot.replication_variety}, Entry: {plot.variety_index} '
-        #               f'data points length: {len(plot.data_points)}**')
-        #         print(f'* Heading date: {convert_int_to_str_date(plot.heading_date)}')
-        #         show_plot_data_missing_dates(plot)
+        plots_to_rm = []
+        for plot in spring_plots:
+            if len(plot.data_points) == 0:
+                plots_to_rm.append(plot)
+        for p in plots_to_rm:
+            spring_plots.remove(p)
+
         for plot in spring_plots:
             sort_data_points_by_date(plot.data_points)
             visualizer.saved_missing = get_plot_missing_dates(plot)
         self.interpolator.fill_missing_data(spring_plots)
+

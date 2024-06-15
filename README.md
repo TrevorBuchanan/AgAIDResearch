@@ -23,7 +23,7 @@ have very different trajectory paths, so the same interpolation cannot be used
 for both. Furthermore, some information can be filled from other IoT units at the 
 site, and other online resources such as weather data)
 * 06/13/2024 - Refactor and begin to use time series learning models
-* 06/14/2024 - Apply uni-variate time series learning models 
+* 06/14/2024 - Apply uni-variate time series learning models and work on setting effective parameters for best results
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

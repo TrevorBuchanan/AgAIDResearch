@@ -1,5 +1,5 @@
 class UnivariateLSTM:
-    def __init__(self, num_epochs: int = 1000, optimizer: str ='adam', loss_function: str ='mse',
+    def __init__(self, num_epochs: int = 500, optimizer: str ='adam', loss_function: str ='mse',
                  verbose: int = 1, activation_function: str = 'relu') -> None:
         self.num_epochs = num_epochs   
         self.optimizer = optimizer
