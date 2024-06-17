@@ -1,4 +1,6 @@
 import datetime
+import random
+import numpy as np
 
 from DataStructures.plot import Plot
 from colorama import Fore, Style
@@ -177,6 +179,7 @@ def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
     plots (list): List of plots to search from
     Returns (Plot): The plot with given values if found
     """
+
     def check_same_plot(plot: 'Plot') -> bool:
         return plot.variety_index == variety_index and plot.replication_variety == replication_variety
 
@@ -192,6 +195,7 @@ def sort_data_points_by_date(data_points: list) -> list:
     :param data_points: list[DataPoint] - data point list to sort
     :return: list[DataPoint] - sorted list of data points
     """
+
     def partition(lst, low, high):
         pivot = lst[high].date
         i = low - 1
@@ -227,7 +231,6 @@ def insert_data_point(data_point, plot: Plot) -> None:
     plot.data_points.insert(insert_index, data_point)
 
 
-
 def singleton(cls):
     """
     Decorator for making a class a singleton
@@ -239,5 +242,26 @@ def singleton(cls):
         if cls not in instances:
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]
+
     return get_instance
 
+
+def shuffle_in_unison(a, b) -> tuple:
+    """
+    Shuffles two numpy arrays in unison.
+    :param a: First NumPy array.
+    :param b: Second NumPy array (must have the same length as a).
+    :return: shuffled_a: First array shuffled in the same order as b.
+    shuffled_b: Second array shuffled.
+    """
+    assert len(a) == len(b)
+    shuffled_a = np.empty(a.shape, dtype=a.dtype)
+    shuffled_b = np.empty(b.shape, dtype=b.dtype)
+    permutation = list(range(len(a)))
+    random.shuffle(permutation)
+
+    for old_index, new_index in enumerate(permutation):
+        shuffled_a[new_index] = a[old_index]
+        shuffled_b[new_index] = b[old_index]
+
+    return shuffled_a, shuffled_b

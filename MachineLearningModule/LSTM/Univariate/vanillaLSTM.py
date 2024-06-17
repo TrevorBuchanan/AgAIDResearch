@@ -1,13 +1,14 @@
+from Helpers.utility import shuffle_in_unison
 from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
 
 from numpy import array
 from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import LSTM, Dense, Input, Dropout, BatchNormalization
+from tensorflow.keras.layers import LSTM, Dense, Input, Dropout, BatchNormalization, Masking
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.regularizers import l2
 
-from MachineLearningModule.data_handler import prep_sequence_target_yield
+from MachineLearningModule.data_handler import prep_sequence_target_val
 
 
 class VanillaLSTM(UnivariateLSTM):
@@ -17,30 +18,36 @@ class VanillaLSTM(UnivariateLSTM):
         self.model = None
         self.n_features = 1
 
-    def load_trained_model(self):
-        # TODO: Add to base
-        self.model = load_model('MachineLearningModule/LSTM/SavedModels/vanilla_model.keras')
+    def load_trained_model(self, season):
+        # TODO: Add to base class
+        self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/{season}_vanilla_model.keras')
 
-    def save_trained_model(self):
-        # TODO: Add to base
-        self.model.save('MachineLearningModule/LSTM/SavedModels/vanilla_model.keras')
+    def save_trained_model(self, season):
+        # TODO: Add to base class
+        self.model.save(f'MachineLearningModule/LSTM/SavedModels/{season}_vanilla_model.keras')
 
-    def train(self, training_sequence: list, target_yield: float):
-        sets, target_outs = prep_sequence_target_yield(training_sequence, target_yield)
+    def build_model(self, n_steps):
+        # TODO: Add to base class
+        self.model = Sequential()
+        self.model.add(Input(shape=(n_steps, self.n_features)))
+        self.model.add(Masking(mask_value=-1.0))
+        self.model.add(LSTM(64, activation=self.activation_function, kernel_regularizer=l2(0.01)))
+        self.model.add(Dropout(0.2))
+        self.model.add(BatchNormalization())
+        self.model.add(Dense(1))
+        optimizer = Adam(learning_rate=0.0001)
+        self.model.compile(optimizer=optimizer, loss=self.loss_function)
+        # self.model.compile(optimizer=self.optimizer, loss=self.loss_function)
+
+    def train(self, training_sequences: list[list], target_values: list[float]):
+        sets, target_outs = prep_sequence_target_val(training_sequences, target_values)
+        # sets, target_outs = shuffle_in_unison(sets, target_outs)
+        n_steps = sets.shape[1]
         sets = sets.reshape((sets.shape[0], sets.shape[1], self.n_features))
-
-        print(f'Training with expected yield: {target_yield}')
+        print(sum(target_outs) / len(target_outs))
         # Define model
         if self.model is None:
-            self.model = Sequential()
-            self.model.add(Input(shape=((len(training_sequence)), self.n_features)))
-            self.model.add(LSTM(100, activation=self.activation_function, kernel_regularizer=l2(0.01)))  # 100 Units (neurons)
-            self.model.add(Dropout(0.2))
-            self.model.add(BatchNormalization())
-            self.model.add(Dense(1))
-            optimizer = Adam()
-            self.model.compile(optimizer=optimizer, loss=self.loss_function)
-            # self.model.compile(optimizer=self.optimizer, loss=self.loss_function)
+            self.build_model(n_steps)
         # Early stopping
         early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 

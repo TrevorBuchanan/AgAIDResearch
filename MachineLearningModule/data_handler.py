@@ -1,7 +1,7 @@
 import random
+import numpy as np
 
 from DataStructures.plot import Plot
-from numpy import array, zeros
 
 from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
 
@@ -19,7 +19,7 @@ def split_sequence(sequence, n_steps):
         seq_x, seq_y = sequence[i:end_ix], sequence[end_ix]
         X.append(seq_x)
         y.append(seq_y)
-    return array(X), array(y)
+    return np.array(X), np.array(y)
 
 
 def split_sequence_target_yield(sequence: list, n_steps: int, result_yield: float):
@@ -41,68 +41,76 @@ def split_sequence_target_yield(sequence: list, n_steps: int, result_yield: floa
         seq_set, seq_target_output = sequence[i:end_i_set], result_yield
         sets.append(seq_set)
         target_outputs.append(seq_target_output)
-    return array(sets), array(target_outputs)
+    return np.array(sets), np.array(target_outputs)
 
 
-def prep_sequence_target_yield(sequence: list, result_yield: float) -> tuple[array, array]:
+def prep_sequence_target_val(sequences: list[list], targets: list[float]) -> tuple[np.array, np.array]:
     # TODO: Add return description
     """
     Split the data into sets of length n_steps and have their target always be yield
-    :param sequence: list - Univariate list of numbers
-    :param result_yield: float - The target yield amount that the model is meant to predict towards
+    :param sequences: list[list] - List of univariate list of numbers
+    :param targets: list[float] - List of target amounts that the model is meant to predict towards
     :return: (tuple[np.ndarray, np.ndarray]) -
     """
 
-    def pad_list(lst, pad_left, pad_right):
+    def pad_list(lst, pad_left, pad_right, num):
         total_length = len(lst) + pad_left + pad_right
-        padded_array = zeros(total_length, dtype=float)
+        padded_array = np.full(total_length, num, dtype=float)
         padded_array[pad_left:pad_left + len(lst)] = lst
-        return padded_array
+        return padded_array.tolist()
+
+    max_len = 0
+    for seq in sequences:
+        if len(seq) > max_len:
+            max_len = len(seq)
 
     sets = []
     target_outputs = []
-    end_i_set = len(sequence)
-    for i, _ in enumerate(sequence):
-        seq_set, seq_target_output = sequence[0:end_i_set - i], result_yield
-        seq_set = pad_list(seq_set, 0, i)
-        sets.append(seq_set)
-        target_outputs.append(seq_target_output)
-    return array(sets), array(target_outputs)
+    for sequence, target in zip(sequences, targets):
+        end_i_set = len(sequence)
+        for i, _ in enumerate(sequence):
+            seq_set, seq_target_output = sequence[0:end_i_set - i], target
+            seq_set = pad_list(seq_set, 0, i, 0)
+            if len(sequence) < max_len:
+                ignore_padding_len = max_len - len(sequence)
+                seq_set = pad_list(seq_set, 0, ignore_padding_len, -1)
+            sets.append(seq_set)
+            target_outputs.append(seq_target_output)
+    return np.array(sets), np.array(target_outputs)
 
 
 class DataHandler:
     def __init__(self, plots: list[Plot]) -> None:
         self.plots = plots
-        self.uni_lstm_training_sets: list[(bool, list, Plot)] = []
+        self.uni_lstm_training_sets: list[(list, Plot)] = []
+        self.uni_lstm_testing_sets: list[(list, Plot)] = []
 
-    def make_uni_lstm_training_sets(self, target_variate: str):
+    def make_uni_lstm_sets(self, target_variate: str):
         """
-        Makes a set of univariate training sets with given target variate and saves
-        it to classes univariate_training_sets
+        Makes a set of univariate training and testing sets with given target variate and saves
+        them to uni_lstm_training_sets and uni_lstm_testing_sets
         :param target_variate: str - The variate to target when creating the training sets
         """
 
-        # TODO: Predict indices fix
-        percentage = 80
+        training_percentage_amt = 80
         total_amt = len(self.plots)
-        unique_count = int(total_amt * (percentage / 100))
-        predict_plot_indices = set()
+        unique_count = int(total_amt * (training_percentage_amt / 100))
+        test_plot_indices = set()
 
-        while len(predict_plot_indices) < unique_count:
+        while len(test_plot_indices) < unique_count:
             index = random.randint(0, total_amt - 1)
-            predict_plot_indices.add(index)
+            test_plot_indices.add(index)
 
-        predict_plot_indices = list(predict_plot_indices)
+        test_plot_indices = list(test_plot_indices)
 
         # Make training sets
         for i, plot in enumerate(self.plots):
             uni_var_set = self.get_uni_lstm_set(plot, target_variate)
             if len(uni_var_set) > 0:
-                if i in predict_plot_indices:
-                    self.uni_lstm_training_sets.append((False, uni_var_set, plot))
+                if i in test_plot_indices:  # Check if in 80 percent group of test plots
+                    self.uni_lstm_training_sets.append((uni_var_set, plot))
                 else:
-                    self.uni_lstm_training_sets.append((True, uni_var_set, plot))
-        pass
+                    self.uni_lstm_testing_sets.append((uni_var_set, plot))
 
     @staticmethod
     def get_uni_lstm_set(plot: Plot, target_variate: str) -> list:
@@ -121,26 +129,20 @@ class DataHandler:
                 univariate_set.append(value)
         return univariate_set
 
-    def uni_lstm_training_on_test_sets(self, model: UnivariateLSTM):
+    def train_uni_lstm_on_test_sets(self, model: UnivariateLSTM):
         # TODO: Function description
         """
 
         :param model:
         :return:
         """
+        test_sets = []
+        targets = []
         for test_set in self.uni_lstm_training_sets:
-            if test_set[0]:
-                model.train(test_set[1], test_set[2].crop_yield)
+            test_sets.append(test_set[0])
+            targets.append(test_set[1].crop_yield)
 
-    def get_uni_lstm_untested_sets(self) -> list[tuple]:
-        # TODO: Function description
-        """
-
-        :return:
-        """
-        untested = list(map(lambda trio: (trio[1], trio[2]),
-                        list(filter(lambda trio: not trio[0], self.uni_lstm_training_sets))))
-        return untested
+        model.train(test_sets, targets)
 
     def get_uni_lstm_predictions_for_set(self, model: UnivariateLSTM, test_set: list) -> list:
         # TODO: Function description
@@ -151,7 +153,7 @@ class DataHandler:
         :return:
         """
         predictions = []
-        tests_for_each_day = prep_sequence_target_yield(test_set, 0)[0]
+        tests_for_each_day = prep_sequence_target_val([test_set], [0 for _, _ in enumerate(test_set)])[0]
         for test_set in tests_for_each_day:
             predictions.append(model.predict(test_set)[0][0])
         return predictions

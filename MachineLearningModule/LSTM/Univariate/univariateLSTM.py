@@ -7,7 +7,7 @@ class UnivariateLSTM:
         self.verbose = verbose
         self.activation_function = activation_function
 
-    def train(self, training_data: list, target_yield: float):
+    def train(self, training_sequences: list[list], target_values: list[float]):
         # TODO: Function description
         """
         Used to train LSTM

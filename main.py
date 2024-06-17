@@ -2,15 +2,14 @@
 
 
 from DataStructures.plot import Plot
-from Helpers.utility import get_plot
 
 from Helpers.visualizer import Visualizer
 from Helpers.parser import Parser
 
-from MachineLearningModule.data_handler import DataHandler
-from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
-from MachineLearningModule.LSTM.Univariate.vanillaLSTM import VanillaLSTM
 
+from MachineLearningModule.data_handler import DataHandler
+from MachineLearningModule.LSTM.Univariate.vanillaLSTM import VanillaLSTM
+from MachineLearningModule.LSTM.Univariate.stackedLSTM import StackedLSTM
 
 if __name__ == '__main__':
     print("AgAID Project\n")
@@ -22,11 +21,10 @@ if __name__ == '__main__':
 
     # Parsing selections
     season = "spring"
-    vi_formula = "ndvi"
-    target_variety = "Seahawk"
+    vi_formula = "sr"
+    # target_variety = "Seahawk"
     target_variate = "vi_mean"
-    variety_block_pair = (1, 1)
-
+    # target_variate = "air_temp"
     # Perform parsing based on selections
     parser = Parser()
     if season == "spring":
@@ -37,19 +35,16 @@ if __name__ == '__main__':
         data_handler = DataHandler(winter_plots)
 
     # Data preparation for machine learning
-    data_handler.make_uni_lstm_training_sets(target_variate)
+    data_handler.make_uni_lstm_sets(target_variate)
 
     # Create model
-    uni_lstm_learning_model = VanillaLSTM(num_epochs=100)
-    uni_lstm_learning_model.load_trained_model()
+    # uni_lstm_learning_model = StackedLSTM(num_epochs=200)
+    uni_lstm_learning_model = VanillaLSTM(num_epochs=200)
+    # uni_lstm_learning_model.load_trained_model(season)
 
     # Train model
-    # data_handler.uni_lstm_training_on_test_sets(uni_lstm_learning_model)
-    # uni_lstm_learning_model.save_trained_model()
-
-    # Test the model
-    untested_tup = data_handler.get_uni_lstm_untested_sets()[0]
-    predictions = data_handler.get_uni_lstm_predictions_for_set(uni_lstm_learning_model, untested_tup[0])
+    data_handler.train_uni_lstm_on_test_sets(uni_lstm_learning_model)
+    uni_lstm_learning_model.save_trained_model(season)
 
     # Create visualizer
     visualizer = Visualizer()
@@ -76,11 +71,14 @@ if __name__ == '__main__':
     # Individual plot visualization
     # Entry, Block (1-3)
     # entry_bloc_pairs = [(7, 1)]
-    entry_bloc_pairs = [(untested_tup[1].variety_index, untested_tup[1].replication_variety)]
-    if season == "spring":
-        visualizer.visualize_plots(spring_plots, entry_bloc_pairs, predictions)
-    elif season == "winter":
-        visualizer.visualize_plots(winter_plots, entry_bloc_pairs, predictions)
+    # Test the model
+    for testing_set in data_handler.uni_lstm_testing_sets:
+        predictions = data_handler.get_uni_lstm_predictions_for_set(uni_lstm_learning_model, testing_set[0])
+        entry_bloc_pairs = [(testing_set[1].variety_index, testing_set[1].replication_variety)]
+        if season == "spring":
+            visualizer.visualize_plots(spring_plots, entry_bloc_pairs, predictions)
+        elif season == "winter":
+            visualizer.visualize_plots(winter_plots, entry_bloc_pairs, predictions)
 
     # Variety plot visualization
     # if season == "spring":
