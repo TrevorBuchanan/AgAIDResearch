@@ -38,13 +38,31 @@ if __name__ == '__main__':
     data_handler.make_uni_lstm_sets(target_variate)
 
     # Create model
-    # uni_lstm_learning_model = StackedLSTM(num_epochs=200)
-    uni_lstm_learning_model = VanillaLSTM(num_epochs=200)
+    uni_lstm_learning_model = StackedLSTM(num_epochs=200)
+    # uni_lstm_learning_model = VanillaLSTM(num_epochs=200)
     # uni_lstm_learning_model.load_trained_model(season)
 
     # Train model
     data_handler.train_uni_lstm_on_test_sets(uni_lstm_learning_model)
-    uni_lstm_learning_model.save_trained_model(season)
+    # uni_lstm_learning_model.save_trained_model(season)
+
+    exit(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # Create visualizer
     visualizer = Visualizer()
