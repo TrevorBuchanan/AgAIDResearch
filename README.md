@@ -25,7 +25,7 @@ site, and other online resources such as weather data)
 * 06/13/2024 - Refactor and begin to use time series learning models
 * 06/14/2024 - Apply uni-variate time series learning models and work on setting 
 * effective parameters for best results
-* 06/17/2024 - 
+* 06/17/2024 - Attempting to refine parameters of LSTM models and adding a stacked LSTM
 
 
 
