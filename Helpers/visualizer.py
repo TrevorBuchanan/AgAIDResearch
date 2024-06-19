@@ -3,7 +3,8 @@ import matplotlib.patches as mpatches
 
 from DataStructures.plot import Plot
 from Helpers.utility import get_plot_missing_dates, convert_int_to_str_date, get_plot, \
-                            spring_variety_map, winter_variety_map, singleton
+    spring_variety_map, winter_variety_map, singleton
+
 
 @singleton
 class Visualizer:
@@ -192,7 +193,10 @@ class Visualizer:
 
             # Heading date
             if self.show_heading_date:
-                plt.scatter(plot.heading_date, vi_means[dates.index(plot.heading_date)], color='blue')
+                if len(vi_means) > 0:
+                    plt.scatter(plot.heading_date, vi_means[dates.index(plot.heading_date)], color='blue')
+                else:
+                    plt.scatter(plot.heading_date, 0, color='blue')
                 print("Heading date: ", end="")
                 print(convert_int_to_str_date(plot.heading_date))
 
