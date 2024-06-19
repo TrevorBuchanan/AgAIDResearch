@@ -34,7 +34,7 @@ class UniLSTMDataHandler(DataHandler):
             test_plot_indices.append(random.randint(0, total_amt - 1))
         # Make training sets
         for i, plot in enumerate(self.plots):
-            uni_var_set = self.get_uni_lstm_set(plot, target_variate)
+            uni_var_set = self.get_set(plot, target_variate)
             if len(uni_var_set) > 0:
                 if i in test_plot_indices:  # Check if in 80 percent group of test plots
                     self.uni_lstm_training_sets.append((uni_var_set, plot))
