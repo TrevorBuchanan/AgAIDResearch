@@ -28,17 +28,15 @@
 10. Tekoa
 11. Net CL+
 12. Jedd
-* A form of SMOTE (Synthetic Minority Oversampling Technique) was used to increase ML model performance.
-The distribution of the yields followed a normal distribution (figure 1.0). 
-![NormalDist.png](..%2F..%2FNormalDist.png)
-
+* A form of SMOTE (Synthetic Minority Oversampling Technique) was used to increase ML model performance. 
+The distribution of the yields followed a normal distribution (figure 1.0).
+  ![NormalDist.png](/Users/trevorbuchanan/Desktop/AgAIDinternship/Images/NormalDist.png)
 In order to fix the issue of there being 
 less data points on the extremities for the ML model to train on, minority oversampling was used. The minority 
 sampling was done in two ways. Firstly, the data was cut down so that the distribution was level, as shown below.
-![CutDist.png](..%2F..%2FCutDist.png)
-
-Secondly, the distribution was leveled by fabricating minority data. 
-![BulkDist.png](..%2F..%2FBulkDist.png)
+![CutDist.png](/Users/trevorbuchanan/Desktop/AgAIDinternship/Images/CutDist.png)
+Secondly, the distribution was leveled by fabricating minority data.
+![BulkDist.png](/Users/trevorbuchanan/Desktop/AgAIDinternship/Images/BulkDist.png)
 
 
 ### Units and labels:
