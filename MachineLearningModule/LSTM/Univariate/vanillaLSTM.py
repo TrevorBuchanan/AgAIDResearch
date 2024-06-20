@@ -16,21 +16,16 @@ class VanillaLSTM(UnivariateLSTM):
     def __init__(self, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
                  verbose: int = 1, activation_function: str = 'relu'):
         super().__init__(num_epochs, optimizer, loss_function, verbose, activation_function)
-        self.model = None
-        self.n_features = 1
 
     def load_trained_model(self, season, vi_formula, target_variate):
-        # TODO: Add to base class
         self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/'
                                 f'{season}_{vi_formula}_{target_variate}_vanilla_model.keras')
 
     def save_trained_model(self, season, vi_formula, target_variate):
-        # TODO: Add to base class
         self.model.save(f'MachineLearningModule/LSTM/SavedModels/'
                         f'{season}_{vi_formula}_{target_variate}_vanilla_model.keras')
 
     def build_model(self, n_steps):
-        # TODO: Add to base class
         self.model = Sequential()
         self.model.add(Input(shape=(n_steps, self.n_features)))
         # self.model.add(Masking(mask_value=-1.0))
@@ -63,4 +58,4 @@ class VanillaLSTM(UnivariateLSTM):
         sequence = array(sequence)
         sequence = sequence.reshape((1, len(sequence), self.n_features))
         predicted = self.model.predict(sequence, self.verbose)
-        return predicted
+        return predicted[0][0]

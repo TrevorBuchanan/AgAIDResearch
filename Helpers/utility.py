@@ -74,46 +74,12 @@ def convert_int_to_str_date(int_date: int, year: int = 2022) -> str:
     return f"{year:04d}-{month:02d}-{day:02d}"
 
 
-def index_of_variety(variety_name: str) -> int:
-    """
-    Gets the index of a given variety type
-    :param variety_name: str - the name of the type of crop
-    :return: int - the index of the type
-    """
-    if variety_name in winter_variety_map:
-        return winter_variety_map.index(variety_name) + 1
-    if variety_name in spring_variety_map:
-        return spring_variety_map.index(variety_name) + 1
-    return 0
-
-
-def get_data_point_index(data_point, plots: list[Plot]) -> int:
-    """
-    Gets the index of the plot that should hold the specific given data point
-    :param plots: List[Plots] - List to find the index in
-    :param data_point: DataPoint
-    :return: int - index for data_point, -1 if none found, or -2 if multiple found
-    """
-    count = 0
-    index = 0
-
-    for i, plot in enumerate(plots):
-        if plot.replication_variety == data_point.replication_variety and \
-                plot.variety_index == data_point.variety_index:
-            count += 1
-            index = i
-
-    if count == 0:
-        raise Exception("No data points with given parameters in plots")
-        # return -1
-    elif count > 1:
-        raise Exception("More than one data point with given parameters in plots")
-        # return -2
-    else:
-        return index
-
-
 def get_plot_missing_dates(plot: Plot) -> list:
+    """
+    Gets a list of the missing dates in a plot's list of data points
+    :param plot: Plot - Plot to search for missing dates in
+    :return: list - List of missing dates in plot's data points
+    """
     dates = []
     for data_point in plot.data_points:
         dates.append(data_point.date)
@@ -127,7 +93,7 @@ def show_plot_data_missing_dates(plot: Plot) -> None:
     :param plot: Plot - Plot to be checked
     :return: None
     """
-    missing_dates = get_plot_missing_dates(plot)
+    missing_dates = get_plot_missing_dates(plot)  # May need to fetch missing days from visualizer instead
     for missing_date in missing_dates:
         print("\t*", end="")
         if abs(plot.heading_date - missing_date) < 14:
@@ -171,70 +137,10 @@ def print_green(string: str) -> None:
     print(Style.RESET_ALL, end="")
 
 
-def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
-    """
-    Gets the plot with given variety and replication variety (Block)
-    variety_index (int): Index of variety type in variety map
-    replication_variety (int): Number representing the replication variety or Block
-    plots (list): List of plots to search from
-    Returns (Plot): The plot with given values if found
-    """
-
-    def check_same_plot(plot: 'Plot') -> bool:
-        return plot.variety_index == variety_index and plot.replication_variety == replication_variety
-
-    same_plots = list(filter(check_same_plot, plots))
-    if len(same_plots) > 1:
-        print("More than 1 same plot")
-    return same_plots[0]
-
-
-def sort_data_points_by_date(data_points: list) -> list:
-    """
-    Sorts data points by their date
-    :param data_points: list[DataPoint] - data point list to sort
-    :return: list[DataPoint] - sorted list of data points
-    """
-
-    def partition(lst, low, high):
-        pivot = lst[high].date
-        i = low - 1
-        for j in range(low, high):
-            if lst[j].date <= pivot:
-                i += 1
-                lst[i], lst[j] = lst[j], lst[i]
-        lst[i + 1], lst[high] = lst[high], lst[i + 1]
-        return i + 1
-
-    def quick_sort(lst, low, high):
-        if low < high:
-            pi = partition(lst, low, high)
-            quick_sort(lst, low, pi - 1)
-            quick_sort(lst, pi + 1, high)
-
-    quick_sort(data_points, 0, len(data_points) - 1)
-    return data_points
-
-
-def insert_data_point(data_point, plot: Plot) -> None:
-    """
-    Inserts a new data point into a plot's data points in order (according to date)
-    :param data_point: DataPoint - new data point to insert
-    :param plot: Plot - plot with data points to insert into
-    :return: None
-    """
-    insert_index = 0
-    for i, dp in enumerate(plot.data_points):
-        if data_point.date < dp.date:
-            insert_index = i
-            break
-    plot.data_points.insert(insert_index, data_point)
-
-
 def singleton(cls):
     """
     Decorator for making a class a singleton
-    Returns: Instance of decorated class 
+    :return: Instance of decorated class
     """
     instances = {}
 

@@ -1,6 +1,6 @@
 import csv
 
-from Helpers.utility import convert_str_to_int_date, get_data_point_index, sort_data_points_by_date, \
+from Helpers.utility import convert_str_to_int_date, \
     get_plot_missing_dates, singleton
 from Helpers.interpolator import Interpolator
 from Helpers.visualizer import Visualizer
@@ -18,6 +18,7 @@ class Parser:
     def __init__(self) -> None:
         self.interpolator = Interpolator()
 
+    # TODO: Merge to one function
     def parse_winter_data(self, winter_plots: list, vi_formula_target: str) -> None:
         """
         Parses the winter data provided in PullmanIOTData
@@ -88,7 +89,7 @@ class Parser:
                 # Add the DataPoint to the Plots data
                 data_point = DataPoint(date, season_type, sensor_name, variety_index,
                                        replication_variety, vi_state, conditions_state)
-                winter_plots[get_data_point_index(data_point, winter_plots)].add_data_point(data_point)
+                winter_plots[self.get_data_point_index(data_point, winter_plots)].add_data_point(data_point)
 
         # Filter faulty plots:
         plots_to_rm = []
@@ -99,7 +100,7 @@ class Parser:
             winter_plots.remove(p)
 
         for plot in winter_plots:
-            sort_data_points_by_date(plot.data_points)
+            self.sort_data_points_by_date(plot.data_points)
             visualizer.saved_missing = get_plot_missing_dates(plot)
         self.interpolator.fill_missing_data(winter_plots)
 
@@ -173,7 +174,7 @@ class Parser:
                 # Add the DataPoint to the Plots data
                 data_point = DataPoint(date, season_type, sensor_name, variety_index,
                                        replication_variety, vi_state, conditions_state)
-                spring_plots[get_data_point_index(data_point, spring_plots)].add_data_point(data_point)
+                spring_plots[self.get_data_point_index(data_point, spring_plots)].add_data_point(data_point)
 
         plots_to_rm = []
         for plot in spring_plots:
@@ -183,7 +184,59 @@ class Parser:
             spring_plots.remove(p)
 
         for plot in spring_plots:
-            sort_data_points_by_date(plot.data_points)
+            self.sort_data_points_by_date(plot.data_points)
             visualizer.saved_missing = get_plot_missing_dates(plot)
         self.interpolator.fill_missing_data(spring_plots)
 
+    @staticmethod
+    def sort_data_points_by_date(data_points: list) -> list:
+        """
+        Sorts data points by their date
+        :param data_points: list[DataPoint] - data point list to sort
+        :return: list[DataPoint] - sorted list of data points
+        """
+
+        def partition(lst, low, high):
+            pivot = lst[high].date
+            i = low - 1
+            for j in range(low, high):
+                if lst[j].date <= pivot:
+                    i += 1
+                    lst[i], lst[j] = lst[j], lst[i]
+            lst[i + 1], lst[high] = lst[high], lst[i + 1]
+            return i + 1
+
+        def quick_sort(lst, low, high):
+            if low < high:
+                pi = partition(lst, low, high)
+                quick_sort(lst, low, pi - 1)
+                quick_sort(lst, pi + 1, high)
+
+        quick_sort(data_points, 0, len(data_points) - 1)
+        return data_points
+
+    @staticmethod
+    def get_data_point_index(data_point, plots: list[Plot]) -> int:
+        """
+        Gets the index of the plot that should hold the specific given data point
+        :param plots: List[Plots] - List to find the index in
+        :param data_point: DataPoint
+        :return: int - index for data_point, -1 if none found, or -2 if multiple found
+        """
+        count = 0
+        index = 0
+
+        for i, plot in enumerate(plots):
+            if plot.replication_variety == data_point.replication_variety and \
+                    plot.variety_index == data_point.variety_index:
+                count += 1
+                index = i
+
+        if count == 0:
+            raise Exception("No data points with given parameters in plots")
+            # return -1
+        elif count > 1:
+            raise Exception("More than one data point with given parameters in plots")
+            # return -2
+        else:
+            return index

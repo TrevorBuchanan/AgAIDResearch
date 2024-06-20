@@ -27,7 +27,11 @@ site, and other online resources such as weather data)
 * effective parameters for best results
 * 06/17/2024 - Attempt to refine parameters of LSTM models and add a stacked LSTM
 * 06/18/2024 - Run training tests to refine parameters and training strategy
-
+* 06/20/2024 - Fix issues: 
+  * Have training data a testing data be separate between all
+  executions (consistent training batch and testing batch)
+  * Refactor for organization and clarity
+  * Complete all unfinished TODO comments 
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

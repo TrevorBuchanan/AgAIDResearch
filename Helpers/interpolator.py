@@ -4,31 +4,29 @@ from DataStructures.conditions_state import ConditionsState
 from DataStructures.data_point import DataPoint
 from DataStructures.plot import Plot
 from DataStructures.vi_state import VIState
-from Helpers.utility import get_plot_missing_dates, insert_data_point, convert_str_to_int_date
+from Helpers.utility import get_plot_missing_dates, convert_str_to_int_date
 
 
 class Interpolator:
     def fill_missing_data(self, plots: list[Plot]) -> None:
-        # TODO: Function description
         """
-
-        :param plots:
-        :return:
+        Fill in the missing data points for each plot in given list of plots
+        :param plots: list[Plot] - List of plots with data point lists to fill missing data for
+        :return: None
         """
         for plot in plots:
             missing = get_plot_missing_dates(plot)
             new_data_points = self.generate_data_points(missing, plot, plots)
             for dp in new_data_points:
-                insert_data_point(dp, plot)
+                self.insert_data_point(dp, plot)
 
     def generate_data_points(self, dates: list[int], plot: Plot, plots: list[Plot]) -> list:
-        # TODO: Function description
         """
-
-        :param dates:
-        :param plot:
-        :param plots:
-        :return:
+        For a given plot, generate a list of data points that fill the missing data in the plot
+        :param dates: list[int] - List of missing dates in the plot given
+        :param plot: Plot - The plot to generate missing data points for
+        :param plots: list[Plot] - The list of plots that 'plot' is in. (Used to find values for interpolating between)
+        :return: list[DataPoints] - A list of data points
         """
         new_data_points = []
         for date in dates:
@@ -55,7 +53,7 @@ class Interpolator:
         Linearly interpolate between the closest known dates
         :param goal_val: str - The value type name to interpolate for
         :param date: int - The date that needs an interpolated value
-        :param dates: list[int] - List of missing dates
+        :param dates: list[int] - The full list of known dates for the plot
         :param data_points: list[DataPoints] - Datapoints to reference values from
         :return: float - interpolated value for given date
         """
@@ -102,16 +100,18 @@ class Interpolator:
 
         return y_to_find
 
-    def other_data_point_fill(self, date: int, dates, data_points, goal_val: str, plots: list[Plot]) -> float:
-        # TODO: Function description
+    def other_data_point_fill(self, date: int, dates: list[int], data_points: list,
+                              goal_val: str, plots: list[Plot]) -> float:
         """
-
-        :param date:
-        :param dates:
-        :param data_points:
-        :param goal_val:
-        :param plots:
-        :return:
+        Fill missing data point strategy which fills the missing data by fetching from other plots on the same date,
+        or by searching a nearby (close to location of experiment) weather station dataset
+        :param date: int - The date that needs to be filled
+        :param dates: list[int] - The list of all dates that are known
+        :param data_points: list[DataPoints] - The list of data points for the target plot to fill missing data for
+        :param goal_val: str - The value name to target when finding a fill value
+        :param plots: list[Plot] - List of plots to search from
+        :return: float - Value filled from other plot at same date if found,
+        otherwise the result of external_weather_data_fill(...)
         """
         for plot in plots:
             for dp in plot.data_points:
@@ -148,3 +148,18 @@ class Interpolator:
                         return float(row[goal_val])
 
         return self.lerp_fill(date, dates, data_points, goal_val)
+
+    @staticmethod
+    def insert_data_point(data_point, plot: Plot) -> None:
+        """
+        Inserts a new data point into a plot's data points in order (according to date)
+        :param data_point: DataPoint - new data point to insert
+        :param plot: Plot - plot with data points to insert into
+        :return: None
+        """
+        insert_index = 0
+        for i, dp in enumerate(plot.data_points):
+            if data_point.date < dp.date:
+                insert_index = i
+                break
+        plot.data_points.insert(insert_index, data_point)

@@ -85,7 +85,7 @@ class UniLSTMDataHandler(DataHandler):
         predictions = []
         tests_for_each_day = prep_sequence_target_val([test_set], [0 for _, _ in enumerate(test_set)])[0]
         for test_set in tests_for_each_day:
-            predictions.append(model.predict(test_set)[0][0])
+            predictions.append(model.predict(test_set))
         return predictions
 
     def save_test_plots(self):

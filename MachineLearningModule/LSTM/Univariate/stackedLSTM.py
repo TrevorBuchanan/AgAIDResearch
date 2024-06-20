@@ -16,19 +16,14 @@ class StackedLSTM(UnivariateLSTM):
     def __init__(self, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
                  verbose: int = 1, activation_function: str = 'relu'):
         super().__init__(num_epochs, optimizer, loss_function, verbose, activation_function)
-        self.classifier_model = None
-        self.model = None
-        self.n_features = 1
         self.seed = 7
         tf.random.set_seed(self.seed)
 
     def load_trained_model(self, season, vi_formula, target_variate):
-        # TODO: Add to base class
         self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/'
                                 f'{season}_{vi_formula}_{target_variate}_stacked_model.keras')
 
     def save_trained_model(self, season, vi_formula, target_variate):
-        # TODO: Add to base class
         self.model.save(f'MachineLearningModule/LSTM/SavedModels/'
                         f'{season}_{vi_formula}_{target_variate}_stacked_model.keras')
 
@@ -68,5 +63,5 @@ class StackedLSTM(UnivariateLSTM):
         sequence = array(sequence)
         sequence = sequence.reshape((1, len(sequence), self.n_features))
         predicted = self.model.predict(sequence, self.verbose)
-        return predicted
+        return predicted[0][0]
 

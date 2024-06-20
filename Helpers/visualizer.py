@@ -2,8 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 from DataStructures.plot import Plot
-from Helpers.utility import get_plot_missing_dates, convert_int_to_str_date, get_plot, \
-    spring_variety_map, winter_variety_map, singleton
+from Helpers.utility import convert_int_to_str_date, spring_variety_map, winter_variety_map, singleton
 
 
 @singleton
@@ -31,10 +30,13 @@ class Visualizer:
         # Saved missing
         self.saved_missing = []
 
-    def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple], predictions=None) -> None:
-        # TODO: Function description
+    def visualize_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple],
+                        predictions=None or list[float]) -> None:
         """
-        Visualization for plots
+        Create a graph visualization of given plots' data
+        :param plots: list[Plot] - List of all plots
+        :param entry_bloc_pairs: list[tuple] - List of entry block pairs to create visualization for
+        :param predictions: list[float] | None - Optional list of predictions from ML model
         :return: None
         """
 
@@ -93,7 +95,7 @@ class Visualizer:
 
         for pair in entry_bloc_pairs:
             # Get correct plot
-            plot = get_plot(pair[0], pair[1], plots)
+            plot = self.get_plot(pair[0], pair[1], plots)
 
             # Lists to hold each data values
             dates = []
@@ -234,11 +236,10 @@ class Visualizer:
         plt.show()
 
     def visualize_variety(self, plots: list[Plot], target_variety: str) -> None:
-        # TODO: Function description
         """
         Visualize all plots of a given variety
-        :param plots:
-        :param target_variety:
+        :param plots: list[Plot] - List of all plots
+        :param target_variety: str - Variety name to show visualization for
         :return: None
         """
         season = plots[0].data_points[0].season_type
@@ -252,3 +253,21 @@ class Visualizer:
                 entry_bloc_pairs.append((plot.variety_index, plot.replication_variety))
 
         self.visualize_plots(plots, entry_bloc_pairs)
+
+    @staticmethod
+    def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
+        """
+        Gets the plot with given variety and replication variety (Block)
+        variety_index (int): Index of variety type in variety map
+        replication_variety (int): Number representing the replication variety or Block
+        plots (list): List of plots to search from
+        Returns (Plot): The plot with given values if found
+        """
+
+        def check_same_plot(plot: 'Plot') -> bool:
+            return plot.variety_index == variety_index and plot.replication_variety == replication_variety
+
+        same_plots = list(filter(check_same_plot, plots))
+        if len(same_plots) > 1:
+            print("More than 1 same plot")
+        return same_plots[0]

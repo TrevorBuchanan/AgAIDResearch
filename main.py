@@ -70,19 +70,19 @@ if __name__ == '__main__':
     visualizer.line_mode = True
     visualizer.point_mode = True
     # Data selection
-    # visualizer.show_missing_dates = True
+    visualizer.show_missing_dates = True
     visualizer.show_vi_mean = True
-    # visualizer.show_air_temp = True
-    # visualizer.show_dew_point = True
-    # visualizer.show_relative_humidity = True
-    # visualizer.show_soil_temp_2in = True
-    # visualizer.show_soil_temp_8in = True
-    # visualizer.show_precipitation = True
-    # visualizer.show_solar_radiation = True
+    visualizer.show_air_temp = True
+    visualizer.show_dew_point = True
+    visualizer.show_relative_humidity = True
+    visualizer.show_soil_temp_2in = True
+    visualizer.show_soil_temp_8in = True
+    visualizer.show_precipitation = True
+    visualizer.show_solar_radiation = True
     # Result data selection
     visualizer.show_heading_date = True
-    # visualizer.show_plant_height = True
-    # visualizer.show_test_pounds_per_bushel = True
+    visualizer.show_plant_height = True
+    visualizer.show_test_pounds_per_bushel = True
     visualizer.show_yield = True
     visualizer.show_prediction = True
 
