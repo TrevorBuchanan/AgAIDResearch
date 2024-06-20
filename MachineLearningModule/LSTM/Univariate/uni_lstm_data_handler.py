@@ -19,7 +19,7 @@ class UniLSTMDataHandler(DataHandler):
     def make_sets(self, target_variate: str) -> None:
         """
         Makes a set of uni-variate training and testing sets with given target variate and saves
-        them to uni_lstm_training_sets and uni_lstm_testing_sets
+        them to training_sets and testing_sets
         :param target_variate: str - The variate to target when creating the training sets
         :return: None
         """
@@ -44,6 +44,8 @@ class UniLSTMDataHandler(DataHandler):
                     self.training_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
                 else:
                     self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
+        self.cut_sets_to_level()
+        # self.bulk_sets_to_level()
 
     @staticmethod
     def get_set(plot: Plot, target_variate: str) -> list:
@@ -112,7 +114,7 @@ class UniLSTMDataHandler(DataHandler):
         Loads saved testing and training data from their respective files
         :return: None
         """
-        temp_max_amt = 30  # Used to limit the amount of data sets that the model is given at once
+        temp_max_amt = 14  # Used to limit the amount of data sets that the model is given at once
         amt = 0
         test_file_path = 'MachineLearningModule/saved_test_data.txt'
         with open(test_file_path, 'r') as file:
@@ -134,3 +136,97 @@ class UniLSTMDataHandler(DataHandler):
                 parsed_tuple = ast.literal_eval(tuple_str)
                 self.training_sets.append(parsed_tuple)
                 amt += 1
+
+    def cut_sets_to_level(self):
+        # TODO: Func def
+        """
+
+        :return:
+        """
+        yields = []
+        for tup in self.training_sets:
+            yields.append(get_plot(tup[1], tup[2], self.plots).crop_yield)
+
+        min_val = min(yields)
+        max_val = max(yields)
+        num_buckets = 7
+        buckets = [0] * num_buckets
+        for tup in self.training_sets:
+            buckets[self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
+                                          min_val, max_val, num_buckets)] += 1
+        min_amt = min(buckets)
+        to_rmv = []
+        for tup in self.training_sets:
+            index = self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
+                                          min_val, max_val, num_buckets)
+            if buckets[index] > min_amt:
+                to_rmv.append(tup)
+                buckets[index] -= 1
+
+        for rmv in to_rmv:
+            self.training_sets.remove(rmv)
+            self.testing_sets.append(rmv)
+
+    def bulk_sets_to_level(self):
+        """
+
+        :return:
+        """
+        # TODO: func def
+        yields = []
+        for tup in self.training_sets:
+            yields.append(get_plot(tup[1], tup[2], self.plots).crop_yield)
+
+        min_val = min(yields)
+        max_val = max(yields)
+        num_buckets = 7
+        buckets = [0] * num_buckets
+        for tup in self.training_sets:
+            buckets[self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
+                                          min_val, max_val, num_buckets)] += 1
+        min_amt = min(buckets)
+        to_add = []
+        for tup in self.training_sets:
+            index = self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
+                                          min_val, max_val, num_buckets)
+            if buckets[index] > min_amt:
+                to_add.append(tup)
+                buckets[index] -= 1
+
+        for add in to_add:
+            self.training_sets.append(add)
+
+    @staticmethod
+    def fabricate_set_and_out(original_set, original_out, max_deviation=0.03):
+        new_set = []
+        for val in original_set:
+            new_set.append(val + random.uniform(-max_deviation, max_deviation))
+        new_out = original_out + random.uniform(-max_deviation * 5, max_deviation * 5)
+        return new_set, new_out
+
+    @staticmethod
+    def get_bucket_index(num: float, min_value: float, max_value: float, num_buckets: int) -> int:
+        # TODO: func def
+        """
+
+        :param num:
+        :param min_value:
+        :param max_value:
+        :param num_buckets:
+        :return:
+        """
+        # Calculate the range of each bucket
+        bucket_range = (max_value - min_value) / num_buckets
+
+        # Edge case: all numbers are the same
+        if bucket_range == 0:
+            return 0
+
+        # Calculate the appropriate bucket index
+        bucket_index = int((num - min_value) / bucket_range)
+
+        # Make sure the last bucket includes the max_value
+        if bucket_index == num_buckets:
+            bucket_index -= 1
+
+        return bucket_index

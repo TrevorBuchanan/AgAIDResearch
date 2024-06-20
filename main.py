@@ -36,8 +36,8 @@ if __name__ == '__main__':
     data_handler.load_saved_sets()
 
     # Create model
-    learning_model = StackedLSTM(num_epochs=300)
-    # learning_model = VanillaLSTM(num_epochs=500)
+    # learning_model = StackedLSTM(num_epochs=300)
+    learning_model = VanillaLSTM(num_epochs=500)
 
     # Train model
     learning_model.load_trained_model(season, vi_formula, target_variate)
@@ -66,11 +66,11 @@ if __name__ == '__main__':
     # Visualize selections
     # target_variety = "Seahawk"
     # Visual settings
-    visualizer.line_mode = True
+    # visualizer.line_mode = True
     # visualizer.point_mode = True
     # Data selection
     # visualizer.show_missing_dates = True
-    visualizer.show_vi_mean = True
+    # visualizer.show_vi_mean = True
     # visualizer.show_air_temp = True
     # visualizer.show_dew_point = True
     # visualizer.show_relative_humidity = True
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     # visualizer.show_precipitation = True
     # visualizer.show_solar_radiation = True
     # Result data selection
-    visualizer.show_heading_date = True
+    # visualizer.show_heading_date = True
     # visualizer.show_plant_height = True
     # visualizer.show_test_pounds_per_bushel = True
     visualizer.show_yield = True
@@ -95,13 +95,13 @@ if __name__ == '__main__':
         visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
 
 
-    # print("Already trained data: _____________________________________________________________________")
+    print("Already trained data: _____________________________________________________________________")
     # Test the model
-    # for testing_set in data_handler.training_sets:
-    #     predictions = data_handler.get_predictions_for_set(learning_model, testing_set[0])
-    #     entry_bloc_pairs = [(testing_set[1], testing_set[2])]
-    #     visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
-
+    for testing_set in data_handler.training_sets:
+        predictions = data_handler.get_predictions_for_set(learning_model, testing_set[0])
+        entry_bloc_pairs = [(testing_set[1], testing_set[2])]
+        visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
+        print("_____________________________________________________________________")
 
     # Variety plot visualization
     # visualizer.visualize_variety(plots, target_variety)

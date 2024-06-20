@@ -46,9 +46,8 @@ def prep_sequence_target_val(sequences: list[list], targets: list[float]) -> tup
 class DataHandler:
     def __init__(self, plots: list[Plot]) -> None:
         self.plots = plots
-        self.uni_lstm_training_sets: list[(list, Plot)] = []
-        self.uni_lstm_testing_sets: list[(list, Plot)] = []
-        self.use_saved_test_plots = False
+        self.training_sets: list[(list, Plot)] = []
+        self.testing_sets: list[(list, Plot)] = []
 
     # def save_sets(self):
     #     pass

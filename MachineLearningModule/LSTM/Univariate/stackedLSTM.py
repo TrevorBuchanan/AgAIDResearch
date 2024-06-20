@@ -31,12 +31,12 @@ class StackedLSTM(UnivariateLSTM):
         model = Sequential()
         model.add(Input(shape=(n_steps, self.n_features)))
         model.add(Masking(mask_value=0.0))
-        model.add(LSTM(50, activation=self.activation_function, return_sequences=True,
+        model.add(LSTM(100, activation=self.activation_function, return_sequences=True,
                        kernel_regularizer=l2(0.01)))
-        model.add(Dropout(0.2))
+        model.add(Dropout(0.1))
         model.add(BatchNormalization())
-        model.add(LSTM(50, activation=self.activation_function, kernel_regularizer=l2(0.01)))
-        model.add(Dropout(0.2))
+        model.add(LSTM(100, activation=self.activation_function, kernel_regularizer=l2(0.01)))
+        model.add(Dropout(0.1))
         model.add(BatchNormalization())
         model.add(Dense(1, kernel_regularizer=l2(0.01)))
         optimizer = Adam(learning_rate=0.001)

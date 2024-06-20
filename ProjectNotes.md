@@ -29,7 +29,7 @@
 11. Net CL+
 12. Jedd
 * A form of SMOTE (Synthetic Minority Oversampling Technique) was used to increase ML model performance. 
-The distribution of the yields followed a normal distribution (figure 1.0).
+The distribution of the yields followed a normal distribution.
 ![NormalDist.png](Images%2FNormalDist.png)
 In order to fix the issue of there being 
 less data points on the extremities for the ML model to train on, minority oversampling was used. The minority 
