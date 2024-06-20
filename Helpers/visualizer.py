@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 from DataStructures.plot import Plot
-from Helpers.utility import convert_int_to_str_date, spring_variety_map, winter_variety_map, singleton
+from Helpers.utility import convert_int_to_str_date, spring_variety_map, winter_variety_map, \
+    singleton, get_plot
 
 
 @singleton
@@ -95,7 +96,7 @@ class Visualizer:
 
         for pair in entry_bloc_pairs:
             # Get correct plot
-            plot = self.get_plot(pair[0], pair[1], plots)
+            plot = get_plot(pair[0], pair[1], plots)
 
             # Lists to hold each data values
             dates = []
@@ -134,7 +135,6 @@ class Visualizer:
 
             # Point graphs
             if self.point_mode:
-                last_working_i = 0
                 for date in dates:
                     index = dates.index(date)
                     # VI mean
@@ -161,13 +161,17 @@ class Visualizer:
                     # Solar radiation
                     if self.show_solar_radiation:
                         plt.scatter(date, solar_rads[index], color='pink')
-                    # Yield prediction
-                    if self.show_prediction and len(predictions) > 0:
-                        if index >= len(predictions):
-                            plt.bar(date, predictions[last_working_i], color='papayawhip')
-                        else:
-                            plt.bar(date, predictions[index], color='papayawhip')
-                            last_working_i = index
+
+            last_working_i = 0
+            for date in dates:
+                index = dates.index(date)
+                # Yield prediction
+                if self.show_prediction and len(predictions) > 0:
+                    if index >= len(predictions):
+                        plt.bar(date, predictions[last_working_i], color='papayawhip')
+                    else:
+                        plt.bar(date, predictions[index], color='papayawhip')
+                        last_working_i = index
 
             # Line graphs
             if self.line_mode:
@@ -253,21 +257,3 @@ class Visualizer:
                 entry_bloc_pairs.append((plot.variety_index, plot.replication_variety))
 
         self.visualize_plots(plots, entry_bloc_pairs)
-
-    @staticmethod
-    def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
-        """
-        Gets the plot with given variety and replication variety (Block)
-        variety_index (int): Index of variety type in variety map
-        replication_variety (int): Number representing the replication variety or Block
-        plots (list): List of plots to search from
-        Returns (Plot): The plot with given values if found
-        """
-
-        def check_same_plot(plot: 'Plot') -> bool:
-            return plot.variety_index == variety_index and plot.replication_variety == replication_variety
-
-        same_plots = list(filter(check_same_plot, plots))
-        if len(same_plots) > 1:
-            print("More than 1 same plot")
-        return same_plots[0]

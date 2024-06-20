@@ -171,3 +171,21 @@ def shuffle_in_unison(a, b) -> tuple:
         shuffled_b[new_index] = b[old_index]
 
     return shuffled_a, shuffled_b
+
+
+def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
+    """
+    Gets the plot with given variety and replication variety (Block)
+    variety_index (int): Index of variety type in variety map
+    replication_variety (int): Number representing the replication variety or Block
+    plots (list): List of plots to search from
+    Returns (Plot): The plot with given values if found
+    """
+
+    def check_same_plot(plot: 'Plot') -> bool:
+        return plot.variety_index == variety_index and plot.replication_variety == replication_variety
+
+    same_plots = list(filter(check_same_plot, plots))
+    if len(same_plots) > 1:
+        print("More than 1 same plot")
+    return same_plots[0]

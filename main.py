@@ -5,9 +5,8 @@ from DataStructures.plot import Plot
 
 from Helpers.visualizer import Visualizer
 from Helpers.parser import Parser
-from MachineLearningModule.LSTM.Univariate.uni_lstm_data_handler import UniLSTMDataHandler
 
-from MachineLearningModule.data_handler import DataHandler
+from MachineLearningModule.LSTM.Univariate.uni_lstm_data_handler import UniLSTMDataHandler
 from MachineLearningModule.LSTM.Univariate.vanillaLSTM import VanillaLSTM
 from MachineLearningModule.LSTM.Univariate.stackedLSTM import StackedLSTM
 
@@ -21,8 +20,9 @@ if __name__ == '__main__':
 
     # Parsing selections
     season = "spring"
-    vi_formula = "sr"
-    # target_variety = "Seahawk"
+    vi_formula = "ndvi"
+
+    # ML model selections
     target_variate = "vi_mean"
 
     # Perform parsing based on selections
@@ -31,16 +31,18 @@ if __name__ == '__main__':
     data_handler = UniLSTMDataHandler(plots)
 
     # Data preparation for machine learning
-    data_handler.make_sets(target_variate)
+    # data_handler.make_sets(target_variate)
+    # data_handler.save_sets()
+    data_handler.load_saved_sets()
 
     # Create model
-    # uni_lstm_learning_model = StackedLSTM(num_epochs=200)
-    uni_lstm_learning_model = VanillaLSTM(num_epochs=500)
+    learning_model = StackedLSTM(num_epochs=300)
+    # learning_model = VanillaLSTM(num_epochs=500)
 
     # Train model
-    uni_lstm_learning_model.load_trained_model(season, vi_formula, target_variate)
-    # data_handler.train_test_sets(uni_lstm_learning_model)
-    # uni_lstm_learning_model.save_trained_model(season, vi_formula, target_variate)
+    learning_model.load_trained_model(season, vi_formula, target_variate)
+    data_handler.train_on_training_sets(learning_model)
+    learning_model.save_trained_model(season, vi_formula, target_variate)
     # exit(0)
 
 
@@ -61,23 +63,25 @@ if __name__ == '__main__':
 
     # Create visualizer
     visualizer = Visualizer()
+    # Visualize selections
+    # target_variety = "Seahawk"
     # Visual settings
     visualizer.line_mode = True
-    visualizer.point_mode = True
+    # visualizer.point_mode = True
     # Data selection
-    visualizer.show_missing_dates = True
+    # visualizer.show_missing_dates = True
     visualizer.show_vi_mean = True
-    visualizer.show_air_temp = True
-    visualizer.show_dew_point = True
-    visualizer.show_relative_humidity = True
-    visualizer.show_soil_temp_2in = True
-    visualizer.show_soil_temp_8in = True
-    visualizer.show_precipitation = True
-    visualizer.show_solar_radiation = True
+    # visualizer.show_air_temp = True
+    # visualizer.show_dew_point = True
+    # visualizer.show_relative_humidity = True
+    # visualizer.show_soil_temp_2in = True
+    # visualizer.show_soil_temp_8in = True
+    # visualizer.show_precipitation = True
+    # visualizer.show_solar_radiation = True
     # Result data selection
     visualizer.show_heading_date = True
-    visualizer.show_plant_height = True
-    visualizer.show_test_pounds_per_bushel = True
+    # visualizer.show_plant_height = True
+    # visualizer.show_test_pounds_per_bushel = True
     visualizer.show_yield = True
     visualizer.show_prediction = True
 
@@ -85,18 +89,19 @@ if __name__ == '__main__':
     # Entry, Block (1-3)
     # entry_bloc_pairs = [(7, 1)]
     # Test the model
-    for testing_set in data_handler.uni_lstm_testing_sets:
-        predictions = data_handler.get_predictions_for_set(uni_lstm_learning_model, testing_set[0])
-        entry_bloc_pairs = [(testing_set[1].variety_index, testing_set[1].replication_variety)]
+    for testing_set in data_handler.testing_sets:
+        predictions = data_handler.get_predictions_for_set(learning_model, testing_set[0])
+        entry_bloc_pairs = [(testing_set[1], testing_set[2])]
         visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
 
 
-    print("Already trained data: _____________________________________________________________________")
+    # print("Already trained data: _____________________________________________________________________")
     # Test the model
-    for testing_set in data_handler.uni_lstm_training_sets:
-        predictions = data_handler.get_predictions_for_set(uni_lstm_learning_model, testing_set[0])
-        entry_bloc_pairs = [(testing_set[1].variety_index, testing_set[1].replication_variety)]
-        visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
+    # for testing_set in data_handler.training_sets:
+    #     predictions = data_handler.get_predictions_for_set(learning_model, testing_set[0])
+    #     entry_bloc_pairs = [(testing_set[1], testing_set[2])]
+    #     visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
+
 
     # Variety plot visualization
     # visualizer.visualize_variety(plots, target_variety)

@@ -31,11 +31,11 @@ class StackedLSTM(UnivariateLSTM):
         model = Sequential()
         model.add(Input(shape=(n_steps, self.n_features)))
         model.add(Masking(mask_value=0.0))
-        model.add(LSTM(20, activation=self.activation_function, return_sequences=True,
+        model.add(LSTM(50, activation=self.activation_function, return_sequences=True,
                        kernel_regularizer=l2(0.01)))
-        model.add(Dropout(0.3))
+        model.add(Dropout(0.2))
         model.add(BatchNormalization())
-        model.add(LSTM(10, activation=self.activation_function, kernel_regularizer=l2(0.01)))
+        model.add(LSTM(50, activation=self.activation_function, kernel_regularizer=l2(0.01)))
         model.add(Dropout(0.2))
         model.add(BatchNormalization())
         model.add(Dense(1, kernel_regularizer=l2(0.01)))
@@ -52,9 +52,8 @@ class StackedLSTM(UnivariateLSTM):
         # Define model
         if self.model is None:
             self.model = self.build_model(n_steps)
-            self.classifier_model = KerasClassifier(model=self.build_model, n_steps=n_steps, verbose=0)
         # Early stopping
-        early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+        early_stopping = EarlyStopping(monitor='val_loss', patience=100, restore_best_weights=True)
         # Fit model with validation split
         self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose,
                        validation_split=0.2, callbacks=[early_stopping])

@@ -28,13 +28,12 @@ class VanillaLSTM(UnivariateLSTM):
     def build_model(self, n_steps):
         self.model = Sequential()
         self.model.add(Input(shape=(n_steps, self.n_features)))
-        # self.model.add(Masking(mask_value=-1.0))
         self.model.add(Masking(mask_value=0.0))
         self.model.add(LSTM(70, activation=self.activation_function))
         self.model.add(BatchNormalization())
         self.model.add(Dropout(0.2))
         self.model.add(Dense(1))
-        optimizer = Adam(learning_rate=0.0001)
+        optimizer = Adam(learning_rate=0.0005)
         self.model.compile(optimizer=optimizer, loss=self.loss_function)
         # self.model.compile(optimizer=self.optimizer, loss=self.loss_function)
 

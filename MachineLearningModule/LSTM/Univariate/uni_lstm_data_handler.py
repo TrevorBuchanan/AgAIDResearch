@@ -1,6 +1,10 @@
 import random
+import ast
 
 from DataStructures.plot import Plot
+
+from Helpers.utility import get_plot
+
 from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
 from MachineLearningModule.data_handler import DataHandler, prep_sequence_target_val
 
@@ -9,9 +13,8 @@ class UniLSTMDataHandler(DataHandler):
     def __init__(self, plots: list[Plot]) -> None:
         super().__init__(plots)
         self.plots = plots
-        self.training_sets: list[(list, Plot)] = []
-        self.testing_sets: list[(list, Plot)] = []
-        self.use_saved_test_plots = False
+        self.training_sets: list[(list, int, int)] = []
+        self.testing_sets: list[(list, int, int)] = []
 
     def make_sets(self, target_variate: str) -> None:
         """
@@ -21,7 +24,7 @@ class UniLSTMDataHandler(DataHandler):
         :return: None
         """
 
-        training_percentage_amt = 90
+        training_percentage_amt = 80
         total_amt = len(self.plots)
         unique_count = int(total_amt * (training_percentage_amt / 100))
         test_plot_indices = set()
@@ -38,9 +41,9 @@ class UniLSTMDataHandler(DataHandler):
             uni_var_set = self.get_set(plot, target_variate)
             if len(uni_var_set) > 0:
                 if i in test_plot_indices:  # Check if in 80 percent group of test plots
-                    self.uni_lstm_training_sets.append((uni_var_set, plot))
+                    self.training_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
                 else:
-                    self.uni_lstm_testing_sets.append((uni_var_set, plot))
+                    self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
 
     @staticmethod
     def get_set(plot: Plot, target_variate: str) -> list:
@@ -69,7 +72,7 @@ class UniLSTMDataHandler(DataHandler):
         targets = []
         for test_set in self.training_sets:
             test_sets.append(test_set[0])
-            targets.append(test_set[1].crop_yield)
+            targets.append(get_plot(test_set[1], test_set[2], self.plots).crop_yield)
 
         model.train(test_sets, targets)
 
@@ -87,8 +90,47 @@ class UniLSTMDataHandler(DataHandler):
             predictions.append(model.predict(test_set))
         return predictions
 
-    def save_test_plots(self):
-        pass
+    def save_sets(self) -> None:
+        """
+        Saves the testing and training data to respective files
+        :return: None
+        """
+        test_file_path = 'MachineLearningModule/saved_test_data.txt'
+        with open(test_file_path, 'w') as file:
+            for tup in self.testing_sets:
+                line = ', '.join(map(str, tup))
+                file.write(line + '\n')
 
-    def load_saved_test_plots(self):
-        pass
+        training_file_path = 'MachineLearningModule/saved_training_data.txt'
+        with open(training_file_path, 'w') as file:
+            for tup in self.training_sets:
+                line = ', '.join(map(str, tup))
+                file.write(line + '\n')
+
+    def load_saved_sets(self) -> None:
+        """
+        Loads saved testing and training data from their respective files
+        :return: None
+        """
+        temp_max_amt = 30  # Used to limit the amount of data sets that the model is given at once
+        amt = 0
+        test_file_path = 'MachineLearningModule/saved_test_data.txt'
+        with open(test_file_path, 'r') as file:
+            for line in file:
+                if amt >= temp_max_amt:
+                    continue
+                tuple_str = line.strip()
+                parsed_tuple = ast.literal_eval(tuple_str)
+                self.testing_sets.append(parsed_tuple)
+                amt += 1
+
+        amt = 0
+        training_file_path = 'MachineLearningModule/saved_training_data.txt'
+        with open(training_file_path, 'r') as file:
+            for line in file:
+                if amt >= temp_max_amt:
+                    continue
+                tuple_str = line.strip()
+                parsed_tuple = ast.literal_eval(tuple_str)
+                self.training_sets.append(parsed_tuple)
+                amt += 1

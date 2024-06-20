@@ -50,8 +50,8 @@ class DataHandler:
         self.uni_lstm_testing_sets: list[(list, Plot)] = []
         self.use_saved_test_plots = False
 
-    def save_test_plots(self):
-        pass
-
-    def load_saved_test_plots(self):
-        pass
+    # def save_sets(self):
+    #     pass
+    #
+    # def load_saved_sets(self):
+    #     pass

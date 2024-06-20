@@ -28,6 +28,17 @@
 10. Tekoa
 11. Net CL+
 12. Jedd
+* A form of SMOTE (Synthetic Minority Oversampling Technique) was used to increase ML model performance.
+The distribution of the yields followed a normal distribution (figure 1.0). 
+![NormalDist.png](..%2F..%2FNormalDist.png)
+
+In order to fix the issue of there being 
+less data points on the extremities for the ML model to train on, minority oversampling was used. The minority 
+sampling was done in two ways. Firstly, the data was cut down so that the distribution was level, as shown below.
+![CutDist.png](..%2F..%2FCutDist.png)
+
+Secondly, the distribution was leveled by fabricating minority data. 
+![BulkDist.png](..%2F..%2FBulkDist.png)
 
 
 ### Units and labels:
@@ -578,3 +589,22 @@ The first technique used to fill the missing data was to pull the data from
 another plot of the same variety. If there was still missing data, then the next technique 
 was to pull data from external weather sources nearby (to the site location). If there was still
 missing data, then linear interpolation was used.
+
+
+### Model Results Notes:
+
+* spring_ndvi_vi_mean_stacked_model
+  * Ends with low costs around 9 and val_loss around 12
+  * Performs worse compared to vanilla model when testing on unseen data
+
+* spring_ndvi_vi_mean_vanilla_model
+  * Ends with high costs around 30 and value costs around 100
+  * Performs relatively well on unseen data
+
+* spring_sr_vi_mean_vanilla_model
+  * Ends with high costs around 40 and value costs around 30
+  * Performs relatively well (but trained on all data, so no data left to
+  tedt performance on unseen data)
+
+
+	
