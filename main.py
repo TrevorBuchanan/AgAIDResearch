@@ -17,8 +17,7 @@ if __name__ == '__main__':
 
     # cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
     # Plots:
-    winter_plots: list[Plot] = []
-    spring_plots: list[Plot] = []
+    plots: list[Plot] = []
 
     # Parsing selections
     season = "spring"
@@ -28,12 +27,8 @@ if __name__ == '__main__':
 
     # Perform parsing based on selections
     parser = Parser()
-    if season == "spring":
-        parser.parse_spring_data(spring_plots, vi_formula)
-        data_handler = UniLSTMDataHandler(spring_plots)
-    else:
-        parser.parse_winter_data(winter_plots, vi_formula)
-        data_handler = UniLSTMDataHandler(winter_plots)
+    parser.parse_data(season, plots, vi_formula)
+    data_handler = UniLSTMDataHandler(plots)
 
     # Data preparation for machine learning
     data_handler.make_sets(target_variate)
@@ -93,10 +88,7 @@ if __name__ == '__main__':
     for testing_set in data_handler.uni_lstm_testing_sets:
         predictions = data_handler.get_predictions_for_set(uni_lstm_learning_model, testing_set[0])
         entry_bloc_pairs = [(testing_set[1].variety_index, testing_set[1].replication_variety)]
-        if season == "spring":
-            visualizer.visualize_plots(spring_plots, entry_bloc_pairs, predictions)
-        elif season == "winter":
-            visualizer.visualize_plots(winter_plots, entry_bloc_pairs, predictions)
+        visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
 
 
     print("Already trained data: _____________________________________________________________________")
@@ -104,13 +96,7 @@ if __name__ == '__main__':
     for testing_set in data_handler.uni_lstm_training_sets:
         predictions = data_handler.get_predictions_for_set(uni_lstm_learning_model, testing_set[0])
         entry_bloc_pairs = [(testing_set[1].variety_index, testing_set[1].replication_variety)]
-        if season == "spring":
-            visualizer.visualize_plots(spring_plots, entry_bloc_pairs, predictions)
-        elif season == "winter":
-            visualizer.visualize_plots(winter_plots, entry_bloc_pairs, predictions)
+        visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
 
     # Variety plot visualization
-    # if season == "spring":
-    #     visualizer.visualize_variety(spring_plots, target_variety)
-    # elif season == "winter":
-    #     visualizer.visualize_variety(winter_plots, target_variety)
+    # visualizer.visualize_variety(plots, target_variety)

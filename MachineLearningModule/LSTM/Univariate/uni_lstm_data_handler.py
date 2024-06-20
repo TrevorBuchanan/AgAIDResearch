@@ -13,11 +13,12 @@ class UniLSTMDataHandler(DataHandler):
         self.testing_sets: list[(list, Plot)] = []
         self.use_saved_test_plots = False
 
-    def make_sets(self, target_variate: str):
+    def make_sets(self, target_variate: str) -> None:
         """
         Makes a set of uni-variate training and testing sets with given target variate and saves
         them to uni_lstm_training_sets and uni_lstm_testing_sets
         :param target_variate: str - The variate to target when creating the training sets
+        :return: None
         """
 
         training_percentage_amt = 90
@@ -58,16 +59,15 @@ class UniLSTMDataHandler(DataHandler):
                 uni_variate_set.append(value)
         return uni_variate_set
 
-    def train_on_test_sets(self, model: UnivariateLSTM):
-        # TODO: Function description
+    def train_on_training_sets(self, model: UnivariateLSTM):
         """
-
-        :param model:
-        :return:
+        Train given model on class's training sets
+        :param model: keras.models.Sequential - Model to be trained
+        :return: None
         """
         test_sets = []
         targets = []
-        for test_set in self.uni_lstm_training_sets:
+        for test_set in self.training_sets:
             test_sets.append(test_set[0])
             targets.append(test_set[1].crop_yield)
 
@@ -75,12 +75,11 @@ class UniLSTMDataHandler(DataHandler):
 
     @staticmethod
     def get_predictions_for_set(model: UnivariateLSTM, test_set: list) -> list:
-        # TODO: Function description
         """
-
-        :param model:
-        :param test_set:
-        :return:
+        Get list of predictions for given test set
+        :param model: keras.models.Sequential - Model to predict from test set
+        :param test_set: list - Sequence to give to model to predict from
+        :return: list - List of predicted values
         """
         predictions = []
         tests_for_each_day = prep_sequence_target_val([test_set], [0 for _, _ in enumerate(test_set)])[0]
