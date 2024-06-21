@@ -17,19 +17,19 @@ class VanillaLSTM(UnivariateLSTM):
                  verbose: int = 1, activation_function: str = 'relu'):
         super().__init__(num_epochs, optimizer, loss_function, verbose, activation_function)
 
-    def load_trained_model(self, season, vi_formula, target_variate):
+    def load_trained_model(self, season, vi_formula, target_variate, model_num):
         self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/'
-                                f'{season}_{vi_formula}_{target_variate}_vanilla_model.keras')
+                                f'{season}_{vi_formula}_{target_variate}_vanilla_model{model_num}.keras')
 
-    def save_trained_model(self, season, vi_formula, target_variate):
+    def save_trained_model(self, season, vi_formula, target_variate, model_num):
         self.model.save(f'MachineLearningModule/LSTM/SavedModels/'
-                        f'{season}_{vi_formula}_{target_variate}_vanilla_model.keras')
+                        f'{season}_{vi_formula}_{target_variate}_vanilla_model{model_num}.keras')
 
     def build_model(self, n_steps):
         self.model = Sequential()
         self.model.add(Input(shape=(n_steps, self.n_features)))
         self.model.add(Masking(mask_value=0.0))
-        self.model.add(LSTM(120, activation=self.activation_function))
+        self.model.add(LSTM(100, activation=self.activation_function))
         self.model.add(BatchNormalization())
         self.model.add(Dropout(0.2))
         self.model.add(Dense(1))

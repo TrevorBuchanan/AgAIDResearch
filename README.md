@@ -32,6 +32,8 @@ site, and other online resources such as weather data)
   executions (consistent training batch and testing batch)
   * Refactor for organization and clarity
   * Complete all unfinished TODO comments 
+* 06/21/2024 - Implement a version of SMOTE (Synthetic Minority Oversampling Technique), further tests of vanilla and stacked
+LSTM ML models, further data and ML performance visualizations, and record correlation between VI and yield
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

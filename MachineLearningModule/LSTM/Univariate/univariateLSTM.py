@@ -9,9 +9,10 @@ class UnivariateLSTM:
         self.model = None
         self.n_features = 1
 
-    def load_trained_model(self, season: str, vi_formula: str, target_variate: str) -> None:
+    def load_trained_model(self, season: str, vi_formula: str, target_variate: str, model_num: int) -> None:
         """
         Loads trained model
+        :param model_num: int - Identification number for the model
         :param season: str - Season for which the model was trained for
         :param vi_formula: str - VI formula for which the model was trained for
         :param target_variate: str - Variate for which the model was trained for
@@ -19,9 +20,10 @@ class UnivariateLSTM:
         """
         raise NotImplementedError("No load_trained_model function implemented")
 
-    def save_trained_model(self, season: str, vi_formula: str, target_variate: str) -> None:
+    def save_trained_model(self, season: str, vi_formula: str, target_variate: str, model_num: int) -> None:
         """
         Saves trained model
+        :param model_num: int - Identification number for the model
         :param season: str - Season for which the model was trained for
         :param vi_formula: str - VI formula for which the model was trained for
         :param target_variate: str - Variate for which the model was trained for

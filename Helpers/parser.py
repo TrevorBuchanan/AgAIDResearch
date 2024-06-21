@@ -1,7 +1,6 @@
 import csv
 
-from Helpers.utility import convert_str_to_int_date, \
-    get_plot_missing_dates, singleton
+from Helpers.utility import convert_str_to_int_date, singleton
 from Helpers.interpolator import Interpolator
 from Helpers.visualizer import Visualizer
 
@@ -103,7 +102,6 @@ class Parser:
 
         for plot in plots:
             self.sort_data_points_by_date(plot.data_points)
-            visualizer.saved_missing = get_plot_missing_dates(plot)
         self.interpolator.fill_missing_data(plots)
 
     @staticmethod

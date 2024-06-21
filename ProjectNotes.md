@@ -590,18 +590,25 @@ missing data, then linear interpolation was used.
 
 ### Model Results Notes:
 
-* spring_ndvi_vi_mean_stacked_model
-  * Ends with low costs around 9 and val_loss around 12
-  * Performs worse compared to vanilla model when testing on unseen data
+* spring_ndvi_vi_mean_stacked_model1
+  * Performs worse compared to vanilla model 1 when testing on unseen data
 
-* spring_ndvi_vi_mean_vanilla_model
-  * Ends with high costs around 30 and value costs around 100
+* spring_ndvi_vi_mean_vanilla_model1
   * Performs relatively well on unseen data
 
-* spring_sr_vi_mean_vanilla_model
-  * Ends with high costs around 40 and value costs around 30
+* spring_sr_vi_mean_vanilla_model1
   * Performs relatively well (but trained on all data, so no data left to
-  tedt performance on unseen data)
+  test performance on unseen data)
 
 
+
+### VI to Yield Correlation Notes:
+
+* Full data with average VI:
+![FullVItoYield.png](Images%2FFullVItoYield.png)
+
+
+	Pearson correlation coefficient: 0.3128284644486723 
+	Spearman rank correlation coefficient: 0.2812639143954764
 	
+

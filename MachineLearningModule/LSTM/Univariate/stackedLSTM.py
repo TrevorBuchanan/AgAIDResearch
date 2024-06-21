@@ -19,23 +19,23 @@ class StackedLSTM(UnivariateLSTM):
         self.seed = 7
         tf.random.set_seed(self.seed)
 
-    def load_trained_model(self, season, vi_formula, target_variate):
+    def load_trained_model(self, season, vi_formula, target_variate, model_num):
         self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/'
-                                f'{season}_{vi_formula}_{target_variate}_stacked_model.keras')
+                                f'{season}_{vi_formula}_{target_variate}_stacked_model{model_num}.keras')
 
-    def save_trained_model(self, season, vi_formula, target_variate):
+    def save_trained_model(self, season, vi_formula, target_variate, model_num):
         self.model.save(f'MachineLearningModule/LSTM/SavedModels/'
-                        f'{season}_{vi_formula}_{target_variate}_stacked_model.keras')
+                        f'{season}_{vi_formula}_{target_variate}_stacked_model{model_num}.keras')
 
     def build_model(self, n_steps):
         model = Sequential()
         model.add(Input(shape=(n_steps, self.n_features)))
         model.add(Masking(mask_value=0.0))
-        model.add(LSTM(100, activation=self.activation_function, return_sequences=True,
+        model.add(LSTM(20, activation=self.activation_function, return_sequences=True,
                        kernel_regularizer=l2(0.01)))
         model.add(Dropout(0.1))
         model.add(BatchNormalization())
-        model.add(LSTM(100, activation=self.activation_function, kernel_regularizer=l2(0.01)))
+        model.add(LSTM(20, activation=self.activation_function, kernel_regularizer=l2(0.01)))
         model.add(Dropout(0.1))
         model.add(BatchNormalization())
         model.add(Dense(1, kernel_regularizer=l2(0.01)))

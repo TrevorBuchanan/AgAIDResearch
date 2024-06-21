@@ -44,8 +44,8 @@ class UniLSTMDataHandler(DataHandler):
                     self.training_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
                 else:
                     self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
-        self.cut_sets_to_level()
-        # self.bulk_sets_to_level()
+        # self.cut_sets_to_level()
+        self.bulk_sets_to_level()
 
     @staticmethod
     def get_set(plot: Plot, target_variate: str) -> list:
@@ -184,25 +184,33 @@ class UniLSTMDataHandler(DataHandler):
         for tup in self.training_sets:
             buckets[self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
                                           min_val, max_val, num_buckets)] += 1
-        min_amt = min(buckets)
         to_add = []
+        max_amt = max(buckets)
         for tup in self.training_sets:
             index = self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
                                           min_val, max_val, num_buckets)
-            if buckets[index] > min_amt:
-                to_add.append(tup)
-                buckets[index] -= 1
+            amt = buckets[index]
+            if amt < max_amt:
+                for _ in range(max_amt - amt):
+                    to_add.append(self.fabricate_set(tup))
+                    buckets[index] += 1
 
         for add in to_add:
             self.training_sets.append(add)
 
     @staticmethod
-    def fabricate_set_and_out(original_set, original_out, max_deviation=0.03):
+    def fabricate_set(original_set: tuple[list, int, int], max_deviation: float = 0.02) -> tuple[list, int, int]:
+        # TODO: func def
+        """
+
+        :param original_set:
+        :param max_deviation:
+        :return:
+        """
         new_set = []
-        for val in original_set:
+        for val in original_set[0]:
             new_set.append(val + random.uniform(-max_deviation, max_deviation))
-        new_out = original_out + random.uniform(-max_deviation * 5, max_deviation * 5)
-        return new_set, new_out
+        return new_set, original_set[1], original_set[2]
 
     @staticmethod
     def get_bucket_index(num: float, min_value: float, max_value: float, num_buckets: int) -> int:
@@ -215,18 +223,13 @@ class UniLSTMDataHandler(DataHandler):
         :param num_buckets:
         :return:
         """
-        # Calculate the range of each bucket
         bucket_range = (max_value - min_value) / num_buckets
-
-        # Edge case: all numbers are the same
-        if bucket_range == 0:
+        if bucket_range == 0:  # All numbers are the same
             return 0
-
-        # Calculate the appropriate bucket index
         bucket_index = int((num - min_value) / bucket_range)
-
+        if bucket_index < 0:
+            pass
         # Make sure the last bucket includes the max_value
         if bucket_index == num_buckets:
             bucket_index -= 1
-
         return bucket_index
