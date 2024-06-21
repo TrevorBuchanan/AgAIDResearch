@@ -604,11 +604,11 @@ missing data, then linear interpolation was used.
 
 ### VI to Yield Correlation Notes:
 
-* Full data with average VI:
+* Full average VI correlation:
 ![FullVItoYield.png](Images%2FFullVItoYield.png)
 
 
-	Pearson correlation coefficient: 0.3128284644486723 
-	Spearman rank correlation coefficient: 0.2812639143954764
+	Pearson correlation coefficient: 0.30116682760560815
 	
 
+* Partial (10) size group average VI correlation:

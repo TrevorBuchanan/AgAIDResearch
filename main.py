@@ -87,7 +87,7 @@ if __name__ == '__main__':
     # visualizer.visualize_variety(plots, target_variety)
 
     # Visualize all plots
-    # visualizer.visualize_num_plots(plots, 20)
+    # visualizer.visualize_num_plots(plots, 1)
 
     # Visualize correspondence
     visualizer.visualize_correspondence(plots)

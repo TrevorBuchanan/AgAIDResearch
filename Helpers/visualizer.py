@@ -430,41 +430,59 @@ class Visualizer:
         plt.show()
 
     @staticmethod
-    def visualize_correspondence(plots: list[Plot], split_size=5) -> None:
+    def visualize_correspondence(plots: list[Plot]) -> None:
         """
         Create a graph of the correspondence between the average vi and the yield
         :param plots: list[Plot] - list of plots to create correspondence from
-        :param split_size: int - size of splot to calculate vi avg from
         :return: None
         """
-        def get_avg_vi(data_points: list):
+        def get_avg_vi(data_points: list, start_i, end_i):
             total = 0
             count = 0
-            for dp in data_points:
-                if count > 50:
+            for i in range(start_i, end_i):
+                if count >= end_i - start_i:
                     break
                 count += 1
-                total += dp.vi_state.vi_mean
-            result = total / count
-            return result
+                total += data_points[i].vi_state.vi_mean
+            return total / count
+
+        # Best vals
+        best_corr = 0
+        best_split_size = 0
+        best_offset = 0
+
+        # Loop to search all correlations
+        split_size = 50
+        while split_size > 20:
+            split_offset = 0
+            while split_size + split_offset <= 50:
+                vi_avgs = []
+                yields = []
+                for p in plots:
+                    vi_avgs.append(get_avg_vi(p.data_points, split_offset, split_offset + split_size))
+                    yields.append(p.crop_yield)
+                # Pearson Correlation
+                pearson_corr, _ = pearsonr(vi_avgs, yields)
+                if abs(pearson_corr) > abs(best_corr):
+                    best_corr = pearson_corr
+                    best_split_size = split_size
+                    best_offset = split_offset
+                split_offset += 1
+            split_size -= 1
+
+        print(f'Best split size: {best_split_size}')
+        print(f'Best offset: {best_offset}')
+        print(f'Best correlation: {best_corr}')
 
         vi_avgs = []
         yields = []
         for p in plots:
-            vi_avgs.append(get_avg_vi(p.data_points))
+            vi_avgs.append(get_avg_vi(p.data_points, best_offset, best_offset + best_split_size))
             yields.append(p.crop_yield)
 
         # Create the plot
         plt.figure(figsize=(16, 8))
         plt.scatter(vi_avgs, yields, marker='o')
-
-        # Pearson Correlation
-        pearson_corr, _ = pearsonr(vi_avgs, yields)
-        print(f'Pearson correlation coefficient: {pearson_corr}')
-
-        # Spearman's Rank Correlation
-        spearman_corr, _ = spearmanr(vi_avgs, yields)
-        print(f'Spearman rank correlation coefficient: {spearman_corr}')
 
         # Customize the plot
         plt.xlabel('VI Averages')
