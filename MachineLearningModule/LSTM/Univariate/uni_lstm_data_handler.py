@@ -46,8 +46,8 @@ class UniLSTMDataHandler(DataHandler):
                     self.training_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
                 else:
                     self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
-        # self.cut_sets_to_level()
-        self.bulk_sets_to_level()
+        self.cut_sets_to_level()
+        # self.bulk_sets_to_level()
 
     @staticmethod
     def get_set(plot: Plot, target_variate: str) -> list:

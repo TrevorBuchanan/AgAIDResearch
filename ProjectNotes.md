@@ -595,24 +595,24 @@ missing data, then linear interpolation was used.
 
 **Model1: Trained on raw training data (saved in saved_data_1.txt)**
 * spring_ndvi_vi_mean_stacked_model1
-  * Performance: 
+  * Model average percent error: 8.937410567126422
 
 * spring_ndvi_vi_mean_vanilla_model1
-  * Performance: 
+  * Model average percent error: 7.610311239093015
 
 **Model2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**
 * spring_ndvi_vi_mean_stacked_model2
-  * Performance: 
+  * Model average percent error: 25.281478640396454
 
 * spring_ndvi_vi_mean_vanilla_model2
-  * Performance:
+  * Model average percent error: 16.602312018117683
 
 **Model3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**
 * spring_ndvi_vi_mean_stacked_model3
-  * Performance: 
+  * Model average percent error: 13.775016853294929
 
 * spring_ndvi_vi_mean_vanilla_model3
-  * Performance:
+  * Model average percent error: 3.84163261592442
 
 
 ### VI to Yield Correlation Notes:

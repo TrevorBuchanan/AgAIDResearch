@@ -24,7 +24,7 @@ if __name__ == '__main__':
     vi_formula = "ndvi"
 
     # ML model selections
-    model_num = 2
+    model_num = 3
     target_variate = "vi_mean"
 
     # Perform parsing based on selections
@@ -38,8 +38,8 @@ if __name__ == '__main__':
     data_handler.load_saved_sets()
 
     # Create model
-    # learning_model = StackedLSTM(num_epochs=300)
-    learning_model = VanillaLSTM(num_epochs=300)
+    # learning_model = StackedLSTM(num_epochs=700)
+    learning_model = VanillaLSTM(num_epochs=700)
 
     # Train model
     learning_model.load_trained_model(season, vi_formula, target_variate, model_num)
@@ -70,17 +70,17 @@ if __name__ == '__main__':
     visualizer.show_yield = True
     visualizer.show_prediction = True
 
-    # # Test the model and show results
-    # data_handler.make_predictions_for_test_sets(learning_model)
-    # total_accuracies = []
-    # for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
-    #     entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
-    #     acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
-    #     total_accuracies.append(acc)
-    #     print(f'Average percent error: {acc}')
-    #     visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
-    #     print()
-    # print(f'Model average percent error: {sum(total_accuracies) / len(total_accuracies)}')
+    # Test the model and show results
+    data_handler.make_predictions_for_test_sets(learning_model)
+    total_accuracies = []
+    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+        acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+        total_accuracies.append(acc)
+        print(f'Average percent error: {acc}')
+        visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+        print()
+    print(f'Model average percent error: {sum(total_accuracies) / len(total_accuracies)}')
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     # visualizer.visualize_num_plots(plots, 3)
 
     # Visualize correspondence with averaged VI's
-    visualizer.visualize_avg_vi_correspondence(plots)
+    # visualizer.visualize_avg_vi_correspondence(plots)
 
     # Visualize correspondence with VI at heading date
     # visualizer.visualize_heading_date_correlation(plots)
