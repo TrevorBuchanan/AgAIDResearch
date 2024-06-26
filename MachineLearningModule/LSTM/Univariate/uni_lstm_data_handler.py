@@ -46,8 +46,8 @@ class UniLSTMDataHandler(DataHandler):
                     self.training_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
                 else:
                     self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
-        self.cut_sets_to_level()
-        # self.bulk_sets_to_level()
+        # self.cut_sets_to_level()
+        self.bulk_sets_to_level()
 
     @staticmethod
     def get_set(plot: Plot, target_variate: str) -> list:
@@ -145,10 +145,9 @@ class UniLSTMDataHandler(DataHandler):
                 amt += 1
 
     def cut_sets_to_level(self):
-        # TODO: Func def
         """
-
-        :return:
+        Balances the distribution of crop yields across the training sets by moving some sets to the testing sets.
+        :return: None
         """
         yields = []
         for tup in self.training_sets:
@@ -176,10 +175,9 @@ class UniLSTMDataHandler(DataHandler):
 
     def bulk_sets_to_level(self):
         """
-
-        :return:
+        Balances the distribution of crop yields across the training sets by fabricating new sets.
+        :return: None
         """
-        # TODO: func def
         yields = []
         for tup in self.training_sets:
             yields.append(get_plot(tup[1], tup[2], self.plots).crop_yield)
@@ -207,12 +205,11 @@ class UniLSTMDataHandler(DataHandler):
 
     @staticmethod
     def fabricate_set(original_set: tuple[list, int, int], max_deviation: float = 0.01) -> tuple[list, int, int]:
-        # TODO: func def
         """
-
-        :param original_set:
-        :param max_deviation:
-        :return:
+        Fabricates a new set by slightly modifying the values of the original set within a specified deviation range.
+        :param original_set: A tuple containing a list of values and two integers.
+        :param max_deviation: The maximum deviation for adjusting the values in the original set.
+        :return: A new set with adjusted values and the same integers as the original set.
         """
         new_set = []
         for val in original_set[0]:
@@ -221,14 +218,13 @@ class UniLSTMDataHandler(DataHandler):
 
     @staticmethod
     def get_bucket_index(num: float, min_value: float, max_value: float, num_buckets: int) -> int:
-        # TODO: func def
         """
-
-        :param num:
-        :param min_value:
-        :param max_value:
-        :param num_buckets:
-        :return:
+        Calculates the bucket index for a given number within a specified range and number of buckets.
+        :param num: The number to categorize.
+        :param min_value: The minimum value of the range.
+        :param max_value: The maximum value of the range.
+        :param num_buckets: The number of buckets to divide the range into.
+        :return: The index of the bucket where the number falls.
         """
         bucket_range = (max_value - min_value) / num_buckets
         if bucket_range == 0:  # All numbers are the same
