@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from matplotlib.lines import Line2D
 
 from scipy.stats import pearsonr, spearmanr
 from DataStructures.plot import Plot
@@ -442,7 +443,7 @@ class Visualizer:
         plt.show()
 
     @staticmethod
-    def visualize_correspondence(plots: list[Plot]) -> None:
+    def visualize_avg_vi_correspondence(plots: list[Plot]) -> None:
         """
         Create a graph of the correspondence between the average vi and the yield
         :param plots: list[Plot] - list of plots to create correspondence from
@@ -457,6 +458,23 @@ class Visualizer:
                 count += 1
                 total += data_points[i].vi_state.vi_mean
             return total / count
+
+        season = plots[0].data_points[0].season_type
+        # Define a color map based on variety_index
+        color_map = {
+            0: 'red',
+            1: 'green',
+            2: 'blue',
+            3: 'purple',
+            4: 'orange',
+            5: 'yellow',
+            6: 'gray',
+            7: 'salmon',
+            8: 'pink',
+            9: 'wheat',
+            10: 'teal',
+            11: 'cyan'
+        }
 
         # Best vals
         best_corr = 0
@@ -488,16 +506,103 @@ class Visualizer:
 
         vi_avgs = []
         yields = []
+        colors = []
         for p in plots:
+            colors.append(color_map.get(p.variety_index - 1, 'black'))
             vi_avgs.append(get_avg_vi(p.data_points, best_offset, best_offset + best_split_size))
             yields.append(p.crop_yield)
 
         # Create the plot
         plt.figure(figsize=(16, 8))
-        plt.scatter(vi_avgs, yields, marker='o')
+        plt.scatter(vi_avgs, yields, c=colors, marker='o')
+
+        # Create custom legend handles
+        if season == "winter":
+            legend_elements = [
+                Line2D([0], [0], marker='o', color='w', markerfacecolor=color,
+                       markersize=10, label=f'{winter_variety_map[i]}')
+                for i, color in color_map.items()
+            ]
+        else:
+            legend_elements = [
+                Line2D([0], [0], marker='o', color='w', markerfacecolor=color,
+                       markersize=10, label=f'{spring_variety_map[i]}')
+                for i, color in color_map.items()
+            ]
+        plt.legend(handles=legend_elements, title="Variety Index")
 
         # Customize the plot
         plt.xlabel('VI Averages')
+        plt.ylabel('Yields')
+        plt.title('VI to Yield')
+        plt.tight_layout()
+        plt.grid(True)
+
+        # Display the plot
+        plt.show()
+
+    @staticmethod
+    def visualize_heading_date_correlation(plots: list[Plot]) -> None:
+        """
+        Create a graph of the correspondence between the VI at the heading date and the yield
+        :param plots: list[Plot] - list of plots to create correspondence from
+        :return: None
+        """
+        def get_vi_at_heading_date(data_points: list, heading_date: int):
+            for dp in data_points:
+                if dp.date == heading_date:
+                    return dp.vi_state.vi_mean
+            return None
+        season = plots[0].data_points[0].season_type
+        # Define a color map based on variety_index
+        color_map = {
+            0: 'red',
+            1: 'green',
+            2: 'blue',
+            3: 'purple',
+            4: 'orange',
+            5: 'yellow',
+            6: 'gray',
+            7: 'salmon',
+            8: 'pink',
+            9: 'wheat',
+            10: 'teal',
+            11: 'cyan'
+        }
+
+        vi_vals = []
+        yields = []
+        colors = []
+        for p in plots:
+            colors.append(color_map.get(p.variety_index - 1, 'black'))
+            vi_vals.append(get_vi_at_heading_date(p.data_points, p.heading_date))
+            yields.append(p.crop_yield)
+
+        # Pearson Correlation
+        pearson_corr, _ = pearsonr(vi_vals, yields)
+        print(f'VI at heading date correlation: {pearson_corr}')
+
+        # Create the plot
+        plt.figure(figsize=(16, 8))
+        plt.scatter(vi_vals, yields, c=colors, marker='o')
+
+        # Create custom legend handles
+        if season == "winter":
+            legend_elements = [
+                Line2D([0], [0], marker='o', color='w', markerfacecolor=color,
+                       markersize=10, label=f'{winter_variety_map[i]}')
+                for i, color in color_map.items()
+            ]
+        else:
+            legend_elements = [
+                Line2D([0], [0], marker='o', color='w', markerfacecolor=color,
+                       markersize=10, label=f'{spring_variety_map[i]}')
+                for i, color in color_map.items()
+            ]
+        plt.legend(handles=legend_elements, title="Variety Index")
+
+        # Customize the plot
+        plt.xlabel('VI at Heading date')
         plt.ylabel('Yields')
         plt.title('VI to Yield')
         plt.tight_layout()

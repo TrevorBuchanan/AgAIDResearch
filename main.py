@@ -53,9 +53,9 @@ if __name__ == '__main__':
     # target_variety = "Glee"
     # Visual settings
     visualizer.line_mode = True
-    visualizer.point_mode = True
+    # visualizer.point_mode = True
     # Data selection
-    # visualizer.show_vi_mean = True
+    visualizer.show_vi_mean = True
     # visualizer.show_air_temp = True
     # visualizer.show_dew_point = True
     # visualizer.show_relative_humidity = True
@@ -70,17 +70,17 @@ if __name__ == '__main__':
     visualizer.show_yield = True
     visualizer.show_prediction = True
 
-    # Test the model
-    data_handler.make_predictions_for_test_sets(learning_model)
-    total_accuracies = []
-    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
-        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
-        acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
-        total_accuracies.append(acc)
-        print(f'Average percent error: {acc}')
-        visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
-        print()
-    print(f'Model average percent error: {sum(total_accuracies) / len(total_accuracies)}')
+    # # Test the model and show results
+    # data_handler.make_predictions_for_test_sets(learning_model)
+    # total_accuracies = []
+    # for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+    #     entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+    #     acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+    #     total_accuracies.append(acc)
+    #     print(f'Average percent error: {acc}')
+    #     visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+    #     print()
+    # print(f'Model average percent error: {sum(total_accuracies) / len(total_accuracies)}')
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
@@ -89,7 +89,10 @@ if __name__ == '__main__':
     # visualizer.visualize_variety(plots, target_variety)
 
     # Visualize all plots
-    # visualizer.visualize_num_plots(plots, 20)
+    # visualizer.visualize_num_plots(plots, 3)
 
-    # Visualize correspondence
-    # visualizer.visualize_correspondence(plots)
+    # Visualize correspondence with averaged VI's
+    visualizer.visualize_avg_vi_correspondence(plots)
+
+    # Visualize correspondence with VI at heading date
+    # visualizer.visualize_heading_date_correlation(plots)

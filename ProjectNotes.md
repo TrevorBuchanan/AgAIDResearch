@@ -2,6 +2,9 @@
 # Project Notes:
 
 * Spring wheat crop was planted on the 25th of April
+* The year the data was taken from (2022) held favorable conditions for all crops so crop conditions,
+including VI's, were more homogeneous than what is usually expected. The low variance in the VI from 2022's
+data may influence the accuracy of the ML models predicting the yield.
 * Vegetation index (vi) formula names: cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
 * The vi used will only be the 'mean' value for each data point
 * Labels in full data and ground truth data: variety_index <-> variety <-> ENTRY | replication_variety <-> BLOC
@@ -592,10 +595,10 @@ missing data, then linear interpolation was used.
 
 **Model1: Trained on raw training data (saved in saved_data_1.txt)**
 * spring_ndvi_vi_mean_stacked_model1
-  * Performs worse compared to vanilla model 1 when testing on unseen data
+  * Performance: 
 
 * spring_ndvi_vi_mean_vanilla_model1
-  * Performs relatively well on unseen data
+  * Performance: 
 
 **Model2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**
 * spring_ndvi_vi_mean_stacked_model2
@@ -614,9 +617,20 @@ missing data, then linear interpolation was used.
 
 ### VI to Yield Correlation Notes:
 
-* Full average VI correlation:
+* Spring full data average VI correlation:
 ![FullVItoYield.png](Images%2FFullVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.30116682760560815
-	Spearman rank correlation coefficient: 0.27636849816390957
+
+* Spring best split size (4) VI correlation:
+![BestSplitSizeVItoYield.png](Images%2FBestSplitSizeVItoYield.png)
+
+
+	Pearson correlation coefficient: 0.5023050212781351
+
+* Spring heading data VI correlation: 
+![HeadingDateVItoYield.png](Images%2FHeadingDateVItoYield.png)
+
+
+	Pearson correlation coefficient: -0.5137212880130718
