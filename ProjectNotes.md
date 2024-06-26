@@ -618,7 +618,7 @@ missing data, then linear interpolation was used.
 ### VI to Yield Correlation Notes:
 
 * Spring full data average VI correlation:
-![FullVItoYield.png](Images%2FFullVItoYield.png)
+![FullDataVItoYield.png](Images%2FFullDataVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.30116682760560815
