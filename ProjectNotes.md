@@ -590,16 +590,26 @@ missing data, then linear interpolation was used.
 
 ### Model Results Notes:
 
+**Model1: Trained on raw training data (saved in saved_data_1.txt)**
 * spring_ndvi_vi_mean_stacked_model1
   * Performs worse compared to vanilla model 1 when testing on unseen data
 
 * spring_ndvi_vi_mean_vanilla_model1
   * Performs relatively well on unseen data
 
-* spring_sr_vi_mean_vanilla_model1
-  * Performs relatively well (but trained on all data, so no data left to
-  test performance on unseen data)
+**Model2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**
+* spring_ndvi_vi_mean_stacked_model2
+  * Performance: 
 
+* spring_ndvi_vi_mean_vanilla_model2
+  * Performance:
+
+**Model3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**
+* spring_ndvi_vi_mean_stacked_model3
+  * Performance: 
+
+* spring_ndvi_vi_mean_vanilla_model3
+  * Performance:
 
 
 ### VI to Yield Correlation Notes:
@@ -609,6 +619,4 @@ missing data, then linear interpolation was used.
 
 
 	Pearson correlation coefficient: 0.30116682760560815
-	
-
-* Partial (10) size group average VI correlation:
+	Spearman rank correlation coefficient: 0.27636849816390957

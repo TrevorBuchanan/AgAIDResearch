@@ -2,6 +2,7 @@
 
 
 from DataStructures.plot import Plot
+from Helpers.utility import percent_error, get_plot
 
 from Helpers.visualizer import Visualizer
 from Helpers.parser import Parser
@@ -14,6 +15,7 @@ if __name__ == '__main__':
     print("AgAID Project\n")
 
     # cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
+
     # Plots:
     plots: list[Plot] = []
 
@@ -28,19 +30,19 @@ if __name__ == '__main__':
     # Perform parsing based on selections
     parser = Parser()
     parser.parse_data(season, plots, vi_formula)
-    # data_handler = UniLSTMDataHandler(plots)
+    data_handler = UniLSTMDataHandler(plots)
 
     # Data preparation for machine learning
     # data_handler.make_sets(target_variate)
     # data_handler.save_sets()
-    # data_handler.load_saved_sets()
+    data_handler.load_saved_sets()
 
     # Create model
     # learning_model = StackedLSTM(num_epochs=300)
-    # learning_model = VanillaLSTM(num_epochs=300)
+    learning_model = VanillaLSTM(num_epochs=300)
 
     # Train model
-    # learning_model.load_trained_model(season, vi_formula, target_variate, model_num)
+    learning_model.load_trained_model(season, vi_formula, target_variate, model_num)
     # data_handler.train_on_training_sets(learning_model)
     # learning_model.save_trained_model(season, vi_formula, target_variate, model_num)
     # exit(0)
@@ -51,9 +53,9 @@ if __name__ == '__main__':
     # target_variety = "Glee"
     # Visual settings
     visualizer.line_mode = True
-    # visualizer.point_mode = True
+    visualizer.point_mode = True
     # Data selection
-    visualizer.show_vi_mean = True
+    # visualizer.show_vi_mean = True
     # visualizer.show_air_temp = True
     # visualizer.show_dew_point = True
     # visualizer.show_relative_humidity = True
@@ -68,26 +70,26 @@ if __name__ == '__main__':
     visualizer.show_yield = True
     visualizer.show_prediction = True
 
-    # Individual plot visualization
     # Test the model
-    # for testing_set in data_handler.testing_sets:
-    #     predictions = data_handler.get_predictions_for_set(learning_model, testing_set[0])
-    #     entry_bloc_pairs = [(testing_set[1], testing_set[2])]
-    #     visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
-    #
-    # print("Already trained data: _____________________________________________________________________")
-    # Test the model
-    # for testing_set in data_handler.training_sets:
-    #     predictions = data_handler.get_predictions_for_set(learning_model, testing_set[0])
-    #     entry_bloc_pairs = [(testing_set[1], testing_set[2])]
-    #     visualizer.visualize_plots(plots, entry_bloc_pairs, predictions)
-    #     print("_____________________________________________________________________")
+    data_handler.make_predictions_for_test_sets(learning_model)
+    total_accuracies = []
+    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+        acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+        total_accuracies.append(acc)
+        print(f'Average percent error: {acc}')
+        visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+        print()
+    print(f'Model average percent error: {sum(total_accuracies) / len(total_accuracies)}')
+
+    # Visualize plot
+    # visualizer.visualize_plots(plots, [(1, 1)])
 
     # Variety plot visualization
     # visualizer.visualize_variety(plots, target_variety)
 
     # Visualize all plots
-    # visualizer.visualize_num_plots(plots, 1)
+    # visualizer.visualize_num_plots(plots, 20)
 
     # Visualize correspondence
-    visualizer.visualize_correspondence(plots)
+    # visualizer.visualize_correspondence(plots)

@@ -176,10 +176,14 @@ def shuffle_in_unison(a, b) -> tuple:
 def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
     """
     Gets the plot with given variety and replication variety (Block)
+
+    Parameters:
     variety_index (int): Index of variety type in variety map
     replication_variety (int): Number representing the replication variety or Block
     plots (list): List of plots to search from
-    Returns (Plot): The plot with given values if found
+
+    Returns
+    (Plot): The plot with given values if found
     """
 
     def check_same_plot(plot: 'Plot') -> bool:
@@ -189,3 +193,19 @@ def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
     if len(same_plots) > 1:
         print("More than 1 same plot")
     return same_plots[0]
+
+
+def percent_error(experimental_value, theoretical_value):
+    """
+    Calculate the percent error between an experimental value and a theoretical value.
+
+    Parameters:
+    experimental_value (float): The value obtained from the experiment.
+    theoretical_value (float): The true or accepted value.
+
+    Returns:
+    float: The percent error.
+    """
+    error = abs(experimental_value - theoretical_value)
+    p_error = (error / abs(theoretical_value)) * 100
+    return p_error

@@ -3,7 +3,7 @@ import ast
 
 from DataStructures.plot import Plot
 
-from Helpers.utility import get_plot
+from Helpers.utility import get_plot, percent_error
 
 from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
 from MachineLearningModule.data_handler import DataHandler, prep_sequence_target_val
@@ -13,8 +13,10 @@ class UniLSTMDataHandler(DataHandler):
     def __init__(self, plots: list[Plot]) -> None:
         super().__init__(plots)
         self.plots = plots
-        self.training_sets: list[(list, int, int)] = []
-        self.testing_sets: list[(list, int, int)] = []
+        self.training_sets: list[tuple[list, int, int]] = []
+        self.testing_sets: list[tuple[list, int, int]] = []
+        self.predictions: list[tuple[list, int, int, float]] = []
+        self.accuracies: list[tuple[list, int, int]] = []
 
     def make_sets(self, target_variate: str) -> None:
         """
@@ -78,19 +80,24 @@ class UniLSTMDataHandler(DataHandler):
 
         model.train(test_sets, targets)
 
-    @staticmethod
-    def get_predictions_for_set(model: UnivariateLSTM, test_set: list) -> list:
+    def make_predictions_for_test_sets(self, model: UnivariateLSTM) -> None:
         """
-        Get list of predictions for given test set
-        :param model: keras.models.Sequential - Model to predict from test set
-        :param test_set: list - Sequence to give to model to predict from
-        :return: list - List of predicted values
+        Populate self's list of predictions for test sets (also populates accuracies)
+        :param model: keras.models.Sequential - Model to predict with
+        :return: None
         """
-        predictions = []
-        tests_for_each_day = prep_sequence_target_val([test_set], [0 for _, _ in enumerate(test_set)])[0]
-        for test_set in tests_for_each_day:
-            predictions.append(model.predict(test_set))
-        return predictions
+
+        for test_set in self.testing_sets:
+            test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)])
+            predictions = []
+            accuracies = []
+            expected = get_plot(test_set[1], test_set[2], self.plots).crop_yield
+            for t_set in test_sets_for_each_day:
+                prediction = model.predict(t_set)
+                predictions.append(prediction)
+                accuracies.append(percent_error(prediction, expected))
+            self.predictions.append((predictions, test_set[1], test_set[2], expected))
+            self.accuracies.append((accuracies, test_set[1], test_set[2]))
 
     def save_sets(self) -> None:
         """
@@ -199,7 +206,7 @@ class UniLSTMDataHandler(DataHandler):
             self.training_sets.append(add)
 
     @staticmethod
-    def fabricate_set(original_set: tuple[list, int, int], max_deviation: float = 0.02) -> tuple[list, int, int]:
+    def fabricate_set(original_set: tuple[list, int, int], max_deviation: float = 0.01) -> tuple[list, int, int]:
         # TODO: func def
         """
 
@@ -227,8 +234,6 @@ class UniLSTMDataHandler(DataHandler):
         if bucket_range == 0:  # All numbers are the same
             return 0
         bucket_index = int((num - min_value) / bucket_range)
-        if bucket_index < 0:
-            pass
         # Make sure the last bucket includes the max_value
         if bucket_index == num_buckets:
             bucket_index -= 1

@@ -89,9 +89,16 @@ class Visualizer:
         min_date = 0
         max_date = 0
         offset = 0
+        season = ""
         for pair in entry_bloc_pairs:
             # Get correct plot
             plot = get_plot(pair[0], pair[1], plots)
+            if plot.data_points[0].season_type == "winter":
+                var = winter_variety_map[plot.variety_index - 1]
+            else:
+                var = spring_variety_map[plot.variety_index - 1]
+                season = "spring"
+            print(f'Variety: {var}')
 
             # Lists to hold each data values
             dates = []
@@ -223,7 +230,12 @@ class Visualizer:
         # Make title string
         title_str: str = "Values for Plots: "
         for pair in entry_bloc_pairs:
-            title_str += str(pair) + " "
+            if season == 'spring':
+                variety = spring_variety_map[pair[0] - 1]
+            else:
+                variety = spring_variety_map[pair[1] - 1]
+            title_str += str(pair) + " " + variety + " "
+
         plt.title(title_str)
         plt.xlabel('Dates')
         plt.ylabel('Plot Values')
@@ -255,7 +267,7 @@ class Visualizer:
         entry_bloc_pairs = []
         total = 0
         for plot in plots:
-            if total > num:
+            if total >= num:
                 break
             total += 1
             entry_bloc_pairs.append((plot.variety_index, plot.replication_variety))
@@ -453,7 +465,7 @@ class Visualizer:
 
         # Loop to search all correlations
         split_size = 50
-        while split_size > 20:
+        while split_size > 49:
             split_offset = 0
             while split_size + split_offset <= 50:
                 vi_avgs = []
