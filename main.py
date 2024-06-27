@@ -24,7 +24,7 @@ if __name__ == '__main__':
     vi_formula = "ndvi"
 
     # ML model selections
-    model_num = 3
+    model_num = 4
     target_variate = "vi_mean"
 
     # Perform parsing based on selections
@@ -38,13 +38,13 @@ if __name__ == '__main__':
     data_handler.load_saved_sets()
 
     # Create model
-    # learning_model = StackedLSTM(num_epochs=700)
-    learning_model = VanillaLSTM(num_epochs=700)
+    # learning_model = StackedLSTM(num_epochs=300)
+    learning_model = VanillaLSTM(num_epochs=300)
 
     # Train model
     learning_model.load_trained_model(season, vi_formula, target_variate, model_num)
-    # data_handler.train_on_training_sets(learning_model)
-    # learning_model.save_trained_model(season, vi_formula, target_variate, model_num)
+    data_handler.train_on_training_sets(learning_model)
+    learning_model.save_trained_model(season, vi_formula, target_variate, model_num)
     # exit(0)
 
     # Create visualizer
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     visualizer.line_mode = True
     # visualizer.point_mode = True
     # Data selection
-    visualizer.show_vi_mean = True
+    # visualizer.show_vi_mean = True
     # visualizer.show_air_temp = True
     # visualizer.show_dew_point = True
     # visualizer.show_relative_humidity = True
@@ -77,10 +77,22 @@ if __name__ == '__main__':
         entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
         acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
         total_accuracies.append(acc)
-        print(f'Average percent error: {acc}')
+        print(f'Average percent error (testing data): {acc}')
         visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
         print()
-    print(f'Model average percent error: {sum(total_accuracies) / len(total_accuracies)}')
+    print(f'Model average percent error (testing data): {sum(total_accuracies) / len(total_accuracies)}')
+
+    # Check model's performance on training data and show results
+    data_handler.make_predictions_for_training_sets(learning_model)
+    total_accuracies = []
+    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+        acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+        total_accuracies.append(acc)
+        print(f'Average percent error (training data): {acc}')
+        visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+        print()
+    print(f'Model average percent error (training data): {sum(total_accuracies) / len(total_accuracies)}')
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
@@ -89,7 +101,7 @@ if __name__ == '__main__':
     # visualizer.visualize_variety(plots, target_variety)
 
     # Visualize all plots
-    # visualizer.visualize_num_plots(plots, 3)
+    # visualizer.visualize_num_plots(plots, 35)
 
     # Visualize correspondence with averaged VI's
     # visualizer.visualize_avg_vi_correspondence(plots)

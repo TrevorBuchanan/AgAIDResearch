@@ -86,7 +86,7 @@ class UniLSTMDataHandler(DataHandler):
         :param model: keras.models.Sequential - Model to predict with
         :return: None
         """
-
+        self.clear_predictions()
         for test_set in self.testing_sets:
             test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)])
             predictions = []
@@ -98,6 +98,33 @@ class UniLSTMDataHandler(DataHandler):
                 accuracies.append(percent_error(prediction, expected))
             self.predictions.append((predictions, test_set[1], test_set[2], expected))
             self.accuracies.append((accuracies, test_set[1], test_set[2]))
+
+    def make_predictions_for_training_sets(self, model: UnivariateLSTM) -> None:
+        """
+        Populate self's list of predictions for test sets (also populates accuracies)
+        :param model: keras.models.Sequential - Model to predict with
+        :return: None
+        """
+        self.clear_predictions()
+        for test_set in self.training_sets:
+            test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)])
+            predictions = []
+            accuracies = []
+            expected = get_plot(test_set[1], test_set[2], self.plots).crop_yield
+            for t_set in test_sets_for_each_day:
+                prediction = model.predict(t_set)
+                predictions.append(prediction)
+                accuracies.append(percent_error(prediction, expected))
+            self.predictions.append((predictions, test_set[1], test_set[2], expected))
+            self.accuracies.append((accuracies, test_set[1], test_set[2]))
+
+    def clear_predictions(self) -> None:
+        """
+        Clears the predictions and accuracies
+        :return: None
+        """
+        self.predictions.clear()
+        self.accuracies.clear()
 
     def save_sets(self) -> None:
         """

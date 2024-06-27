@@ -593,26 +593,34 @@ missing data, then linear interpolation was used.
 
 ### Model Results Notes:
 
-**Model1: Trained on raw training data (saved in saved_data_1.txt)**
+**Models 1: Trained on raw training data (saved in saved_data_1.txt)**
 * spring_ndvi_vi_mean_stacked_model1
-  * Model average percent error: 8.937410567126422
+  * Model average percent error (testing data): 11.56
+  * Model average percent error (training data): 2.25
 
 * spring_ndvi_vi_mean_vanilla_model1
-  * Model average percent error: 7.610311239093015
+  * Model average percent error (testing data): 6.87
+  * Model average percent error (training data): 1.79
 
-**Model2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**
+
+**Models 2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**
 * spring_ndvi_vi_mean_stacked_model2
-  * Model average percent error: 25.281478640396454
+  * Model average percent error (testing data): 25.28
+  * Model average percent error (training data): 9.05
 
 * spring_ndvi_vi_mean_vanilla_model2
-  * Model average percent error: 16.602312018117683
+  * Model average percent error (testing data): 17.74
+  * Model average percent error (training data): 2.66
 
-**Model3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**
+
+**Models 3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**
 * spring_ndvi_vi_mean_stacked_model3
-  * Model average percent error: 13.775016853294929
+  * Model average percent error (testing data): 15.02
+  * Model average percent error (training data): 1.88
 
 * spring_ndvi_vi_mean_vanilla_model3
-  * Model average percent error: 3.84163261592442
+  * Model average percent error (testing data): 3.84
+  * Model average percent error (training data): 2.88
 
 
 ### VI to Yield Correlation Notes:
@@ -621,16 +629,16 @@ missing data, then linear interpolation was used.
 ![FullDataVItoYield.png](Images%2FFullDataVItoYield.png)
 
 
-	Pearson correlation coefficient: 0.30116682760560815
+	Pearson correlation coefficient: 0.30
 
 * Spring best split size (4) VI correlation:
 ![BestSplitSizeVItoYield.png](Images%2FBestSplitSizeVItoYield.png)
 
 
-	Pearson correlation coefficient: 0.5023050212781351
+	Pearson correlation coefficient: 0.50
 
 * Spring heading data VI correlation: 
 ![HeadingDateVItoYield.png](Images%2FHeadingDateVItoYield.png)
 
 
-	Pearson correlation coefficient: -0.5137212880130718
+	Pearson correlation coefficient: -0.51

@@ -34,7 +34,7 @@ site, and other online resources such as weather data)
   * Complete all unfinished TODO comments 
 * 06/21/2024 - Implement a version of SMOTE (Synthetic Minority Oversampling Technique), further tests of vanilla and stacked
 LSTM ML models, further data and ML performance visualizations, and record correlation between VI and yield
-* 06/26/2024 - Measure accuracy for models, show variety with results, and add correlation at heading date to correlation visualization
+* 06/26/2024 - Measure accuracy for models, show variety with results, log training performance, and add correlation at heading date to correlation visualization
 
 
 # References: 
