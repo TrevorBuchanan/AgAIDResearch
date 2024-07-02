@@ -8,7 +8,6 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.regularizers import l2
 
-
 from MachineLearningModule.data_handler import prep_sequence_target_val
 
 
@@ -46,12 +45,18 @@ class VanillaLSTM(UnivariateLSTM):
         # Define model
         if self.model is None:
             self.build_model(n_steps)
+        # # Early stopping
+        # early_stopping = EarlyStopping(monitor='loss', patience=100, restore_best_weights=True)
+        #
+        # # Fit model with validation split
+        # self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose, callbacks=[early_stopping])
+
         # Early stopping
         early_stopping = EarlyStopping(monitor='val_loss', patience=100, restore_best_weights=True)
 
         # Fit model with validation split
         self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose,
-                        validation_split=0.2, callbacks=[early_stopping]) #
+                       validation_split=0.2, callbacks=[early_stopping])
 
     def predict(self, sequence: list):
         sequence = array(sequence)

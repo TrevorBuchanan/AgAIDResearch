@@ -20,11 +20,11 @@ if __name__ == '__main__':
     plots: list[Plot] = []
 
     # Parsing selections
-    season = "spring"
+    season = "winter"
     vi_formula = "ndvi"
 
     # ML model selections
-    model_num = 4
+    model_num = 3
     target_variate = "vi_mean"
 
     # Perform parsing based on selections
@@ -32,10 +32,16 @@ if __name__ == '__main__':
     parser.parse_data(season, plots, vi_formula)
     data_handler = UniLSTMDataHandler(plots)
 
+    for p in plots:
+        print(f'{p.crop_yield}, ', end='')
+
+    exit(0)
+
     # Data preparation for machine learning
     # data_handler.make_sets(target_variate)
     # data_handler.save_sets()
     data_handler.load_saved_sets()
+    # exit(0)
 
     # Create model
     # learning_model = StackedLSTM(num_epochs=300)
@@ -43,8 +49,8 @@ if __name__ == '__main__':
 
     # Train model
     learning_model.load_trained_model(season, vi_formula, target_variate, model_num)
-    data_handler.train_on_training_sets(learning_model)
-    learning_model.save_trained_model(season, vi_formula, target_variate, model_num)
+    # data_handler.train_on_training_sets(learning_model)
+    # learning_model.save_trained_model(season, vi_formula, target_variate, model_num)
     # exit(0)
 
     # Create visualizer
@@ -55,7 +61,7 @@ if __name__ == '__main__':
     visualizer.line_mode = True
     # visualizer.point_mode = True
     # Data selection
-    # visualizer.show_vi_mean = True
+    visualizer.show_vi_mean = True
     # visualizer.show_air_temp = True
     # visualizer.show_dew_point = True
     # visualizer.show_relative_humidity = True
@@ -82,17 +88,17 @@ if __name__ == '__main__':
         print()
     print(f'Model average percent error (testing data): {sum(total_accuracies) / len(total_accuracies)}')
 
-    # Check model's performance on training data and show results
-    data_handler.make_predictions_for_training_sets(learning_model)
-    total_accuracies = []
-    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
-        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
-        acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
-        total_accuracies.append(acc)
-        print(f'Average percent error (training data): {acc}')
-        visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
-        print()
-    print(f'Model average percent error (training data): {sum(total_accuracies) / len(total_accuracies)}')
+    # # Check model's performance on training data and show results
+    # data_handler.make_predictions_for_training_sets(learning_model)
+    # total_accuracies = []
+    # for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+    #     entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+    #     acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+    #     total_accuracies.append(acc)
+    #     print(f'Average percent error (training data): {acc}')
+    #     visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+    #     print()
+    # print(f'Model average percent error (training data): {sum(total_accuracies) / len(total_accuracies)}')
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])

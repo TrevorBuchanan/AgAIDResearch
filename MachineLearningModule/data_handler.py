@@ -25,7 +25,8 @@ def prep_sequence_target_val(sequences: list[list], targets: list[float]) -> tup
         if len(seq) > max_len:
             max_len = len(seq)
 
-    know_threshold = 50
+    # TODO: Change back to 50
+    know_threshold = 70
     sets = []
     target_outputs = []
     for sequence, target in zip(sequences, targets):

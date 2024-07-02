@@ -120,7 +120,7 @@ class Visualizer:
             for dp in plot.data_points:
                 dates.append(dp.date)
                 if self.show_vi_mean:
-                    vi_means.append(dp.vi_state.vi_mean)
+                    vi_means.append(dp.vi_state.vi_mean * 200)  # TODO: Change temp val back
                 if self.show_air_temp:
                     air_temps.append(dp.conditions_state.air_temp)
                 if self.show_dew_point:
@@ -518,10 +518,11 @@ class Visualizer:
 
         # Create custom legend handles
         if season == "winter":
+            trimmed_color_map = {k: v for k, v in list(color_map.items())[:8]}
             legend_elements = [
                 Line2D([0], [0], marker='o', color='w', markerfacecolor=color,
                        markersize=10, label=f'{winter_variety_map[i]}')
-                for i, color in color_map.items()
+                for i, color in trimmed_color_map.items()
             ]
         else:
             legend_elements = [
@@ -588,10 +589,11 @@ class Visualizer:
 
         # Create custom legend handles
         if season == "winter":
+            trimmed_color_map = {k: v for k, v in list(color_map.items())[:8]}
             legend_elements = [
                 Line2D([0], [0], marker='o', color='w', markerfacecolor=color,
                        markersize=10, label=f'{winter_variety_map[i]}')
-                for i, color in color_map.items()
+                for i, color in trimmed_color_map.items()
             ]
         else:
             legend_elements = [

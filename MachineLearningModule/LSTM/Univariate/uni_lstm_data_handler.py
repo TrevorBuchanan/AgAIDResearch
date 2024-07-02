@@ -48,6 +48,8 @@ class UniLSTMDataHandler(DataHandler):
                     self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
         # self.cut_sets_to_level()
         self.bulk_sets_to_level()
+        print(f'Number of training sets: {len(self.training_sets)}')
+        print(f'Number of testing sets: {len(self.testing_sets)}')
 
     @staticmethod
     def get_set(plot: Plot, target_variate: str) -> list:
@@ -148,7 +150,8 @@ class UniLSTMDataHandler(DataHandler):
         Loads saved testing and training data from their respective files
         :return: None
         """
-        temp_max_amt = 14  # Used to limit the amount of data sets that the model is given at once
+        # TODO: Temp max amt ?
+        temp_max_amt = 30  # Used to limit the amount of data sets that the model is given at once
         amt = 0
         test_file_path = 'MachineLearningModule/saved_test_data.txt'
         with open(test_file_path, 'r') as file:
@@ -170,6 +173,8 @@ class UniLSTMDataHandler(DataHandler):
                 parsed_tuple = ast.literal_eval(tuple_str)
                 self.training_sets.append(parsed_tuple)
                 amt += 1
+        print(f'Number of training sets: {len(self.training_sets)}')
+        print(f'Number of testing sets: {len(self.testing_sets)}')
 
     def cut_sets_to_level(self):
         """

@@ -192,6 +192,8 @@ def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
     same_plots = list(filter(check_same_plot, plots))
     if len(same_plots) > 1:
         print("More than 1 same plot")
+    if len(same_plots) == 0:
+        print("No same plots found")
     return same_plots[0]
 
 

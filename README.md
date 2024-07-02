@@ -35,7 +35,7 @@ site, and other online resources such as weather data)
 * 06/21/2024 - Implement a version of SMOTE (Synthetic Minority Oversampling Technique), further tests of vanilla and stacked
 LSTM ML models, further data and ML performance visualizations, and record correlation between VI and yield
 * 06/26/2024 - Measure accuracy for models, show variety with results, log training performance, and add correlation at heading date to correlation visualization
-
+* 07/01/2024 - Add winter data correlations to project notes, train winter ML models, 
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

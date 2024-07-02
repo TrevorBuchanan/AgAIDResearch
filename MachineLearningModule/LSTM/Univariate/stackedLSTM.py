@@ -33,13 +33,13 @@ class StackedLSTM(UnivariateLSTM):
         model.add(Masking(mask_value=0.0))
         model.add(LSTM(50, activation=self.activation_function, return_sequences=True,
                        kernel_regularizer=l2(0.01)))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(BatchNormalization())
         model.add(LSTM(50, activation=self.activation_function, kernel_regularizer=l2(0.01)))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(BatchNormalization())
         model.add(Dense(1, kernel_regularizer=l2(0.01)))
-        optimizer = Adam(learning_rate=0.001)
+        optimizer = Adam(learning_rate=0.0005)
         model.compile(optimizer=optimizer, loss=self.loss_function)
         return model
 
@@ -52,8 +52,14 @@ class StackedLSTM(UnivariateLSTM):
         # Define model
         if self.model is None:
             self.model = self.build_model(n_steps)
+
+        # # Early stopping
+        # early_stopping = EarlyStopping(monitor='loss', patience=100, restore_best_weights=True)
+        # # Fit model with validation split
+        # self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose, callbacks=[early_stopping])
+
         # Early stopping
-        early_stopping = EarlyStopping(monitor='val_loss', patience=100, restore_best_weights=True)
+        early_stopping = EarlyStopping(monitor='val_loss', patience=25, restore_best_weights=True)
         # Fit model with validation split
         self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose,
                        validation_split=0.2, callbacks=[early_stopping])
