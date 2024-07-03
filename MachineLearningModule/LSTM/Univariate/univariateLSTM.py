@@ -1,35 +1,26 @@
+import tensorflow as tf
+
+from tensorflow.keras.models import load_model
+
+
 class UnivariateLSTM:
-    def __init__(self, num_epochs: int = 500, optimizer: str ='adam', loss_function: str ='mse',
+    def __init__(self, model_num: int, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
                  verbose: int = 1, activation_function: str = 'relu') -> None:
-        self.num_epochs = num_epochs   
+        self.num_epochs = num_epochs
         self.optimizer = optimizer
         self.loss_function = loss_function
         self.verbose = verbose
         self.activation_function = activation_function
         self.model = None
         self.n_features = 1
+        self.seed = 7
+        tf.random.set_seed(self.seed)
 
-    def load_trained_model(self, season: str, vi_formula: str, target_variate: str, model_num: int) -> None:
-        """
-        Loads trained model
-        :param model_num: int - Identification number for the model
-        :param season: str - Season for which the model was trained for
-        :param vi_formula: str - VI formula for which the model was trained for
-        :param target_variate: str - Variate for which the model was trained for
-        :return: None
-        """
-        raise NotImplementedError("No load_trained_model function implemented")
+    def load_trained_model(self, model_num):
+        self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/model_{model_num}.keras')
 
-    def save_trained_model(self, season: str, vi_formula: str, target_variate: str, model_num: int) -> None:
-        """
-        Saves trained model
-        :param model_num: int - Identification number for the model
-        :param season: str - Season for which the model was trained for
-        :param vi_formula: str - VI formula for which the model was trained for
-        :param target_variate: str - Variate for which the model was trained for
-        :return: None
-        """
-        raise NotImplementedError("No save_trained_model function implemented")
+    def save_trained_model(self, model_num):
+        self.model.save(f'MachineLearningModule/LSTM/SavedModels/model_{model_num}.keras')
 
     def build_model(self, n_steps):
         """
@@ -55,4 +46,3 @@ class UnivariateLSTM:
         :return: float - Result of running the input sequence through the LSTM model
         """
         raise NotImplementedError("No predict function implemented")
-    

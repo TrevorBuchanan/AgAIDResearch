@@ -36,6 +36,14 @@ site, and other online resources such as weather data)
 LSTM ML models, further data and ML performance visualizations, and record correlation between VI and yield
 * 06/26/2024 - Measure accuracy for models, show variety with results, log training performance, and add correlation at heading date to correlation visualization
 * 07/01/2024 - Add winter data correlations to project notes, train winter ML models, add testing and training sizes to project notes
+* 07/02/2024 - Fix issues and make advancements:
+  * Improve saved model data and better model saving approach
+  * Work on weakness-target training
+  * Bug and error search; bugs found:
+    * Bug fetching predictions where only a few of the predictions would be made, and then the visualizer would fill 
+    the rest of the data with the existing values; resulting in skewed accuracy. 
+    * Bug where the prediction data would be backwards (according to time, i.e. starting at end, whole data, and 
+    ending with beginning (one day of data))
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

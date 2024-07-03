@@ -20,11 +20,11 @@ if __name__ == '__main__':
     plots: list[Plot] = []
 
     # Parsing selections
-    season = "winter"
+    season = "spring"
     vi_formula = "ndvi"
 
     # ML model selections
-    model_num = 3
+    model_num = 1
     target_variate = "vi_mean"
 
     # Perform parsing based on selections
@@ -32,52 +32,32 @@ if __name__ == '__main__':
     parser.parse_data(season, plots, vi_formula)
     data_handler = UniLSTMDataHandler(plots)
 
-    for p in plots:
-        print(f'{p.crop_yield}, ', end='')
-
-    exit(0)
-
     # Data preparation for machine learning
-    # data_handler.make_sets(target_variate)
-    # data_handler.save_sets()
-    data_handler.load_saved_sets()
+    # data_handler.make_sets(target_variate, 80)
+    # data_handler.save_sets(model_num)
+    data_handler.load_saved_sets(30, model_num)
     # exit(0)
 
     # Create model
-    # learning_model = StackedLSTM(num_epochs=300)
-    learning_model = VanillaLSTM(num_epochs=300)
+    # learning_model = StackedLSTM(model_num, num_epochs=300)
+    learning_model = VanillaLSTM(model_num, num_epochs=300)
 
     # Train model
-    learning_model.load_trained_model(season, vi_formula, target_variate, model_num)
+    learning_model.load_trained_model(model_num)
     # data_handler.train_on_training_sets(learning_model)
-    # learning_model.save_trained_model(season, vi_formula, target_variate, model_num)
+    # learning_model.save_trained_model(model_num)
     # exit(0)
 
     # Create visualizer
     visualizer = Visualizer()
-    # Visualize selections
-    # target_variety = "Glee"
-    # Visual settings
     visualizer.line_mode = True
-    # visualizer.point_mode = True
-    # Data selection
     visualizer.show_vi_mean = True
-    # visualizer.show_air_temp = True
-    # visualizer.show_dew_point = True
-    # visualizer.show_relative_humidity = True
-    # visualizer.show_soil_temp_2in = True
-    # visualizer.show_soil_temp_8in = True
-    # visualizer.show_precipitation = True
-    # visualizer.show_solar_radiation = True
-    # Result data selection
     visualizer.show_heading_date = True
-    # visualizer.show_plant_height = True
-    # visualizer.show_test_pounds_per_bushel = True
     visualizer.show_yield = True
     visualizer.show_prediction = True
 
     # Test the model and show results
-    data_handler.make_predictions_for_test_sets(learning_model)
+    data_handler.make_predictions_and_accuracies_for_test_sets(learning_model)
     total_accuracies = []
     for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
         entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
@@ -88,23 +68,25 @@ if __name__ == '__main__':
         print()
     print(f'Model average percent error (testing data): {sum(total_accuracies) / len(total_accuracies)}')
 
-    # # Check model's performance on training data and show results
-    # data_handler.make_predictions_for_training_sets(learning_model)
-    # total_accuracies = []
-    # for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
-    #     entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
-    #     acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
-    #     total_accuracies.append(acc)
-    #     print(f'Average percent error (training data): {acc}')
-    #     visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
-    #     print()
-    # print(f'Model average percent error (training data): {sum(total_accuracies) / len(total_accuracies)}')
+    # data_handler.continue_training_on_weak_sets(learning_model, 2)
+
+    # Check model's performance on training data and show results
+    data_handler.make_predictions_and_accuracies_for_training_sets(learning_model)
+    total_accuracies = []
+    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+        acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+        total_accuracies.append(acc)
+        print(f'Average percent error (training data): {acc}')
+        # visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+        print()
+    print(f'Model average percent error (training data): {sum(total_accuracies) / len(total_accuracies)}')
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
 
     # Variety plot visualization
-    # visualizer.visualize_variety(plots, target_variety)
+    # visualizer.visualize_variety(plots, "Glee")
 
     # Visualize all plots
     # visualizer.visualize_num_plots(plots, 35)

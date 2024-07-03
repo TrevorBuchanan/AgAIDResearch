@@ -1,5 +1,6 @@
 import random
 import ast
+import heapq
 
 from DataStructures.plot import Plot
 
@@ -18,15 +19,15 @@ class UniLSTMDataHandler(DataHandler):
         self.predictions: list[tuple[list, int, int, float]] = []
         self.accuracies: list[tuple[list, int, int]] = []
 
-    def make_sets(self, target_variate: str) -> None:
+    def make_sets(self, target_variate: str, training_percentage_amt: int) -> None:
         """
         Makes a set of uni-variate training and testing sets with given target variate and saves
         them to training_sets and testing_sets
+        :param training_percentage_amt: int - The amount of data that is used to train with
         :param target_variate: str - The variate to target when creating the training sets
         :return: None
         """
 
-        training_percentage_amt = 80
         total_amt = len(self.plots)
         unique_count = int(total_amt * (training_percentage_amt / 100))
         test_plot_indices = set()
@@ -47,7 +48,7 @@ class UniLSTMDataHandler(DataHandler):
                 else:
                     self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
         # self.cut_sets_to_level()
-        self.bulk_sets_to_level()
+        # self.bulk_sets_to_level()
         print(f'Number of training sets: {len(self.training_sets)}')
         print(f'Number of testing sets: {len(self.testing_sets)}')
 
@@ -82,7 +83,7 @@ class UniLSTMDataHandler(DataHandler):
 
         model.train(test_sets, targets)
 
-    def make_predictions_for_test_sets(self, model: UnivariateLSTM) -> None:
+    def make_predictions_and_accuracies_for_test_sets(self, model: UnivariateLSTM) -> None:
         """
         Populate self's list of predictions for test sets (also populates accuracies)
         :param model: keras.models.Sequential - Model to predict with
@@ -90,18 +91,18 @@ class UniLSTMDataHandler(DataHandler):
         """
         self.clear_predictions()
         for test_set in self.testing_sets:
-            test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)])
+            test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)], 0)
             predictions = []
             accuracies = []
             expected = get_plot(test_set[1], test_set[2], self.plots).crop_yield
-            for t_set in test_sets_for_each_day:
+            for t_set in reversed(test_sets_for_each_day):
                 prediction = model.predict(t_set)
                 predictions.append(prediction)
                 accuracies.append(percent_error(prediction, expected))
             self.predictions.append((predictions, test_set[1], test_set[2], expected))
             self.accuracies.append((accuracies, test_set[1], test_set[2]))
 
-    def make_predictions_for_training_sets(self, model: UnivariateLSTM) -> None:
+    def make_predictions_and_accuracies_for_training_sets(self, model: UnivariateLSTM) -> None:
         """
         Populate self's list of predictions for test sets (also populates accuracies)
         :param model: keras.models.Sequential - Model to predict with
@@ -109,11 +110,11 @@ class UniLSTMDataHandler(DataHandler):
         """
         self.clear_predictions()
         for test_set in self.training_sets:
-            test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)])
+            test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)], 0)
             predictions = []
             accuracies = []
             expected = get_plot(test_set[1], test_set[2], self.plots).crop_yield
-            for t_set in test_sets_for_each_day:
+            for t_set in reversed(test_sets_for_each_day):
                 prediction = model.predict(t_set)
                 predictions.append(prediction)
                 accuracies.append(percent_error(prediction, expected))
@@ -128,46 +129,42 @@ class UniLSTMDataHandler(DataHandler):
         self.predictions.clear()
         self.accuracies.clear()
 
-    def save_sets(self) -> None:
+    def save_sets(self, model_num: int) -> None:
         """
         Saves the testing and training data to respective files
         :return: None
         """
-        test_file_path = 'MachineLearningModule/saved_test_data.txt'
+        test_file_path = f'MachineLearningModule/saved_test_data_model_{model_num}.txt'
         with open(test_file_path, 'w') as file:
             for tup in self.testing_sets:
                 line = ', '.join(map(str, tup))
                 file.write(line + '\n')
 
-        training_file_path = 'MachineLearningModule/saved_training_data.txt'
+        training_file_path = f'MachineLearningModule/saved_training_data_model_{model_num}.txt'
         with open(training_file_path, 'w') as file:
             for tup in self.training_sets:
                 line = ', '.join(map(str, tup))
                 file.write(line + '\n')
 
-    def load_saved_sets(self) -> None:
+    def load_saved_sets(self, max_training_data_amt: int, model_num: int) -> None:
         """
         Loads saved testing and training data from their respective files
+        :param: max_training_data_amt: Used to limit the amount of data sets that the model is given at once
+        :param: model_num: The identification number of the model
         :return: None
         """
-        # TODO: Temp max amt ?
-        temp_max_amt = 30  # Used to limit the amount of data sets that the model is given at once
-        amt = 0
-        test_file_path = 'MachineLearningModule/saved_test_data.txt'
+        test_file_path = f'MachineLearningModule/SavedDataForModels/saved_test_data_model_{model_num}.txt'
         with open(test_file_path, 'r') as file:
             for line in file:
-                if amt >= temp_max_amt:
-                    continue
                 tuple_str = line.strip()
                 parsed_tuple = ast.literal_eval(tuple_str)
                 self.testing_sets.append(parsed_tuple)
-                amt += 1
 
         amt = 0
-        training_file_path = 'MachineLearningModule/saved_training_data.txt'
+        training_file_path = f'MachineLearningModule/SavedDataForModels/saved_training_data_model_{model_num}.txt'
         with open(training_file_path, 'r') as file:
             for line in file:
-                if amt >= temp_max_amt:
+                if amt >= max_training_data_amt:
                     continue
                 tuple_str = line.strip()
                 parsed_tuple = ast.literal_eval(tuple_str)
@@ -266,3 +263,19 @@ class UniLSTMDataHandler(DataHandler):
         if bucket_index == num_buckets:
             bucket_index -= 1
         return bucket_index
+
+    def continue_training_on_weak_sets(self, model, num_worst):
+        def avg(acc_set):
+            return sum(acc_set[0]) / len(acc_set[0])
+
+        # Min-heap to keep track of the lowest 3 averages
+        lowest_avgs = []
+        for accuracy_set in self.accuracies:
+            current_avg = avg(accuracy_set)
+            if len(lowest_avgs) < num_worst:
+                heapq.heappush(lowest_avgs, (current_avg, accuracy_set))
+            else:
+                heapq.heappushpop(lowest_avgs, (current_avg, accuracy_set))
+        lowest_avg_sets = [set_info[1] for set_info in lowest_avgs]
+
+

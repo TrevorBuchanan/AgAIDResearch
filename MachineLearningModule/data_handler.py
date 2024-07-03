@@ -1,14 +1,13 @@
-import random
 import numpy as np
 
 from DataStructures.plot import Plot
 
-from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
 
-
-def prep_sequence_target_val(sequences: list[list], targets: list[float]) -> tuple[np.array, np.array]:
+def prep_sequence_target_val(sequences: list[list], targets: list[float], know_threshold: int) \
+        -> tuple[np.array, np.array]:
     """
     Split the data into sets of length n_steps and have their target always be yield
+    :param know_threshold: int - Number of minimum known units that sequences must have before masked values
     :param sequences: list[list] - List of uni-variate list of numbers
     :param targets: list[float] - List of target amounts that the model is meant to predict towards
     :return: (tuple[np.ndarray, np.ndarray]) - Returns tuple of 2 numpy arrays holding the test
@@ -25,8 +24,6 @@ def prep_sequence_target_val(sequences: list[list], targets: list[float]) -> tup
         if len(seq) > max_len:
             max_len = len(seq)
 
-    # TODO: Change back to 50
-    know_threshold = 70
     sets = []
     target_outputs = []
     for sequence, target in zip(sequences, targets):

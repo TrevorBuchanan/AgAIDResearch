@@ -1,4 +1,3 @@
-import tensorflow as tf
 from Helpers.utility import shuffle_in_unison
 from MachineLearningModule.LSTM.Univariate.univariateLSTM import UnivariateLSTM
 from numpy import array
@@ -13,19 +12,9 @@ from MachineLearningModule.data_handler import prep_sequence_target_val
 
 
 class StackedLSTM(UnivariateLSTM):
-    def __init__(self, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
+    def __init__(self, model_number, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
                  verbose: int = 1, activation_function: str = 'relu'):
-        super().__init__(num_epochs, optimizer, loss_function, verbose, activation_function)
-        self.seed = 7
-        tf.random.set_seed(self.seed)
-
-    def load_trained_model(self, season, vi_formula, target_variate, model_num):
-        self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/'
-                                f'{season}_{vi_formula}_{target_variate}_stacked_model{model_num}.keras')
-
-    def save_trained_model(self, season, vi_formula, target_variate, model_num):
-        self.model.save(f'MachineLearningModule/LSTM/SavedModels/'
-                        f'{season}_{vi_formula}_{target_variate}_stacked_model{model_num}.keras')
+        super().__init__(model_number, num_epochs, optimizer, loss_function, verbose, activation_function)
 
     def build_model(self, n_steps):
         model = Sequential()
@@ -44,7 +33,7 @@ class StackedLSTM(UnivariateLSTM):
         return model
 
     def train(self, training_sequences: list[list], target_values: list[float]):
-        sets, target_outs = prep_sequence_target_val(training_sequences, target_values)
+        sets, target_outs = prep_sequence_target_val(training_sequences, target_values, 2)
         sets, target_outs = shuffle_in_unison(sets, target_outs)
         n_steps = sets.shape[1]
         sets = sets.reshape((sets.shape[0], sets.shape[1], self.n_features))

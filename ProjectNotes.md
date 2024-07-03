@@ -32,14 +32,16 @@ data may influence the accuracy of the ML models predicting the yield.
 11. Net CL+
 12. Jedd
 * A form of SMOTE (Synthetic Minority Oversampling Technique) was used to increase ML model performance. 
-The distribution of the yields followed a normal distribution.
-![NormalDist.png](Images%2FNormalDist.png)
+The distribution of the spring yields followed a normal distribution.
+![SpringDist.png](Images%2FSpringDist.png)
 In order to fix the issue of there being 
 less data points on the extremities for the ML model to train on, minority oversampling was used. The minority 
 sampling was done in two ways. Firstly, the data was cut down so that the distribution was level, as shown below.
 ![CutDist.png](Images%2FCutDist.png)
 Secondly, the distribution was leveled by fabricating minority data.
 ![BulkDist.png](Images%2FBulkDist.png)
+As an extra frame of reference, below is the winter yield distribution as well:
+![WinterDist.png](Images%2FWinterDist.png)
 
 ### Units and labels:
  - Temperatures: Celsius
@@ -593,30 +595,35 @@ missing data, then linear interpolation was used.
 
 ### Model Results Notes:
 
-**Models v1: Trained on raw training data (saved in saved_data_1.txt)**
-**Number of testing sets: 6, Number of training sets: 24**
+**Models v1: Trained on raw training data (saved in saved_data_1.txt)**  
+Number of testing sets: 6, Number of training sets: 24  
+Average Yield: 78.21
+
 * spring_ndvi_vi_mean_stacked_model1
-  * Model average percent error (testing data): 11.56
-  * Model average percent error (training data): 2.25
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
 
 * spring_ndvi_vi_mean_vanilla_model1
-  * Model average percent error (testing data): 6.87
-  * Model average percent error (training data): 1.79
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
 
 
-**Models v2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**
-**Number of testing sets: 23, Number of training sets: 7**
+**Models v2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**  
+Number of testing sets: , Number of training sets:  
+Average Target: 
+
 * spring_ndvi_vi_mean_stacked_model2
-  * Model average percent error (testing data): 25.28
-  * Model average percent error (training data): 9.05
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
 
 * spring_ndvi_vi_mean_vanilla_model2
-  * Model average percent error (testing data): 17.74
-  * Model average percent error (training data): 2.66
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
 
 
-**Models v3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**
-**Number of testing sets: 6, Number of training sets: 56**
+**Models v3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**  
+Number of testing sets: 6, Number of training sets: 56  
+Average Target:  
 * spring_ndvi_vi_mean_stacked_model3
   * Model average percent error (testing data): 15.02
   * Model average percent error (training data): 1.88

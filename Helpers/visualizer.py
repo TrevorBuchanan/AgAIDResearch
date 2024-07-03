@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from matplotlib.lines import Line2D
 
-from scipy.stats import pearsonr, spearmanr
+from matplotlib.lines import Line2D
+from scipy.stats import pearsonr
 from DataStructures.plot import Plot
 from Helpers.utility import convert_int_to_str_date, spring_variety_map, winter_variety_map, \
     singleton, get_plot
