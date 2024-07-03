@@ -15,7 +15,15 @@ class Visualizer:
         self.line_mode = False
         self.point_mode = False
         # Data selection
-        self.show_vi_mean = False
+        self.show_cigreen0 = False
+        self.show_cigreen = False
+        self.show_evi2 = False
+        self.show_gndvi0 = False
+        self.show_gndvi = False
+        self.show_ndvi = False
+        self.show_rdvi = False
+        self.show_savi = False
+        self.show_sr = False
         self.show_air_temp = False
         self.show_dew_point = False
         self.show_relative_humidity = False
@@ -41,12 +49,19 @@ class Visualizer:
         """
 
         # Start graph figure
-        # plt.style.use('dark_background')
         if predictions is None:
             predictions = []
         plt.figure(figsize=(16, 8))
         predictions_patch = mpatches.Patch(color='papayawhip', label='Yield predictions')
-        vi_patch = mpatches.Patch(color='purple', label='VI Mean')
+        cigreen0_patch = mpatches.Patch(color='purple', label='cigreen0')
+        cigreen_patch = mpatches.Patch(color='peru', label='cigreen')
+        evi2_patch = mpatches.Patch(color='violet', label='evi2')
+        gndvi0_patch = mpatches.Patch(color='indigo', label='gndvi0')
+        gndvi_patch = mpatches.Patch(color='navy', label='gndvi')
+        ndvi_patch = mpatches.Patch(color='springgreen', label='ndvi')
+        rdvi_patch = mpatches.Patch(color='seagreen', label='rdvi')
+        savi_patch = mpatches.Patch(color='darkkhaki', label='savi')
+        sr_patch = mpatches.Patch(color='rosybrown', label='sr')
         air_temp_patch = mpatches.Patch(color='orange', label='Air Temp')
         dew_point_patch = mpatches.Patch(color='cyan', label='Dew point')
         relative_hum_patch = mpatches.Patch(color='teal', label='Relative humidity')
@@ -61,8 +76,24 @@ class Visualizer:
         handles = []
         if self.show_prediction:
             handles.append(predictions_patch)
-        if self.show_vi_mean:
-            handles.append(vi_patch)
+        if self.show_cigreen0:
+            handles.append(cigreen0_patch)
+        if self.show_cigreen:
+            handles.append(cigreen_patch)
+        if self.show_evi2:
+            handles.append(evi2_patch)
+        if self.show_gndvi0:
+            handles.append(gndvi0_patch)
+        if self.show_gndvi:
+            handles.append(gndvi_patch)
+        if self.show_ndvi:
+            handles.append(ndvi_patch)
+        if self.show_rdvi:
+            handles.append(rdvi_patch)
+        if self.show_savi:
+            handles.append(savi_patch)
+        if self.show_sr:
+            handles.append(sr_patch)
         if self.show_air_temp:
             handles.append(air_temp_patch)
         if self.show_dew_point:
@@ -103,7 +134,15 @@ class Visualizer:
 
             # Lists to hold each data values
             dates = []
-            vi_means = []
+            cigreen0s = []
+            cigreens = []
+            evi2s = []
+            gndvi0s = []
+            gndvis = []
+            ndvis = []
+            rdvis = []
+            savis = []
+            srs = []
             air_temps = []
             dew_points = []
             relative_hums = []
@@ -119,8 +158,24 @@ class Visualizer:
             # Get plot data
             for dp in plot.data_points:
                 dates.append(dp.date)
-                if self.show_vi_mean:
-                    vi_means.append(dp.vi_state.vi_mean * 200)  # TODO: Change temp val back
+                if self.show_cigreen0:
+                    cigreen0s.append(dp.vi_state.cigreen0)
+                if self.show_cigreen:
+                    cigreens.append(dp.vi_state.cigreen)
+                if self.show_evi2:
+                    evi2s.append(dp.vi_state.evi2)
+                if self.show_gndvi0:
+                    gndvi0s.append(dp.vi_state.gndvi0)
+                if self.show_gndvi:
+                    gndvis.append(dp.vi_state.gndvi)
+                if self.show_ndvi:
+                    ndvis.append(dp.vi_state.ndvi)
+                if self.show_rdvi:
+                    rdvis.append(dp.vi_state.rdvi)
+                if self.show_savi:
+                    savis.append(dp.vi_state.savi)
+                if self.show_sr:
+                    srs.append(dp.vi_state.sr)
                 if self.show_air_temp:
                     air_temps.append(dp.conditions_state.air_temp)
                 if self.show_dew_point:
@@ -136,13 +191,35 @@ class Visualizer:
                 if self.show_solar_radiation:
                     solar_rads.append(dp.conditions_state.solar_radiation)
 
+            # Prediction bar graphs (first so that it is behind other graph values)
+            if self.show_prediction and predictions:
+                for date in dates:
+                    index = dates.index(date)
+                    plt.bar(date, predictions[index], color='papayawhip')
+
             # Point graphs
             if self.point_mode:
                 for date in dates:
                     index = dates.index(date)
-                    # VI mean
-                    if self.show_vi_mean:
-                        plt.scatter(date, vi_means[index], color='purple')
+                    # VI means
+                    if self.show_cigreen0:
+                        plt.scatter(date, cigreen0s[index], color='purple')
+                    if self.show_cigreen:
+                        plt.scatter(date, cigreens[index], color='peru')
+                    if self.show_evi2:
+                        plt.scatter(date, evi2s[index], color='violet')
+                    if self.show_gndvi0:
+                        plt.scatter(date, gndvi0s[index], color='indigo')
+                    if self.show_gndvi:
+                        plt.scatter(date, gndvis[index], color='navy')
+                    if self.show_ndvi:
+                        plt.scatter(date, ndvis[index], color='springgreen')
+                    if self.show_rdvi:
+                        plt.scatter(date, rdvis[index], color='seagreen')
+                    if self.show_savi:
+                        plt.scatter(date, savis[index], color='darkkhaki')
+                    if self.show_sr:
+                        plt.scatter(date, srs[index], color='rosybrown')
                     # Air temp
                     if self.show_air_temp:
                         plt.scatter(date, air_temps[index], color='orange')
@@ -165,22 +242,26 @@ class Visualizer:
                     if self.show_solar_radiation:
                         plt.scatter(date, solar_rads[index], color='pink')
 
-            if self.show_prediction and predictions:
-                last_working_i = 0
-                for date in dates:
-                    index = dates.index(date)
-                    # Yield prediction
-                    if len(predictions) > 0:
-                        if index >= len(predictions):
-                            plt.bar(date, predictions[last_working_i], color='papayawhip')
-                        else:
-                            plt.bar(date, predictions[index], color='papayawhip')
-                            last_working_i = index
-
             # Line graphs
             if self.line_mode:
-                if self.show_vi_mean:
-                    plt.plot(dates, vi_means, color='purple')
+                if self.show_cigreen0:
+                    plt.plot(dates, cigreen0s, color='purple')
+                if self.show_cigreen:
+                    plt.plot(dates, cigreens, color='peru')
+                if self.show_evi2:
+                    plt.plot(dates, evi2s, color='violet')
+                if self.show_gndvi0:
+                    plt.plot(dates, gndvi0s, color='indigo')
+                if self.show_gndvi:
+                    plt.plot(dates, gndvis, color='navy')
+                if self.show_ndvi:
+                    plt.plot(dates, ndvis, color='springgreen')
+                if self.show_rdvi:
+                    plt.plot(dates, rdvis, color='seagreen')
+                if self.show_savi:
+                    plt.plot(dates, savis, color='darkkhaki')
+                if self.show_sr:
+                    plt.plot(dates, srs, color='rosybrown')
                 if self.show_air_temp:
                     plt.plot(dates, air_temps, color='orange')
                 if self.show_dew_point:
@@ -198,10 +279,7 @@ class Visualizer:
 
             # Heading date
             if self.show_heading_date:
-                if len(vi_means) > 0:
-                    plt.scatter(plot.heading_date, vi_means[dates.index(plot.heading_date)], color='blue')
-                else:
-                    plt.scatter(plot.heading_date, 0, color='blue')
+                plt.scatter(plot.heading_date, 0, color='blue')
                 print("Heading date: ", end="")
                 print(convert_int_to_str_date(plot.heading_date))
 
@@ -241,7 +319,7 @@ class Visualizer:
         plt.xlabel('Dates')
         plt.ylabel('Plot Values')
         plt.grid(True)
-        plt.legend(handles=handles)
+        plt.legend(handles=handles, loc="upper left")
         plt.tight_layout()
         plt.show()
 
@@ -418,7 +496,7 @@ class Visualizer:
 
             # Yield
             if self.show_yield:
-                plt.bar(max_date + offset, plot.crop_yield / 200, color=plot_color)
+                plt.bar(max_date + offset, plot.crop_yield / 150, color=plot_color)
                 print(f'Actual yield: {plot.crop_yield}')
             if self.show_prediction and predictions:
                 print(f'Final expected yield: {predictions[len(predictions) - 1]}')

@@ -134,13 +134,13 @@ class UniLSTMDataHandler(DataHandler):
         Saves the testing and training data to respective files
         :return: None
         """
-        test_file_path = f'MachineLearningModule/saved_test_data_model_{model_num}.txt'
+        test_file_path = f'MachineLearningModule/saved_test_data_{model_num}.txt'
         with open(test_file_path, 'w') as file:
             for tup in self.testing_sets:
                 line = ', '.join(map(str, tup))
                 file.write(line + '\n')
 
-        training_file_path = f'MachineLearningModule/saved_training_data_model_{model_num}.txt'
+        training_file_path = f'MachineLearningModule/saved_training_data_{model_num}.txt'
         with open(training_file_path, 'w') as file:
             for tup in self.training_sets:
                 line = ', '.join(map(str, tup))
@@ -153,7 +153,7 @@ class UniLSTMDataHandler(DataHandler):
         :param: model_num: The identification number of the model
         :return: None
         """
-        test_file_path = f'MachineLearningModule/SavedDataForModels/saved_test_data_model_{model_num}.txt'
+        test_file_path = f'MachineLearningModule/SavedDataForModels/saved_test_data_{model_num}.txt'
         with open(test_file_path, 'r') as file:
             for line in file:
                 tuple_str = line.strip()
@@ -161,7 +161,7 @@ class UniLSTMDataHandler(DataHandler):
                 self.testing_sets.append(parsed_tuple)
 
         amt = 0
-        training_file_path = f'MachineLearningModule/SavedDataForModels/saved_training_data_model_{model_num}.txt'
+        training_file_path = f'MachineLearningModule/SavedDataForModels/saved_training_data_{model_num}.txt'
         with open(training_file_path, 'r') as file:
             for line in file:
                 if amt >= max_training_data_amt:

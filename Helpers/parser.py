@@ -17,20 +17,16 @@ class Parser:
     def __init__(self) -> None:
         self.interpolator = Interpolator()
 
-    def parse_data(self, season: str, plots: list, vi_formula_target: str) -> None:
+    def parse_data(self, season: str, plots: list) -> None:
         """
         Parses the given season data provided in PullmanIOTData
         :param season: str - Target season data to parse
         :param plots: list - List of plots to parse into
-        :param vi_formula_target: The type of vi to take values for
         :return: None
         """
         # Ground truth
         file_path: str = f'PullmanIOTData/GT_{season}_wheat.csv'
 
-        # (Plot) Data to get for each plot:
-        # type_name, heading_date, plant_height, test_pounds_per_bushel, plot_area, experiment_name,
-        # year, location, vi_formula, variety_index, replication_variety, crop_yield
         with open(file_path, mode="r") as gt_file:
             csv_reader = csv.DictReader(gt_file)
             for row in csv_reader:
@@ -44,26 +40,20 @@ class Parser:
                 experiment_name = row['Experiment Name']
                 year = int(row['Year'])
                 location = row['Locn']
-                vi_formula = vi_formula_target
                 variety_index = int(row['ENTRY'])
                 if int(row['BLOC']) > 3:  # No IOT data exists for BLOC's 4-6 for winter data
                     continue
                 replication_variety = int(row['BLOC'])
                 crop_yield = float(row['Yield bu/a'])
                 plot = Plot(type_name, heading_date, plant_height, test_pounds_per_bushel, plot_area, experiment_name,
-                            year, location, vi_formula, variety_index, replication_variety, crop_yield)
+                            year, location, variety_index, replication_variety, crop_yield)
                 plots.append(plot)
 
         # Full Wheat Data
         file_path = f'PullmanIOTData/Final_{season.capitalize()}_Wheat_Weather.csv'
-
-        # Conditions and state (DataPoint) data to get for each plot:
-        # date, season_type, sensor_name, variety_index, replication_variety --> DataPoint class
-        # vegetation_formula, vegetation_index_mean --> VI class in DataPoint
-        # air_temp, dewpoint, relative_humidity, soil_temp_8in,
-        # precipitation, solar_radiation --> Conditions class in DataPoint
-        with open(file_path, mode="r") as dp_winter_file:
-            csv_reader = csv.DictReader(dp_winter_file)
+        temp_target_vi = "sr"  # Used to make sure loop only adds one data point per day
+        with open(file_path, mode="r") as dp_file:
+            csv_reader = csv.DictReader(dp_file)
             for row in csv_reader:
                 # DataPoint specific
                 date = convert_str_to_int_date(row['date'])
@@ -73,10 +63,9 @@ class Parser:
                 replication_variety = int(row['rep_var'])
                 # VI class in DataPoint
                 vi_formula = row['vi']
-                if vi_formula != vi_formula_target:  # Only get values on one type of vegetation index formula
+                if vi_formula != temp_target_vi:
                     continue
-                vi_mean = float(row['mean'])
-                vi_state = VIState(vi_formula, vi_mean)
+                vi_state = VIState()
                 # Conditions class in DataPoint
                 air_temp = float(row['air_temp'])
                 dew_point = float(row['dewpoint'])
@@ -91,6 +80,26 @@ class Parser:
                 data_point = DataPoint(date, season_type, sensor_name, variety_index,
                                        replication_variety, vi_state, conditions_state)
                 plots[self.get_data_point_index(data_point, plots)].add_data_point(data_point)
+
+        with open(file_path, mode="r") as dp_file:
+            csv_reader = csv.DictReader(dp_file)
+            for row in csv_reader:
+                date = convert_str_to_int_date(row['date'])
+                variety_index = int(row['variety'])
+                replication_variety = int(row['rep_var'])
+                vi_formula = row['vi']
+                vi_mean = float(row['mean'])
+                vi_state = None
+                found = False
+                for p in plots:
+                    if found:
+                        break
+                    if p.replication_variety == replication_variety and p.variety_index == variety_index:
+                        for dp in p.data_points:
+                            if dp.date == date:
+                                vi_state = dp.vi_state
+                                break
+                setattr(vi_state, vi_formula, vi_mean)
 
         # Filter faulty plots:
         plots_to_rm = []

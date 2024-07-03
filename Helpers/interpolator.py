@@ -30,8 +30,17 @@ class Interpolator:
         """
         new_data_points = []
         for date in dates:
-            lerped_vi_mean: float = self.lerp_fill(date, dates, plot.data_points, "vi_mean")
-            new_vi_state: VIState = VIState(plot.vi_formula, lerped_vi_mean)
+            lerped_cigreen0: float = self.lerp_fill(date, dates, plot.data_points, "cigreen0")
+            lerped_cigreen: float = self.lerp_fill(date, dates, plot.data_points, "cigreen")
+            lerped_evi2: float = self.lerp_fill(date, dates, plot.data_points, "evi2")
+            lerped_gndvi0: float = self.lerp_fill(date, dates, plot.data_points, "gndvi0")
+            lerped_gndvi: float = self.lerp_fill(date, dates, plot.data_points, "gndvi")
+            lerped_ndvi: float = self.lerp_fill(date, dates, plot.data_points, "ndvi")
+            lerped_rdvi: float = self.lerp_fill(date, dates, plot.data_points, "rdvi")
+            lerped_savi: float = self.lerp_fill(date, dates, plot.data_points, "savi")
+            lerped_sr: float = self.lerp_fill(date, dates, plot.data_points, "sr")
+            new_vi_state: VIState = VIState(lerped_cigreen0, lerped_cigreen, lerped_evi2, lerped_gndvi0,
+                                            lerped_gndvi, lerped_ndvi, lerped_rdvi, lerped_savi, lerped_sr)
             air_temp: float = self.other_data_point_fill(date, dates, plot.data_points, "air_temp", plots)
             dewpoint: float = self.other_data_point_fill(date, dates, plot.data_points, "dewpoint", plots)
             relative_humidity: float = self.other_data_point_fill(date, dates, plot.data_points,
