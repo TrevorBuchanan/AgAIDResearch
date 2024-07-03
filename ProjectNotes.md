@@ -51,6 +51,88 @@ As an extra frame of reference, below is the winter yield distribution as well:
  - Plot area: Square feet
  - IoT: Internet of Things
 
+### Models' Results Notes:
+
+**Data sets 1: Trained on raw training data (saved in saved_data_1.txt)**  
+Number of testing sets: 6, Number of training sets: 24  
+Average Yield: 78.21
+
+* spring_ndvi_vi_mean_stacked_model1
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
+
+
+* spring_ndvi_vi_mean_vanilla_model1
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
+  * Problems:
+    * Trains to target around the average yield
+
+
+**Data sets 2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**  
+Number of testing sets: , Number of training sets:  
+Average Target: 
+
+* spring_ndvi_vi_mean_stacked_model2
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
+
+* spring_ndvi_vi_mean_vanilla_model2
+  * Model average percent error (testing data): 
+  * Model average percent error (training data): 
+
+
+**Data sets 3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**  
+Number of testing sets: 6, Number of training sets: 56  
+Average Target:  
+* spring_ndvi_vi_mean_stacked_model3
+  * Model average percent error (testing data): 15.02
+  * Model average percent error (training data): 1.88
+
+* spring_ndvi_vi_mean_vanilla_model3
+  * Model average percent error (testing data): 3.84
+  * Model average percent error (training data): 2.88
+
+
+### VI to Yield Correlation Notes:
+Note: Offset means the amount of days from the beginning of the data collection. Split size is the
+duration, in days, of how long the best correlation segment is. 
+
+* Spring full data average VI correlation:
+![SpringFullDataVItoYield.png](Images%2FSpringFullDataVItoYield.png)
+
+
+	Pearson correlation coefficient: 0.30
+
+* Spring best split size (4) and offset (40) VI correlation:
+![SpringBestSplitSizeVItoYield.png](Images%2FSpringBestSplitSizeVItoYield.png)
+
+
+	Pearson correlation coefficient: 0.50
+
+* Spring heading data VI correlation: 
+![SpringHeadingDateVItoYield.png](Images%2FSpringHeadingDateVItoYield.png)
+
+
+	Pearson correlation coefficient: -0.51
+
+* Winter full data average VI correlation:
+![WinterFullDataVitoYield.png](Images%2FWinterFullDataVitoYield.png)
+
+
+	Pearson correlation coefficient: 0.53
+
+* Winter best split size (3) and offset (45) VI correlation:
+![WinterBestSplitSizeVItoYield.png](Images%2FWinterBestSplitSizeVItoYield.png)
+
+
+	Pearson correlation coefficient: 0.58
+
+* Winter heading data VI correlation: 
+![WinterHeadingDateVItoYield.png](Images%2FWinterHeadingDateVItoYield.png)
+
+
+	Pearson correlation coefficient: 0.62
 
 ### Missing Data Points Notes For Winter Wheat:
 (Dates with * marker are within 2 weeks of heading date)
@@ -592,83 +674,256 @@ another plot of the same variety. If there was still missing data, then the next
 was to pull data from external weather sources nearby (to the site location). If there was still
 missing data, then linear interpolation was used.
 
+### Date Ranges
 
-### Model Results Notes:
+**Spring Date Ranges**  
+Plot: Block 1 Variety 9
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-**Models v1: Trained on raw training data (saved in saved_data_1.txt)**  
-Number of testing sets: 6, Number of training sets: 24  
-Average Yield: 78.21
+Plot: Block 1 Variety 7
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-* spring_ndvi_vi_mean_stacked_model1
-  * Model average percent error (testing data): 
-  * Model average percent error (training data): 
+Plot: Block 1 Variety 11
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-* spring_ndvi_vi_mean_vanilla_model1
-  * Model average percent error (testing data): 
-  * Model average percent error (training data): 
+Plot: Block 1 Variety 3
+Start date: 2022-06-06
+End date: 2022-08-05
+Date range: 61
 
+Plot: Block 1 Variety 4
+Start date: 2022-06-06
+End date: 2022-08-05
+Date range: 61
 
-**Models v2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**  
-Number of testing sets: , Number of training sets:  
-Average Target: 
+Plot: Block 1 Variety 6
+Start date: 2022-06-06
+End date: 2022-08-05
+Date range: 61
 
-* spring_ndvi_vi_mean_stacked_model2
-  * Model average percent error (testing data): 
-  * Model average percent error (training data): 
+Plot: Block 1 Variety 8
+Start date: 2022-06-05
+End date: 2022-07-24
+Date range: 50
 
-* spring_ndvi_vi_mean_vanilla_model2
-  * Model average percent error (testing data): 
-  * Model average percent error (training data): 
+Plot: Block 1 Variety 12
+Start date: 2022-06-05
+End date: 2022-07-24
+Date range: 50
 
+Plot: Block 1 Variety 2
+Start date: 2022-06-05
+End date: 2022-07-24
+Date range: 50
 
-**Models v3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**  
-Number of testing sets: 6, Number of training sets: 56  
-Average Target:  
-* spring_ndvi_vi_mean_stacked_model3
-  * Model average percent error (testing data): 15.02
-  * Model average percent error (training data): 1.88
+Plot: Block 1 Variety 5
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-* spring_ndvi_vi_mean_vanilla_model3
-  * Model average percent error (testing data): 3.84
-  * Model average percent error (training data): 2.88
+Plot: Block 1 Variety 10
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
+Plot: Block 1 Variety 1
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-### VI to Yield Correlation Notes:
-Note: Offset means the amount of days from the beginning of the data collection. Split size is the
-duration, in days, of how long the best correlation segment is. 
+Plot: Block 2 Variety 11
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-* Spring full data average VI correlation:
-![SpringFullDataVItoYield.png](Images%2FSpringFullDataVItoYield.png)
+Plot: Block 2 Variety 7
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
+Plot: Block 2 Variety 4
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-	Pearson correlation coefficient: 0.30
+Plot: Block 2 Variety 9
+Start date: 2022-06-07
+End date: 2022-08-05
+Date range: 60
 
-* Spring best split size (4) and offset (40) VI correlation:
-![SpringBestSplitSizeVItoYield.png](Images%2FSpringBestSplitSizeVItoYield.png)
+Plot: Block 2 Variety 6
+Start date: 2022-06-07
+End date: 2022-08-05
+Date range: 60
 
+Plot: Block 2 Variety 8
+Start date: 2022-06-07
+End date: 2022-08-05
+Date range: 60
 
-	Pearson correlation coefficient: 0.50
+Plot: Block 2 Variety 10
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-* Spring heading data VI correlation: 
-![SpringHeadingDateVItoYield.png](Images%2FSpringHeadingDateVItoYield.png)
+Plot: Block 2 Variety 1
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
+Plot: Block 2 Variety 2
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-	Pearson correlation coefficient: -0.51
+Plot: Block 3 Variety 2
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-* Winter full data average VI correlation:
-![WinterFullDataVitoYield.png](Images%2FWinterFullDataVitoYield.png)
+Plot: Block 3 Variety 11
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
+Plot: Block 3 Variety 3
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-	Pearson correlation coefficient: 0.53
+Plot: Block 3 Variety 7
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-* Winter best split size (3) and offset (45) VI correlation:
-![WinterBestSplitSizeVItoYield.png](Images%2FWinterBestSplitSizeVItoYield.png)
+Plot: Block 3 Variety 1
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
+Plot: Block 3 Variety 5
+Start date: 2022-06-05
+End date: 2022-08-05
+Date range: 62
 
-	Pearson correlation coefficient: 0.58
+Plot: Block 3 Variety 10
+Start date: 2022-06-05
+End date: 2022-07-26
+Date range: 52
 
-* Winter heading data VI correlation: 
-![WinterHeadingDateVItoYield.png](Images%2FWinterHeadingDateVItoYield.png)
+Plot: Block 3 Variety 8
+Start date: 2022-06-05
+End date: 2022-07-26
+Date range: 52
 
+Plot: Block 3 Variety 6
+Start date: 2022-06-05
+End date: 2022-07-26
+Date range: 52
 
-	Pearson correlation coefficient: 0.62
+**Winter Date Ranges**  
+Plot: Block 1 Variety 1
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 1 Variety 2
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 1 Variety 3
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 1 Variety 4
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 1 Variety 5
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80
+
+Plot: Block 1 Variety 6
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80
+
+Plot: Block 1 Variety 7
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80
+
+Plot: Block 1 Variety 8
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80
+
+Plot: Block 2 Variety 4
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 2 Variety 5
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 2 Variety 8
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 2 Variety 7
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 2 Variety 2
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 2 Variety 3
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 2 Variety 1
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 2 Variety 6
+Start date: 2022-05-12
+End date: 2022-07-31
+Date range: 81
+
+Plot: Block 3 Variety 5
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80
+
+Plot: Block 3 Variety 3
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80
+
+Plot: Block 3 Variety 7
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80
+
+Plot: Block 3 Variety 1
+Start date: 2022-05-12
+End date: 2022-07-30
+Date range: 80

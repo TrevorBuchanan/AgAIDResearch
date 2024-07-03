@@ -211,3 +211,103 @@ def percent_error(experimental_value, theoretical_value):
     error = abs(experimental_value - theoretical_value)
     p_error = (error / abs(theoretical_value)) * 100
     return p_error
+
+
+def calculate_r_squared(y_true: float, y_preds: list) -> float:
+    """
+    Calculates R-squared error
+    :param y_true: float - Target value that all predicted values should be
+    :param y_preds: list - List of predicted values
+    :return: float - R-squared error
+    """
+    y_trues = np.array([y_true] * len(y_preds))
+    y_preds = np.array(y_preds)
+    sst = np.sum((y_trues - y_true) ** 2)
+    ssr = np.sum((y_trues - y_preds) ** 2)
+    r_squared = 1 - (ssr / sst)
+
+    return r_squared
+
+
+def calculate_rmse(y_true: float, y_preds: list):
+    """
+    Calculates root mean squared error
+    :param y_true: float - Target value that all predicted values should be
+    :param y_preds: list - List of predicted values
+    :return: float - Root mean squared error
+    """
+    y_trues = [y_true for _ in enumerate(y_preds)]
+    y_preds = np.array(y_preds)
+    y_trues = np.array(y_trues)
+    squared_diff = (y_trues - y_preds) ** 2
+    mean_squared_diff = np.mean(squared_diff)
+    rmse = np.sqrt(mean_squared_diff)
+    return rmse
+
+
+def date_check(ps: list[Plot]) -> None:
+    """
+    Shows the start, end, and range of each plot
+    :param ps: list[Plot] - List of plots with data points to check dates for
+    :return: None
+    """
+    for p in ps:
+        min_date = 365
+        max_date = 1
+        for dp in p.data_points:
+            if dp.date < min_date:
+                min_date = dp.date
+            if dp.date > max_date:
+                max_date = dp.date
+        date_range = max_date - min_date
+        print(f'Plot: Block {p.replication_variety} Variety {p.variety_index}')
+        print(f'Start date: {convert_int_to_str_date(min_date)}')
+        print(f'End date: {convert_int_to_str_date(max_date)}')
+        print(f'Date range: {date_range + 1}')  # Add one to include the edge
+        print()
+
+
+def normalize_all_of_attr(plots: list[Plot], attr_name: str) -> None:
+    """
+    Normalize all attr name values in plots' data points to range 0 - 1 according to given min and max values
+    :param plots: list[Plot] - List of plots with data points to normalize
+    :param attr_name: str - Name of attribute to normalize
+    :return: None
+    """
+    min_val, max_val = get_plots_min_max_for_attr(plots, attr_name)
+    for p in plots:
+        p.normalize_data_point_attr(attr_name, max_val, min_val)
+
+
+def get_plots_min_max_for_attr(plots: list[Plot], attr_name: str) -> tuple[float, float]:
+    """
+    Gets min and max for all attr name values in plots' data points
+    :param plots: list[Plot] - List of plots with data points to find min and max for
+    :param attr_name: str - Name of attribute to find min and max for
+    :return: tuple[float, float] - Min, Max for values of given attribute name
+    """
+    vi_attr = False
+    conditions_attr = False
+    if not hasattr(plots[0].data_points[0], attr_name):
+        if hasattr(plots[0].data_points[0].vi_state, attr_name):
+            vi_attr = True
+        elif hasattr(plots[0].data_points[0].conditions_state, attr_name):
+            conditions_attr = True
+        else:
+            print(f'Invalid attribute name, {attr_name} no found in DataPoint')
+            return 0, 0
+    max_val = 0
+    min_val = float('inf')
+    for p in plots:
+        for dp in p.data_points:
+            obj = dp
+            if vi_attr:
+                obj = getattr(dp, "vi_state")
+            if conditions_attr:
+                obj = getattr(dp, "conditions_state")
+            val = getattr(obj, attr_name)
+            if val < min_val:
+                min_val = val
+            if val > max_val:
+                max_val = val
+    return min_val, max_val
