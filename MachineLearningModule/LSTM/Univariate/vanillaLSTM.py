@@ -20,7 +20,7 @@ class VanillaLSTM(UnivariateLSTM):
         self.model = Sequential()
         self.model.add(Input(shape=(n_steps, self.n_features)))
         self.model.add(Masking(mask_value=0.0))
-        self.model.add(LSTM(100, activation=self.activation_function))
+        self.model.add(LSTM(100, activation=self.activation_function, kernel_regularizer=l2(0.01)))
         self.model.add(BatchNormalization())
         self.model.add(Dropout(0.2))
         self.model.add(Dense(1))

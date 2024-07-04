@@ -18,6 +18,7 @@ class UniLSTMDataHandler(DataHandler):
         self.testing_sets: list[tuple[list, int, int]] = []
         self.predictions: list[tuple[list, int, int, float]] = []
         self.accuracies: list[tuple[list, int, int]] = []
+        self.num_buckets = 7
 
     def make_sets(self, target_variate: str, training_percentage_amt: int) -> None:
         """
@@ -134,13 +135,13 @@ class UniLSTMDataHandler(DataHandler):
         Saves the testing and training data to respective files
         :return: None
         """
-        test_file_path = f'MachineLearningModule/saved_test_data_{model_num}.txt'
+        test_file_path = f'MachineLearningModule/SavedDataForModels/saved_test_data_{model_num}.txt'
         with open(test_file_path, 'w') as file:
             for tup in self.testing_sets:
                 line = ', '.join(map(str, tup))
                 file.write(line + '\n')
 
-        training_file_path = f'MachineLearningModule/saved_training_data_{model_num}.txt'
+        training_file_path = f'MachineLearningModule/SavedDataForModels/saved_training_data_{model_num}.txt'
         with open(training_file_path, 'w') as file:
             for tup in self.training_sets:
                 line = ', '.join(map(str, tup))
@@ -213,16 +214,15 @@ class UniLSTMDataHandler(DataHandler):
 
         min_val = min(yields)
         max_val = max(yields)
-        num_buckets = 7
-        buckets = [0] * num_buckets
+        buckets = [0] * self.num_buckets
         for tup in self.training_sets:
             buckets[self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
-                                          min_val, max_val, num_buckets)] += 1
+                                          min_val, max_val, self.num_buckets)] += 1
         to_add = []
         max_amt = max(buckets)
         for tup in self.training_sets:
             index = self.get_bucket_index(get_plot(tup[1], tup[2], self.plots).crop_yield,
-                                          min_val, max_val, num_buckets)
+                                          min_val, max_val, self.num_buckets)
             amt = buckets[index]
             if amt < max_amt:
                 for _ in range(max_amt - amt):
@@ -264,9 +264,30 @@ class UniLSTMDataHandler(DataHandler):
             bucket_index -= 1
         return bucket_index
 
-    def continue_training_on_weak_sets(self, model, num_worst):
+    def continue_training_on_weak_sets(self, model, num_worst, num_epochs=50):
+        """
+        Continues training a given model on the weakest performing training sets. The weakest sets are determined by
+        their average accuracies, and the model is retrained on these sets for a specified number of epochs.
+        :param model: The machine learning model to be retrained.
+        :param num_worst: The number of weakest performing sets to select for further training.
+        :param num_epochs: The number of epochs for which to continue training the model (default is 50).
+        :return: None
+        """
         def avg(acc_set):
             return sum(acc_set[0]) / len(acc_set[0])
+
+        def get_training_set_in_bucket(bucket_index):
+            while True:
+                index = random.randint(0, len(self.training_sets) - 1)
+                plot = get_plot(self.training_sets[index][1], self.training_sets[index][2], self.plots)
+                if self.get_bucket_index(plot.crop_yield, min_val, max_val, self.num_buckets) == bucket_index:
+                    return self.training_sets[index]
+
+        def offset_set(t_set, ofs):
+            n_set = []
+            for val in t_set[0]:
+                n_set.append(val + ofs)
+            return n_set, t_set[1], t_set[2]
 
         # Min-heap to keep track of the lowest 3 averages
         lowest_avgs = []
@@ -278,4 +299,30 @@ class UniLSTMDataHandler(DataHandler):
                 heapq.heappushpop(lowest_avgs, (current_avg, accuracy_set))
         lowest_avg_sets = [set_info[1] for set_info in lowest_avgs]
 
+        yields = []
+        for tup in self.training_sets:
+            yields.append(get_plot(tup[1], tup[2], self.plots).crop_yield)
+
+        offset = random.uniform(0, 0.05)
+        min_val = min(yields)
+        max_val = max(yields)
+        new_training_sets = []
+        for lowest_avg_set in lowest_avg_sets:
+            bucket_i = self.get_bucket_index(get_plot(lowest_avg_set[1], lowest_avg_set[2], self.plots).crop_yield,
+                                             min_val, max_val, self.num_buckets)
+            training_set = get_training_set_in_bucket(bucket_i)
+            # new_set = self.fabricate_set(training_set)
+            new_set = offset_set(training_set, offset)
+            new_training_sets.append(new_set)
+
+        test_sets = []
+        targets = []
+        for test_set in new_training_sets:
+            test_sets.append(test_set[0])
+            targets.append(get_plot(test_set[1], test_set[2], self.plots).crop_yield + offset * 10)
+
+        temp = model.num_epochs
+        model.num_epochs = num_epochs
+        model.train(test_sets, targets)
+        model.num_epochs = temp
 

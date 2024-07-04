@@ -46,7 +46,7 @@ LSTM ML models, further data and ML performance visualizations, and record corre
     ending with beginning (one day of data))
 * 07/03/2024 - Log start and end dates of all plots, add ability to normalize any inputs, use r-squared and RMSE
 when measuring performance (r-squared not used, but function exists), get all VIs when parsing data and add them
-to the visualization (used later for multivariate LSTM model), train models with new changes
+to the visualization (used later for multivariate LSTM model), train models with new changes, further work on weakness-target training
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

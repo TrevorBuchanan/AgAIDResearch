@@ -131,15 +131,15 @@ class Interpolator:
         return self.external_weather_data_fill(plots[0].data_points[0].season_type, date, dates, data_points, goal_val)
 
     def external_weather_data_fill(self, season: str, date: int, dates, data_points, goal_val: str) -> float:
-        # TODO: Function description
         """
-
-        :param season:
-        :param date:
-        :param dates:
-        :param data_points:
-        :param goal_val:
-        :return:
+        Fills in the weather data for a given date by reading from an external CSV file. If the specific value is not found,
+        it falls back to a linear interpolation method.
+        :param season: str - The season for which the weather data is required. Can be either "winter" or other seasons.
+        :param date: int - The specific date for which the weather data is needed, represented as an integer.
+        :param dates: A list or array of dates surrounding the target date, used for interpolation if necessary.
+        :param data_points: A list or array of data points corresponding to the dates, used for interpolation if necessary.
+        :param goal_val: str - The specific weather data parameter to retrieve (e.g., "temperature", "humidity").
+        :return: The weather data value for the given date and parameter, as a float.
         """
         if season == "winter":
             file_path: str = "GapFillWeatherData/22PULSATW.csv"

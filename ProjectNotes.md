@@ -55,7 +55,7 @@ As an extra frame of reference, below is the winter yield distribution as well:
 
 **Data sets 1: Trained on raw training data (saved in saved_data_1.txt)**  
 Number of testing sets: 6, Number of training sets: 24  
-Average Yield: 78.21
+Average Yield: 78.30
 
 * spring_ndvi_vi_mean_stacked_model1
   * Model average percent error (testing data): 
@@ -64,9 +64,7 @@ Average Yield: 78.21
 
 * spring_ndvi_vi_mean_vanilla_model1
   * Model average percent error (testing data): 
-  * Model average percent error (training data): 
-  * Problems:
-    * Trains to target around the average yield
+  * Model average percent error (training data):
 
 
 **Data sets 2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**  
