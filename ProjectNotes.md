@@ -57,9 +57,12 @@ As an extra frame of reference, below is the winter yield distribution as well:
 Number of testing sets: 6, Number of training sets: 24  
 Average Yield: 78.30
 
-* spring_ndvi_vi_mean_stacked_model1
-  * Model average percent error (testing data): 
-  * Model average percent error (training data): 
+* model_1
+  * Spring, NDVI variate, Stacked 
+  * Model average percent error (testing data): 5.27
+  * Model average RMSE (testing data): 4.78
+  * Model average percent error (training data): 4.92
+  * Model average RMSE (testing data): 4.56
 
 
 * spring_ndvi_vi_mean_vanilla_model1
@@ -68,41 +71,22 @@ Average Yield: 78.30
 
 
 **Data sets 2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**  
-Number of testing sets: , Number of training sets:  
-Average Target: 
-
-* spring_ndvi_vi_mean_stacked_model2
-  * Model average percent error (testing data): 
-  * Model average percent error (training data): 
-
-* spring_ndvi_vi_mean_vanilla_model2
-  * Model average percent error (testing data): 
-  * Model average percent error (training data): 
-
 
 **Data sets 3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**  
-Number of testing sets: 6, Number of training sets: 56  
-Average Target:  
-* spring_ndvi_vi_mean_stacked_model3
-  * Model average percent error (testing data): 15.02
-  * Model average percent error (training data): 1.88
 
-* spring_ndvi_vi_mean_vanilla_model3
-  * Model average percent error (testing data): 3.84
-  * Model average percent error (training data): 2.88
 
 
 ### VI to Yield Correlation Notes:
 Note: Offset means the amount of days from the beginning of the data collection. Split size is the
 duration, in days, of how long the best correlation segment is. 
 
-* Spring full data average VI correlation:
+* Spring full data average VI (ndvi) correlation:
 ![SpringFullDataVItoYield.png](Images%2FSpringFullDataVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.30
 
-* Spring best split size (4) and offset (40) VI correlation:
+* Spring best split size (4) and offset (40) VI (ndvi) correlation:
 ![SpringBestSplitSizeVItoYield.png](Images%2FSpringBestSplitSizeVItoYield.png)
 
 
@@ -114,19 +98,19 @@ duration, in days, of how long the best correlation segment is.
 
 	Pearson correlation coefficient: -0.51
 
-* Winter full data average VI correlation:
+* Winter full data average VI (ndvi) correlation:
 ![WinterFullDataVitoYield.png](Images%2FWinterFullDataVitoYield.png)
 
 
 	Pearson correlation coefficient: 0.53
 
-* Winter best split size (3) and offset (45) VI correlation:
+* Winter best split size (3) and offset (45) VI (ndvi) correlation:
 ![WinterBestSplitSizeVItoYield.png](Images%2FWinterBestSplitSizeVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.58
 
-* Winter heading data VI correlation: 
+* Winter heading data VI (ndvi) correlation: 
 ![WinterHeadingDateVItoYield.png](Images%2FWinterHeadingDateVItoYield.png)
 
 

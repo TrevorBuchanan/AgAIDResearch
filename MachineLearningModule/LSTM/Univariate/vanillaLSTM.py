@@ -53,5 +53,5 @@ class VanillaLSTM(UnivariateLSTM):
     def predict(self, sequence: list):
         sequence = array(sequence)
         sequence = sequence.reshape((1, len(sequence), self.n_features))
-        predicted = self.model.predict(sequence, self.verbose)
+        predicted = self.model.predict(sequence, verbose=self.verbose)
         return predicted[0][0]

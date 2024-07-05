@@ -5,7 +5,7 @@ from matplotlib.lines import Line2D
 from scipy.stats import pearsonr
 from DataStructures.plot import Plot
 from Helpers.utility import convert_int_to_str_date, spring_variety_map, winter_variety_map, \
-    singleton, get_plot
+    singleton, get_plot, get_min_date, get_max_date
 
 
 @singleton
@@ -152,7 +152,7 @@ class Visualizer:
             solar_rads = []
 
             # Get min and max range dates of graph
-            min_date = plot.data_points[0].date
+            min_date = get_min_date(plots)
             max_date = plot.data_points[len(plot.data_points) - 1].date
 
             # Get plot data
@@ -295,9 +295,9 @@ class Visualizer:
             if self.show_yield:
                 plt.bar(max_date + offset, plot.crop_yield, color='olive')
                 print(f'Actual yield: {plot.crop_yield}')
+                offset += 1
             if self.show_prediction and predictions:
                 print(f'Final expected yield: {predictions[len(predictions) - 1]}')
-            offset += 1
 
         # Graph logic
         if self.show_plant_height:
@@ -381,7 +381,15 @@ class Visualizer:
 
             # Lists to hold each data values
             dates = []
-            vi_means = []
+            cigreen0s = []
+            cigreens = []
+            evi2s = []
+            gndvi0s = []
+            gndvis = []
+            ndvis = []
+            rdvis = []
+            savis = []
+            srs = []
             air_temps = []
             dew_points = []
             relative_hums = []
@@ -391,14 +399,32 @@ class Visualizer:
             solar_rads = []
 
             # Get min and max range dates of graph
-            min_date = plot.data_points[0].date
-            max_date = plot.data_points[len(plot.data_points) - 1].date
+            min_date = get_min_date(plots)
+            max_date = get_max_date(plots)
 
             # Get plot data
             for dp in plot.data_points:
+                if dp.date > max_date:
+                    break
                 dates.append(dp.date)
-                if self.show_vi_mean:
-                    vi_means.append(dp.vi_state.vi_mean)
+                if self.show_cigreen0:
+                    cigreen0s.append(dp.vi_state.cigreen0)
+                if self.show_cigreen:
+                    cigreens.append(dp.vi_state.cigreen)
+                if self.show_evi2:
+                    evi2s.append(dp.vi_state.evi2)
+                if self.show_gndvi0:
+                    gndvi0s.append(dp.vi_state.gndvi0)
+                if self.show_gndvi:
+                    gndvis.append(dp.vi_state.gndvi)
+                if self.show_ndvi:
+                    ndvis.append(dp.vi_state.ndvi)
+                if self.show_rdvi:
+                    rdvis.append(dp.vi_state.rdvi)
+                if self.show_savi:
+                    savis.append(dp.vi_state.savi)
+                if self.show_sr:
+                    srs.append(dp.vi_state.sr)
                 if self.show_air_temp:
                     air_temps.append(dp.conditions_state.air_temp)
                 if self.show_dew_point:
@@ -421,9 +447,25 @@ class Visualizer:
             if self.point_mode:
                 for date in dates:
                     index = dates.index(date)
-                    # VI mean
-                    if self.show_vi_mean:
-                        plt.scatter(date, vi_means[index], color=plot_color)
+                    # VI means
+                    if self.show_cigreen0:
+                        plt.scatter(date, cigreen0s[index], color='purple')
+                    if self.show_cigreen:
+                        plt.scatter(date, cigreens[index], color='peru')
+                    if self.show_evi2:
+                        plt.scatter(date, evi2s[index], color='violet')
+                    if self.show_gndvi0:
+                        plt.scatter(date, gndvi0s[index], color='indigo')
+                    if self.show_gndvi:
+                        plt.scatter(date, gndvis[index], color='navy')
+                    if self.show_ndvi:
+                        plt.scatter(date, ndvis[index], color='springgreen')
+                    if self.show_rdvi:
+                        plt.scatter(date, rdvis[index], color='seagreen')
+                    if self.show_savi:
+                        plt.scatter(date, savis[index], color='darkkhaki')
+                    if self.show_sr:
+                        plt.scatter(date, srs[index], color='rosybrown')
                     # Air temp
                     if self.show_air_temp:
                         plt.scatter(date, air_temps[index], color=plot_color)
@@ -447,21 +489,30 @@ class Visualizer:
                         plt.scatter(date, solar_rads[index], color=plot_color)
 
             if self.show_prediction and predictions:
-                last_working_i = 0
                 for date in dates:
                     index = dates.index(date)
-                    # Yield prediction
-                    if len(predictions) > 0:
-                        if index >= len(predictions):
-                            plt.bar(date, predictions[last_working_i], color='papayawhip')
-                        else:
-                            plt.bar(date, predictions[index], color='papayawhip')
-                            last_working_i = index
+                    plt.bar(date, predictions[index], color='papayawhip')
 
             # Line graphs
             if self.line_mode:
-                if self.show_vi_mean:
-                    plt.plot(dates, vi_means, color=plot_color)
+                if self.show_cigreen0:
+                    plt.plot(dates, cigreen0s, color=plot_color)
+                if self.show_cigreen:
+                    plt.plot(dates, cigreens, color=plot_color)
+                if self.show_evi2:
+                    plt.plot(dates, evi2s, color=plot_color)
+                if self.show_gndvi0:
+                    plt.plot(dates, gndvi0s, color=plot_color)
+                if self.show_gndvi:
+                    plt.plot(dates, gndvis, color=plot_color)
+                if self.show_ndvi:
+                    plt.plot(dates, ndvis, color=plot_color)
+                if self.show_rdvi:
+                    plt.plot(dates, rdvis, color=plot_color)
+                if self.show_savi:
+                    plt.plot(dates, savis, color=plot_color)
+                if self.show_sr:
+                    plt.plot(dates, srs, color=plot_color)
                 if self.show_air_temp:
                     plt.plot(dates, air_temps, color=plot_color)
                 if self.show_dew_point:
@@ -479,10 +530,7 @@ class Visualizer:
 
             # Heading date
             if self.show_heading_date:
-                if len(vi_means) > 0:
-                    plt.scatter(plot.heading_date, vi_means[dates.index(plot.heading_date)], color=plot_color)
-                else:
-                    plt.scatter(plot.heading_date, 0, color=plot_color)
+                plt.scatter(plot.heading_date, 0, color=plot_color)
                 print("Heading date: ", end="")
                 print(convert_int_to_str_date(plot.heading_date))
 
@@ -496,11 +544,11 @@ class Visualizer:
 
             # Yield
             if self.show_yield:
-                plt.bar(max_date + offset, plot.crop_yield / 150, color=plot_color)
+                plt.bar(max_date + offset, plot.crop_yield / 200, color=plot_color)
                 print(f'Actual yield: {plot.crop_yield}')
+                offset += 1
             if self.show_prediction and predictions:
                 print(f'Final expected yield: {predictions[len(predictions) - 1]}')
-            offset += 1
 
         # Graph logic
         if self.show_plant_height:
@@ -521,20 +569,26 @@ class Visualizer:
         plt.show()
 
     @staticmethod
-    def visualize_avg_vi_correspondence(plots: list[Plot]) -> None:
+    def visualize_avg_correspondence(plots: list[Plot], val_type: str) -> None:
         """
-        Create a graph of the correspondence between the average vi and the yield
+        Create a graph of the correspondence between the average value type and the yield
+        :param val_type: str - The type of value type to view correspondence for
         :param plots: list[Plot] - list of plots to create correspondence from
         :return: None
         """
-        def get_avg_vi(data_points: list, start_i, end_i):
+        def get_avg_val(data_points: list, start_i, end_i):
             total = 0
             count = 0
             for i in range(start_i, end_i):
                 if count >= end_i - start_i:
                     break
                 count += 1
-                total += data_points[i].vi_state.vi_mean
+                if hasattr(data_points[i], val_type):
+                    total += getattr(data_points[i], val_type)
+                if hasattr(data_points[i].conditions_state, val_type):
+                    total += getattr(data_points[i].conditions_state, val_type)
+                if hasattr(data_points[i].vi_state, val_type):
+                    total += getattr(data_points[i].vi_state, val_type)
             return total / count
 
         season = plots[0].data_points[0].season_type
@@ -567,7 +621,7 @@ class Visualizer:
                 vi_avgs = []
                 yields = []
                 for p in plots:
-                    vi_avgs.append(get_avg_vi(p.data_points, split_offset, split_offset + split_size))
+                    vi_avgs.append(get_avg_val(p.data_points, split_offset, split_offset + split_size))
                     yields.append(p.crop_yield)
                 # Pearson Correlation
                 pearson_corr, _ = pearsonr(vi_avgs, yields)
@@ -582,17 +636,17 @@ class Visualizer:
         print(f'Best offset: {best_offset}')
         print(f'Best correlation: {best_corr}')
 
-        vi_avgs = []
+        val_avgs = []
         yields = []
         colors = []
         for p in plots:
             colors.append(color_map.get(p.variety_index - 1, 'black'))
-            vi_avgs.append(get_avg_vi(p.data_points, best_offset, best_offset + best_split_size))
+            val_avgs.append(get_avg_val(p.data_points, best_offset, best_offset + best_split_size))
             yields.append(p.crop_yield)
 
         # Create the plot
         plt.figure(figsize=(16, 8))
-        plt.scatter(vi_avgs, yields, c=colors, marker='o')
+        plt.scatter(val_avgs, yields, c=colors, marker='o')
 
         # Create custom legend handles
         if season == "winter":
@@ -611,9 +665,9 @@ class Visualizer:
         plt.legend(handles=legend_elements, title="Variety Index")
 
         # Customize the plot
-        plt.xlabel('VI Averages')
+        plt.xlabel('Value Averages')
         plt.ylabel('Yields')
-        plt.title('VI to Yield')
+        plt.title('Value to Yield')
         plt.tight_layout()
         plt.grid(True)
 
@@ -621,17 +675,24 @@ class Visualizer:
         plt.show()
 
     @staticmethod
-    def visualize_heading_date_correlation(plots: list[Plot]) -> None:
+    def visualize_heading_date_correlation(plots: list[Plot], val_type: str) -> None:
         """
-        Create a graph of the correspondence between the VI at the heading date and the yield
+        Create a graph of the correspondence between the given value type at the heading date and the yield
+        :param val_type: str - The type of value type to view heading correspondence for
         :param plots: list[Plot] - list of plots to create correspondence from
         :return: None
         """
         def get_vi_at_heading_date(data_points: list, heading_date: int):
             for dp in data_points:
                 if dp.date == heading_date:
-                    return dp.vi_state.vi_mean
+                    if hasattr(dp, val_type):
+                        return getattr(dp, val_type)
+                    if hasattr(dp.conditions_state, val_type):
+                        return getattr(dp.conditions_state, val_type)
+                    if hasattr(dp.vi_state, val_type):
+                        return getattr(dp.vi_state, val_type)
             return None
+
         season = plots[0].data_points[0].season_type
         # Define a color map based on variety_index
         color_map = {
@@ -649,21 +710,21 @@ class Visualizer:
             11: 'cyan'
         }
 
-        vi_vals = []
+        vals = []
         yields = []
         colors = []
         for p in plots:
             colors.append(color_map.get(p.variety_index - 1, 'black'))
-            vi_vals.append(get_vi_at_heading_date(p.data_points, p.heading_date))
+            vals.append(get_vi_at_heading_date(p.data_points, p.heading_date))
             yields.append(p.crop_yield)
 
         # Pearson Correlation
-        pearson_corr, _ = pearsonr(vi_vals, yields)
-        print(f'VI at heading date correlation: {pearson_corr}')
+        pearson_corr, _ = pearsonr(vals, yields)
+        print(f'Value at heading date correlation: {pearson_corr}')
 
         # Create the plot
         plt.figure(figsize=(16, 8))
-        plt.scatter(vi_vals, yields, c=colors, marker='o')
+        plt.scatter(vals, yields, c=colors, marker='o')
 
         # Create custom legend handles
         if season == "winter":
@@ -682,9 +743,9 @@ class Visualizer:
         plt.legend(handles=legend_elements, title="Variety Index")
 
         # Customize the plot
-        plt.xlabel('VI at Heading date')
+        plt.xlabel('Value at Heading date')
         plt.ylabel('Yields')
-        plt.title('VI to Yield')
+        plt.title('Value to Yield')
         plt.tight_layout()
         plt.grid(True)
 

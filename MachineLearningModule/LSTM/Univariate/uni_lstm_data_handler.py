@@ -20,12 +20,14 @@ class UniLSTMDataHandler(DataHandler):
         self.accuracies: list[tuple[list, int, int]] = []
         self.num_buckets = 7
 
-    def make_sets(self, target_variate: str, training_percentage_amt: int) -> None:
+    def make_sets(self, target_variate: str, training_percentage_amt: int, cut_sets=False, bulk_sets=False) -> None:
         """
         Makes a set of uni-variate training and testing sets with given target variate and saves
         them to training_sets and testing_sets
         :param training_percentage_amt: int - The amount of data that is used to train with
         :param target_variate: str - The variate to target when creating the training sets
+        :param cut_sets: bool - Whether or not to cuts training sets down to where distribution is level
+        :param bulk_sets: bool - Whether or not to bulk (fabricate) training sets down to where distribution is level
         :return: None
         """
 
@@ -48,8 +50,10 @@ class UniLSTMDataHandler(DataHandler):
                     self.training_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
                 else:
                     self.testing_sets.append((uni_var_set, plot.variety_index, plot.replication_variety))
-        # self.cut_sets_to_level()
-        # self.bulk_sets_to_level()
+        if cut_sets:
+            self.cut_sets_to_level()
+        if bulk_sets:
+            self.bulk_sets_to_level()
         print(f'Number of training sets: {len(self.training_sets)}')
         print(f'Number of testing sets: {len(self.testing_sets)}')
 
@@ -166,7 +170,7 @@ class UniLSTMDataHandler(DataHandler):
         with open(training_file_path, 'r') as file:
             for line in file:
                 if amt >= max_training_data_amt:
-                    continue
+                    break
                 tuple_str = line.strip()
                 parsed_tuple = ast.literal_eval(tuple_str)
                 self.training_sets.append(parsed_tuple)

@@ -12,6 +12,54 @@ from MachineLearningModule.LSTM.Univariate.vanillaLSTM import VanillaLSTM
 from MachineLearningModule.LSTM.Univariate.stackedLSTM import StackedLSTM
 
 
+def testing_performance(visualize=True):
+    temp = learning_model.verbose
+    learning_model.verbose = 3
+    # Test the model and show results
+    data_handler.make_predictions_and_accuracies_for_test_sets(learning_model)
+    total_percent_errors = []
+    total_rmse_errors = []
+    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+        percent_e_acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+        total_percent_errors.append(percent_e_acc)
+        # print(f'Average percent error (testing data): {percent_e_acc}')
+        goal_val = get_plot(prediction_tup[1], prediction_tup[2], plots).crop_yield
+        rmse_error = calculate_rmse(goal_val, prediction_tup[0])
+        total_rmse_errors.append(rmse_error)
+        # print(f'RMSE error (testing data): {rmse_error}')
+        if visualize:
+            visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+        # print()
+    print(f'Model average percent error (testing data): {sum(total_percent_errors) / len(total_percent_errors)}')
+    print(f'Model average RMSE (testing data): {sum(total_rmse_errors) / len(total_rmse_errors)}')
+    learning_model.verbose = temp
+
+
+def training_performance(visualize=True):
+    temp = learning_model.verbose
+    learning_model.verbose = 3
+    # Check model's performance on training data and show results
+    data_handler.make_predictions_and_accuracies_for_training_sets(learning_model)
+    total_percent_errors = []
+    total_rmse_errors = []
+    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
+        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
+        percent_e_acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
+        total_percent_errors.append(percent_e_acc)
+        # print(f'Average percent error (training data): {percent_e_acc}')
+        goal_val = get_plot(prediction_tup[1], prediction_tup[2], plots).crop_yield
+        rmse_error = calculate_rmse(goal_val, prediction_tup[0])
+        total_rmse_errors.append(rmse_error)
+        # print(f'RMSE error (training data): {rmse_error}')
+        if visualize:
+            visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
+        # print()
+    print(f'Model average percent error (training data): {sum(total_percent_errors) / len(total_percent_errors)}')
+    print(f'Model average RMSE (training data): {sum(total_rmse_errors) / len(total_rmse_errors)}')
+    learning_model.verbose = temp
+
+
 if __name__ == '__main__':
     print("AgAID Project\n")
 
@@ -26,7 +74,6 @@ if __name__ == '__main__':
     # ML model selections
     model_num = 1
     saved_data_set_num = 1
-    target_variate = "ndvi"
 
     # Perform parsing based on selections
     parser = Parser()
@@ -37,9 +84,9 @@ if __name__ == '__main__':
     normalize_all_of_attr(plots, "ndvi")
 
     # Data preparation for machine learning
-    # data_handler.make_sets(target_variate, 80)
-    # data_handler.save_sets(model_num)
-    data_handler.load_saved_sets(30, model_num)
+    # data_handler.make_sets(target_variate="ndvi", training_percentage_amt=80)
+    # data_handler.save_sets(saved_data_set_num)
+    data_handler.load_saved_sets(100, saved_data_set_num)
 
     # Create model
     # learning_model = StackedLSTM(model_num, num_epochs=300)
@@ -49,7 +96,6 @@ if __name__ == '__main__':
     learning_model.load_trained_model(model_num)
     # data_handler.train_on_training_sets(learning_model)
     # learning_model.save_trained_model(model_num)
-    # exit(0)
 
     # Create visualizer
     visualizer = Visualizer()
@@ -57,56 +103,39 @@ if __name__ == '__main__':
     visualizer.show_heading_date = True
     visualizer.show_yield = True
     visualizer.show_prediction = True
+    visualizer.show_ndvi = True
 
-    # Test the model and show results
-    data_handler.make_predictions_and_accuracies_for_test_sets(learning_model)
-    total_percent_errors = []
-    total_rmse_errors = []
-    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
-        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
-        percent_e_acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
-        total_percent_errors.append(percent_e_acc)
-        print(f'Average percent error (testing data): {percent_e_acc}')
-        goal_val = get_plot(prediction_tup[1], prediction_tup[2], plots).crop_yield
-        rmse_error = calculate_rmse(goal_val, prediction_tup[0])
-        total_rmse_errors.append(rmse_error)
-        print(f'RMSE error (testing data): {rmse_error}')
-        # visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
-        print()
-    print(f'Model average percent error (testing data): {sum(total_percent_errors) / len(total_percent_errors)}')
-    print(f'Model average RMSE (testing data): {sum(total_rmse_errors) / len(total_rmse_errors)}')
+    # print("Before weak target training: ")
+    # testing_performance(visualize=False)
+    # data_handler.continue_training_on_weak_sets(learning_model, 2, num_epochs=3)
+    #
+    # training_performance(visualize=False)
+    # data_handler.continue_training_on_weak_sets(learning_model, 6, num_epochs=10)
+    #
+    # print("After weak target training: ")
+    # testing_performance(visualize=True)
+    # training_performance(visualize=True)
+    # learning_model.save_trained_model(2)
 
-    data_handler.continue_training_on_weak_sets(learning_model, 2)
 
-    # Check model's performance on training data and show results
-    data_handler.make_predictions_and_accuracies_for_training_sets(learning_model)
-    total_percent_errors = []
-    total_rmse_errors = []
-    for prediction_tup, accuracies_tup in zip(data_handler.predictions, data_handler.accuracies):
-        entry_bloc_pairs = [(prediction_tup[1], prediction_tup[2])]
-        percent_e_acc = sum(accuracies_tup[0]) / len(accuracies_tup[0])
-        total_percent_errors.append(percent_e_acc)
-        print(f'Average percent error (training data): {percent_e_acc}')
-        goal_val = get_plot(prediction_tup[1], prediction_tup[2], plots).crop_yield
-        rmse_error = calculate_rmse(goal_val, prediction_tup[0])
-        total_rmse_errors.append(rmse_error)
-        print(f'RMSE error (training data): {rmse_error}')
-        # visualizer.visualize_plots(plots, entry_bloc_pairs, prediction_tup[0])
-        print()
-    print(f'Model average percent error (training data): {sum(total_percent_errors) / len(total_percent_errors)}')
-    print(f'Model average RMSE (training data): {sum(total_rmse_errors) / len(total_rmse_errors)}')
+
+
+
+
+
+
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
 
     # Variety plot visualization
-    # visualizer.visualize_variety(plots, "Glee")
+    # visualizer.visualize_variety(plots, "Jedd")
 
     # Visualize all plots
     # visualizer.visualize_num_plots(plots, 35)
 
-    # Visualize correspondence with averaged VI's
-    # visualizer.visualize_avg_vi_correspondence(plots)
+    # Visualize correspondence with averaged values
+    # visualizer.visualize_avg_correspondence(plots, "ndvi")
 
-    # Visualize correspondence with VI at heading date
-    # visualizer.visualize_heading_date_correlation(plots)
+    # Visualize correspondence with value at heading date
+    # visualizer.visualize_heading_date_correlation(plots, "ndvi")

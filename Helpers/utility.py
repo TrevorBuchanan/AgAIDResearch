@@ -311,3 +311,19 @@ def get_plots_min_max_for_attr(plots: list[Plot], attr_name: str) -> tuple[float
             if val > max_val:
                 max_val = val
     return min_val, max_val
+
+
+def get_min_date(plots: list[Plot]):
+    try:
+        return min(dp.date for p in plots for dp in p.data_points)
+    except ValueError:
+        return None
+
+
+def get_max_date(plots: list[Plot]):
+    max_date = 0
+    for p in plots:
+        for dp in p.data_points:
+            if dp.date > max_date:
+                max_date = dp.date
+    return max_date
