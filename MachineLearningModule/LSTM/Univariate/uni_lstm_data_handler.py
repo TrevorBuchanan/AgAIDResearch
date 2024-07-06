@@ -18,6 +18,8 @@ class UniLSTMDataHandler(DataHandler):
         self.testing_sets: list[tuple[list, int, int]] = []
         self.predictions: list[tuple[list, int, int, float]] = []
         self.accuracies: list[tuple[list, int, int]] = []
+        self.best_accuracies_dates: list[int] = []
+        self.accuracies_at_bests: list[float] = []
         self.num_buckets = 7
 
     def make_sets(self, target_variate: str, training_percentage_amt: int, cut_sets=False, bulk_sets=False) -> None:
@@ -99,13 +101,20 @@ class UniLSTMDataHandler(DataHandler):
             test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)], 0)
             predictions = []
             accuracies = []
-            expected = get_plot(test_set[1], test_set[2], self.plots).crop_yield
+            test_plot = get_plot(test_set[1], test_set[2], self.plots)
+            expected = test_plot.crop_yield
+            start_date = test_plot.data_points[0].date
+            end_date = test_plot.data_points[len(test_plot.data_points) - 1].date
+            date_range = end_date - start_date + 1
+            dates = [start_date + i for i in range(date_range)]
             for t_set in reversed(test_sets_for_each_day):
                 prediction = model.predict(t_set)
                 predictions.append(prediction)
                 accuracies.append(percent_error(prediction, expected))
             self.predictions.append((predictions, test_set[1], test_set[2], expected))
             self.accuracies.append((accuracies, test_set[1], test_set[2]))
+            self.best_accuracies_dates.append(dates[accuracies.index(min(accuracies))])
+            self.accuracies_at_bests.append(min(accuracies))
 
     def make_predictions_and_accuracies_for_training_sets(self, model: UnivariateLSTM) -> None:
         """
@@ -118,13 +127,20 @@ class UniLSTMDataHandler(DataHandler):
             test_sets_for_each_day, _ = prep_sequence_target_val([test_set[0]], [0 for _, _ in enumerate(test_set)], 0)
             predictions = []
             accuracies = []
-            expected = get_plot(test_set[1], test_set[2], self.plots).crop_yield
+            test_plot = get_plot(test_set[1], test_set[2], self.plots)
+            expected = test_plot.crop_yield
+            start_date = test_plot.data_points[0].date
+            end_date = test_plot.data_points[len(test_plot.data_points) - 1].date
+            date_range = end_date - start_date + 1
+            dates = [start_date + i for i in range(date_range)]
             for t_set in reversed(test_sets_for_each_day):
                 prediction = model.predict(t_set)
                 predictions.append(prediction)
                 accuracies.append(percent_error(prediction, expected))
             self.predictions.append((predictions, test_set[1], test_set[2], expected))
             self.accuracies.append((accuracies, test_set[1], test_set[2]))
+            self.best_accuracies_dates.append(dates[accuracies.index(min(accuracies))])
+            self.accuracies_at_bests.append(min(accuracies))
 
     def clear_predictions(self) -> None:
         """
@@ -133,6 +149,8 @@ class UniLSTMDataHandler(DataHandler):
         """
         self.predictions.clear()
         self.accuracies.clear()
+        self.best_accuracies_dates.clear()
+        self.accuracies_at_bests.clear()
 
     def save_sets(self, model_num: int) -> None:
         """
@@ -277,6 +295,9 @@ class UniLSTMDataHandler(DataHandler):
         :param num_epochs: The number of epochs for which to continue training the model (default is 50).
         :return: None
         """
+        if not self.accuracies:
+            print("Accuracies list empty so could not find weak sets")
+
         def avg(acc_set):
             return sum(acc_set[0]) / len(acc_set[0])
 

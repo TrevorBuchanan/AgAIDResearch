@@ -53,27 +53,48 @@ As an extra frame of reference, below is the winter yield distribution as well:
 
 ### Models' Results Notes:
 
-**Data sets 1: Trained on raw training data (saved in saved_data_1.txt)**  
-Number of testing sets: 6, Number of training sets: 24  
-Average Yield: 78.30
+**Saved data sets 1: Trained on raw training data**  
+Number of testing sets: 6, Number of training sets: 24
 
 * model_1
-  * Spring, NDVI variate, Stacked 
+  * Spring wheat, NDVI target variate, Vanilla LSTM model
   * Model average percent error (testing data): 5.27
   * Model average RMSE (testing data): 4.78
+  * Most accurate (percent error) date (training data): 172 or 2022-06-21 
+  * Average accuracy at best date (testing data): 0.16
   * Model average percent error (training data): 4.92
-  * Model average RMSE (testing data): 4.56
+  * Model average RMSE (training data): 4.56
+  * Most accurate (percent error) date (training data): 192 or 2022-07-11 
+  * Average accuracy at best date (training data): 0.76
 
+**Saved data sets 2: Trained on cut training data (form of SMOTE)**
 
-* spring_ndvi_vi_mean_vanilla_model1
+* model_3
+  * Spring wheat, NDVI target variate, Vanilla LSTM model
   * Model average percent error (testing data): 
-  * Model average percent error (training data):
+  * Model average RMSE (testing data): 
+  * Most accurate (percent error) date (training data): 
+  * Average accuracy at best date (testing data): 
+  * Model average percent error (training data): 
+  * Model average RMSE (training data): 
+  * Most accurate (percent error) date (training data):
+  * Average accuracy at best date (training data):
 
+**Saved data sets 3: Trained on bulked training data (form of SMOTE)**  
 
-**Data sets 2: Trained on cut training data (form of SMOTE) (saved in saved_data_2.txt)**  
+**Saved data sets 4: Trained on raw training data**  
+Number of testing sets: 4, Number of training sets: 16
 
-**Data sets 3: Trained on bulked training data (form of SMOTE) (saved in saved_data_3.txt)**  
-
+* model_2
+  * Winter wheat, NDVI target variate, Vanilla LSTM model
+  * Model average percent error (testing data): 24.31
+  * Model average RMSE (testing data): 32.87
+  * Most accurate date (training data): 137 or 2022-05-17
+  * Average accuracy (percent error) at best date (testing data): 16.32
+  * Model average percent error (training data): 3.99
+  * Model average RMSE (training data): 6.04
+  * Most accurate date (training data): 159 or 2022-06-08
+  * Average accuracy (percent error) at best date (training data): 1.25
 
 
 ### VI to Yield Correlation Notes:

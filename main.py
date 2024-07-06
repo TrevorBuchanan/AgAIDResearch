@@ -2,7 +2,7 @@
 
 
 from DataStructures.plot import Plot
-from Helpers.utility import get_plot, normalize_all_of_attr, calculate_rmse
+from Helpers.utility import get_plot, normalize_all_of_attr, calculate_rmse, convert_int_to_str_date
 
 from Helpers.visualizer import Visualizer
 from Helpers.parser import Parser
@@ -33,6 +33,12 @@ def testing_performance(visualize=True):
         # print()
     print(f'Model average percent error (testing data): {sum(total_percent_errors) / len(total_percent_errors)}')
     print(f'Model average RMSE (testing data): {sum(total_rmse_errors) / len(total_rmse_errors)}')
+    most_accurate_date = int(round(sum(data_handler.best_accuracies_dates) /
+                                   len(data_handler.best_accuracies_dates), 0))
+    print(f'Most accurate date (training data): {most_accurate_date} or {convert_int_to_str_date(most_accurate_date)}')
+    print(f'Average accuracy (percent error) at best date (testing data): '
+          f'{sum(data_handler.accuracies_at_bests) / len(data_handler.accuracies_at_bests)}')
+    print()
     learning_model.verbose = temp
 
 
@@ -57,6 +63,12 @@ def training_performance(visualize=True):
         # print()
     print(f'Model average percent error (training data): {sum(total_percent_errors) / len(total_percent_errors)}')
     print(f'Model average RMSE (training data): {sum(total_rmse_errors) / len(total_rmse_errors)}')
+    most_accurate_date = int(round(sum(data_handler.best_accuracies_dates) /
+                                   len(data_handler.best_accuracies_dates), 0))
+    print(f'Most accurate date (training data): {most_accurate_date} or {convert_int_to_str_date(most_accurate_date)}')
+    print(f'Average accuracy (percent error) at best date (training data): '
+          f'{sum(data_handler.accuracies_at_bests) / len(data_handler.accuracies_at_bests)}')
+    print()
     learning_model.verbose = temp
 
 
@@ -72,8 +84,8 @@ if __name__ == '__main__':
     season = "spring"
 
     # ML model selections
-    model_num = 1
-    saved_data_set_num = 1
+    model_num = 3
+    saved_data_set_num = 2
 
     # Perform parsing based on selections
     parser = Parser()
@@ -84,18 +96,18 @@ if __name__ == '__main__':
     normalize_all_of_attr(plots, "ndvi")
 
     # Data preparation for machine learning
-    # data_handler.make_sets(target_variate="ndvi", training_percentage_amt=80)
-    # data_handler.save_sets(saved_data_set_num)
-    data_handler.load_saved_sets(100, saved_data_set_num)
+    data_handler.make_sets(target_variate="ndvi", training_percentage_amt=80, cut_sets=True)
+    data_handler.save_sets(saved_data_set_num)
+    # data_handler.load_saved_sets(100, saved_data_set_num)
 
     # Create model
     # learning_model = StackedLSTM(model_num, num_epochs=300)
     learning_model = VanillaLSTM(model_num, num_epochs=300)
 
     # Train model
-    learning_model.load_trained_model(model_num)
-    # data_handler.train_on_training_sets(learning_model)
-    # learning_model.save_trained_model(model_num)
+    # learning_model.load_trained_model(model_num)
+    data_handler.train_on_training_sets(learning_model)
+    learning_model.save_trained_model(model_num)
 
     # Create visualizer
     visualizer = Visualizer()
@@ -103,18 +115,16 @@ if __name__ == '__main__':
     visualizer.show_heading_date = True
     visualizer.show_yield = True
     visualizer.show_prediction = True
-    visualizer.show_ndvi = True
 
     # print("Before weak target training: ")
     # testing_performance(visualize=False)
-    # data_handler.continue_training_on_weak_sets(learning_model, 2, num_epochs=3)
-    #
+    # data_handler.continue_training_on_weak_sets(learning_model, 2, num_epochs=5)
     # training_performance(visualize=False)
     # data_handler.continue_training_on_weak_sets(learning_model, 6, num_epochs=10)
-    #
+
     # print("After weak target training: ")
-    # testing_performance(visualize=True)
-    # training_performance(visualize=True)
+    testing_performance(visualize=False)
+    training_performance(visualize=False)
     # learning_model.save_trained_model(2)
 
 
