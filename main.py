@@ -84,7 +84,7 @@ if __name__ == '__main__':
     season = "winter"
 
     # ML model selections
-    model_num = 6
+    model_num = 12
     saved_data_set_num = 6
 
     # Perform parsing based on selections
@@ -101,13 +101,13 @@ if __name__ == '__main__':
     data_handler.load_saved_sets(100, saved_data_set_num)
 
     # Create model
-    # learning_model = StackedLSTM(model_num, num_epochs=300)
-    learning_model = VanillaLSTM(model_num, num_epochs=300)
+    learning_model = StackedLSTM(model_num, num_epochs=300)
+    # learning_model = VanillaLSTM(model_num, num_epochs=300)
 
     # Train model
     learning_model.load_trained_model(model_num)
-    # data_handler.train_on_training_sets(learning_model)
-    # learning_model.save_trained_model(model_num)
+    data_handler.train_on_training_sets(learning_model)
+    learning_model.save_trained_model(model_num + 1)
 
     # Create visualizer
     visualizer = Visualizer()
@@ -117,8 +117,8 @@ if __name__ == '__main__':
     visualizer.show_prediction = True
     visualizer.show_ndvi = True
 
-    training_performance(visualize=True)
-    testing_performance(visualize=True)
+    training_performance(visualize=False)
+    testing_performance(visualize=False)
 
 
 
