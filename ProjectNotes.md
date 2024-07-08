@@ -53,48 +53,99 @@ As an extra frame of reference, below is the winter yield distribution as well:
 
 ### Models' Results Notes:
 
+
 **Saved data sets 1: Trained on raw training data**  
 Number of testing sets: 6, Number of training sets: 24
 
 * model_1
   * Spring wheat, NDVI target variate, Vanilla LSTM model
-  * Model average percent error (testing data): 5.27
-  * Model average RMSE (testing data): 4.78
-  * Most accurate (percent error) date (training data): 172 or 2022-06-21 
-  * Average accuracy at best date (testing data): 0.16
-  * Model average percent error (training data): 4.92
-  * Model average RMSE (training data): 4.56
-  * Most accurate (percent error) date (training data): 192 or 2022-07-11 
-  * Average accuracy at best date (training data): 0.76
+  * Model average percent error (testing data): 3.41
+  * Model average RMSE (testing data): 3.30
+  * Most accurate date (training data): 188 or 2022-07-07 
+  * Average accuracy (percent error) at best date (testing data): 0.15
+  * Model average percent error (training data): 3.32
+  * Model average RMSE (training data): 3.65
+  * Most accurate date (training data): 189 or 2022-07-08 
+  * Average accuracy (percent error) at best date (training data): 0.23
+
 
 **Saved data sets 2: Trained on cut training data (form of SMOTE)**
+Number of testing sets: 23, Number of training sets: 7
 
 * model_3
   * Spring wheat, NDVI target variate, Vanilla LSTM model
-  * Model average percent error (testing data): 
-  * Model average RMSE (testing data): 
-  * Most accurate (percent error) date (training data): 
-  * Average accuracy at best date (testing data): 
-  * Model average percent error (training data): 
-  * Model average RMSE (training data): 
-  * Most accurate (percent error) date (training data):
-  * Average accuracy at best date (training data):
+  * Model average percent error (testing data): 10.74
+  * Model average RMSE (testing data): 9.56
+  * Most accurate date (training data): 171 or 2022-06-20 
+  * Average accuracy (percent error) at best date (testing data): 2.19
+  * Model average percent error (training data): 2.78
+  * Model average RMSE (training data): 3.59
+  * Most accurate date (training data): 197 or 2022-07-16 
+  * Average accuracy (percent error) at best date (training data): 0.05
+
 
 **Saved data sets 3: Trained on bulked training data (form of SMOTE)**  
+Number of testing sets: 6, Number of training sets: 49
+
+* model_5
+  * Spring wheat, NDVI target variate, Vanilla LSTM model 
+  * Model average percent error (testing data): 9.43
+  * Model average RMSE (testing data): 8.29
+  * Most accurate date (training data): 166 or 2022-06-15 
+  * Average accuracy (percent error) at best date (testing data): 5.86 
+  * Model average percent error (training data): 2.23
+  * Model average RMSE (training data): 2.75
+  * Most accurate date (training data): 181 or 2022-06-30 
+  * Average accuracy (percent error) at best date (training data): 0.17
+
+
 
 **Saved data sets 4: Trained on raw training data**  
 Number of testing sets: 4, Number of training sets: 16
 
 * model_2
   * Winter wheat, NDVI target variate, Vanilla LSTM model
-  * Model average percent error (testing data): 24.31
-  * Model average RMSE (testing data): 32.87
-  * Most accurate date (training data): 137 or 2022-05-17
-  * Average accuracy (percent error) at best date (testing data): 16.32
-  * Model average percent error (training data): 3.99
-  * Model average RMSE (training data): 6.04
-  * Most accurate date (training data): 159 or 2022-06-08
-  * Average accuracy (percent error) at best date (training data): 1.25
+  * Model average percent error (testing data): 22.57
+  * Model average RMSE (testing data): 30.35
+  * Most accurate date (training data): 156 or 2022-06-05 
+  * Average accuracy (percent error) at best date (testing data): 16.28
+  * Model average percent error (training data): 4.05
+  * Model average RMSE (training data): 5.93
+  * Most accurate date (training data): 163 or 2022-06-12 
+  * Average accuracy (percent error) at best date (training data): 1.43
+
+
+**Saved data sets 5: Trained on cut training data (form of SMOTE)**
+Number of testing sets: 13, Number of training sets: 7
+
+* model_4
+  * Winter wheat, NDVI target variate, Vanilla LSTM model
+  * Model average percent error (testing data): 9.20
+  * Model average RMSE (testing data): 13.08
+  * Most accurate date (training data): 167 or 2022-06-16
+  * Average accuracy (percent error) at best date (testing data): 2.96
+  * Model average percent error (training data): 7.53
+  * Model average RMSE (training data): 10.85
+  * Most accurate date (training data): 200 or 2022-07-19
+  * Average accuracy (percent error) at best date (training data): 1.33
+
+
+**Saved data sets 6: Trained on bulked training data (form of SMOTE)**  
+Number of testing sets: 4, Number of training sets: 21
+
+* model_6
+  * Winter wheat, NDVI target variate, Vanilla LSTM model
+  * Model average percent error (testing data): 8.65 
+  * Model average RMSE (testing data): 12.94 
+  * Most accurate date (training data): 160 or 2022-06-09 
+  * Average accuracy (percent error) at best date (testing data): 2.87 
+  * Model average percent error (training data): 3.62
+  * Model average RMSE (training data): 6.56
+  * Most accurate date (training data): 183 or 2022-07-02 
+  * Average accuracy (percent error) at best date (training data): 0.19
+
+
+
 
 
 ### VI to Yield Correlation Notes:
@@ -682,7 +733,7 @@ missing data, then linear interpolation was used.
 **Spring Date Ranges**  
 Plot: Block 1 Variety 9
 Start date: 2022-06-05
-End date: 2022-08-05
+End date: 2022-08-05 (156 Julian Calender)
 Date range: 62
 
 Plot: Block 1 Variety 7
@@ -832,7 +883,7 @@ Date range: 52
 
 **Winter Date Ranges**  
 Plot: Block 1 Variety 1
-Start date: 2022-05-12
+Start date: 2022-05-12 (132 Julian Calender)
 End date: 2022-07-31
 Date range: 81
 

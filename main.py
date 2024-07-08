@@ -81,11 +81,11 @@ if __name__ == '__main__':
     plots: list[Plot] = []
 
     # Parsing selections
-    season = "spring"
+    season = "winter"
 
     # ML model selections
-    model_num = 3
-    saved_data_set_num = 2
+    model_num = 6
+    saved_data_set_num = 6
 
     # Perform parsing based on selections
     parser = Parser()
@@ -96,18 +96,18 @@ if __name__ == '__main__':
     normalize_all_of_attr(plots, "ndvi")
 
     # Data preparation for machine learning
-    data_handler.make_sets(target_variate="ndvi", training_percentage_amt=80, cut_sets=True)
-    data_handler.save_sets(saved_data_set_num)
-    # data_handler.load_saved_sets(100, saved_data_set_num)
+    # data_handler.make_sets(target_variate="ndvi", training_percentage_amt=80, bulk_sets=True)
+    # data_handler.save_sets(saved_data_set_num)
+    data_handler.load_saved_sets(100, saved_data_set_num)
 
     # Create model
     # learning_model = StackedLSTM(model_num, num_epochs=300)
     learning_model = VanillaLSTM(model_num, num_epochs=300)
 
     # Train model
-    # learning_model.load_trained_model(model_num)
-    data_handler.train_on_training_sets(learning_model)
-    learning_model.save_trained_model(model_num)
+    learning_model.load_trained_model(model_num)
+    # data_handler.train_on_training_sets(learning_model)
+    # learning_model.save_trained_model(model_num)
 
     # Create visualizer
     visualizer = Visualizer()
@@ -115,31 +115,41 @@ if __name__ == '__main__':
     visualizer.show_heading_date = True
     visualizer.show_yield = True
     visualizer.show_prediction = True
+    visualizer.show_ndvi = True
 
-    # print("Before weak target training: ")
-    # testing_performance(visualize=False)
-    # data_handler.continue_training_on_weak_sets(learning_model, 2, num_epochs=5)
-    # training_performance(visualize=False)
-    # data_handler.continue_training_on_weak_sets(learning_model, 6, num_epochs=10)
-
-    # print("After weak target training: ")
-    testing_performance(visualize=False)
-    training_performance(visualize=False)
-    # learning_model.save_trained_model(2)
+    training_performance(visualize=True)
+    testing_performance(visualize=True)
 
 
 
+    # Glee
+    # Kelse
+    # Alum
+    # Chet
+    # Louise
+    # Ryan
+    # Seahawk
+    # Whit
+    # Dayn
+    # Tekoa
+    # Net CL+
+    # Jedd
 
-
-
-
+    # Rosalyn
+    # Otto
+    # Puma
+    # Purl
+    # Jasper
+    # Inspire
+    # Piranha CL+
+    # Jameson
 
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
 
     # Variety plot visualization
-    # visualizer.visualize_variety(plots, "Jedd")
+    # visualizer.visualize_variety(plots, "Jameson")
 
     # Visualize all plots
     # visualizer.visualize_num_plots(plots, 35)
