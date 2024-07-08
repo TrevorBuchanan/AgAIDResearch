@@ -1,34 +1,9 @@
-import tensorflow as tf
-
-from tensorflow.keras.models import load_model
+from MachineLearningModule.LSTM.lstm_model import LSTMModel
 
 
-class UnivariateLSTM:
-    def __init__(self, model_num: int, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
-                 verbose: int = 1, activation_function: str = 'relu') -> None:
-        self.num_epochs = num_epochs
-        self.optimizer = optimizer
-        self.loss_function = loss_function
-        self.verbose = verbose
-        self.activation_function = activation_function
-        self.model = None
-        self.n_features = 1
-        self.seed = 7
-        tf.random.set_seed(self.seed)
-
-    def load_trained_model(self, model_num):
-        self.model = load_model(f'MachineLearningModule/LSTM/SavedModels/model_{model_num}.keras')
-
-    def save_trained_model(self, model_num):
-        self.model.save(f'MachineLearningModule/LSTM/SavedModels/model_{model_num}.keras')
-
-    def build_model(self, n_steps):
-        """
-        Builds a uni-variate LSTM model
-        :param n_steps: int - Size of input shape (features=1 because only predicting one value)
-        :return: keras.models.Sequential - New built LSTM model
-        """
-        raise NotImplementedError("No build_model function implemented")
+class UnivariateLSTM(LSTMModel):
+    def __init__(self, num_epochs: int = 500, verbose: int = 1) -> None:
+        super().__init__(num_epochs, verbose)
 
     def train(self, training_sequences: list[list], target_values: list[float]) -> None:
         """

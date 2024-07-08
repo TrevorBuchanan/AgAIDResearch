@@ -12,21 +12,19 @@ from MachineLearningModule.data_handler import prep_sequence_target_val
 
 
 class VanillaLSTM(UnivariateLSTM):
-    def __init__(self, model_number, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
-                 verbose: int = 1, activation_function: str = 'relu'):
-        super().__init__(model_number, num_epochs, optimizer, loss_function, verbose, activation_function)
+    def __init__(self, num_epochs: int = 500, verbose: int = 1):
+        super().__init__(num_epochs, verbose)
 
     def build_model(self, n_steps):
         self.model = Sequential()
         self.model.add(Input(shape=(n_steps, self.n_features)))
         self.model.add(Masking(mask_value=0.0))
-        self.model.add(LSTM(100, activation=self.activation_function, kernel_regularizer=l2(0.01)))
+        self.model.add(LSTM(100, activation='relu', kernel_regularizer=l2(0.01)))
         self.model.add(BatchNormalization())
         self.model.add(Dropout(0.2))
         self.model.add(Dense(1))
         optimizer = Adam(learning_rate=0.0005)
-        self.model.compile(optimizer=optimizer, loss=self.loss_function)
-        # self.model.compile(optimizer=self.optimizer, loss=self.loss_function)
+        self.model.compile(optimizer=optimizer, loss='mse')
 
     def train(self, training_sequences: list[list], target_values: list[float]):
         sets, target_outs = prep_sequence_target_val(training_sequences, target_values, 2)
@@ -37,12 +35,6 @@ class VanillaLSTM(UnivariateLSTM):
         # Define model
         if self.model is None:
             self.build_model(n_steps)
-        # # Early stopping
-        # early_stopping = EarlyStopping(monitor='loss', patience=100, restore_best_weights=True)
-        #
-        # # Fit model with validation split
-        # self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose, callbacks=[early_stopping])
-
         # Early stopping
         early_stopping = EarlyStopping(monitor='val_loss', patience=100, restore_best_weights=True)
 

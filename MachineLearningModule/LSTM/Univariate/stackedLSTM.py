@@ -12,24 +12,22 @@ from MachineLearningModule.data_handler import prep_sequence_target_val
 
 
 class StackedLSTM(UnivariateLSTM):
-    def __init__(self, model_number, num_epochs: int = 500, optimizer: str = 'adam', loss_function: str = 'mse',
-                 verbose: int = 1, activation_function: str = 'relu'):
-        super().__init__(model_number, num_epochs, optimizer, loss_function, verbose, activation_function)
+    def __init__(self, num_epochs: int = 500, verbose: int = 1):
+        super().__init__(num_epochs, verbose)
 
     def build_model(self, n_steps):
         model = Sequential()
         model.add(Input(shape=(n_steps, self.n_features)))
         model.add(Masking(mask_value=0.0))
-        model.add(LSTM(50, activation=self.activation_function, return_sequences=True,
-                       kernel_regularizer=l2(0.01)))
+        model.add(LSTM(50, activation='relu', return_sequences=True, kernel_regularizer=l2(0.01)))
         model.add(Dropout(0.2))
         model.add(BatchNormalization())
-        model.add(LSTM(50, activation=self.activation_function, kernel_regularizer=l2(0.01)))
+        model.add(LSTM(50, activation='relu', kernel_regularizer=l2(0.01)))
         model.add(Dropout(0.2))
         model.add(BatchNormalization())
         model.add(Dense(1, kernel_regularizer=l2(0.01)))
         optimizer = Adam(learning_rate=0.0005)
-        model.compile(optimizer=optimizer, loss=self.loss_function)
+        model.compile(optimizer=optimizer, loss='mse')
         return model
 
     def train(self, training_sequences: list[list], target_values: list[float]):
@@ -41,12 +39,6 @@ class StackedLSTM(UnivariateLSTM):
         # Define model
         if self.model is None:
             self.model = self.build_model(n_steps)
-
-        # # Early stopping
-        # early_stopping = EarlyStopping(monitor='loss', patience=100, restore_best_weights=True)
-        # # Fit model with validation split
-        # self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose, callbacks=[early_stopping])
-
         # Early stopping
         early_stopping = EarlyStopping(monitor='val_loss', patience=25, restore_best_weights=True)
         # Fit model with validation split

@@ -79,7 +79,7 @@ Number of testing sets: 6, Number of training sets: 24
   * Most accurate date (training data): 184 or 2022-07-03 
   * Average accuracy (percent error) at best date (training data): 1.34
 
-**Saved data sets 2: Trained on cut training data (form of SMOTE)**
+**Saved data sets 2: Trained on cut training data (form of SMOTE)**  
 Number of testing sets: 23, Number of training sets: 7
 
 * model_3
@@ -106,7 +106,7 @@ Number of testing sets: 23, Number of training sets: 7
 
 
 
-**Saved data sets 3: Trained on bulked training data (form of SMOTE)**  
+**Saved data sets 3: Trained on bulked training data (form of SMOTE)**   
 Number of testing sets: 6, Number of training sets: 49
 
 * model_5
@@ -158,7 +158,7 @@ Number of testing sets: 4, Number of training sets: 16
   * Average accuracy (percent error) at best date (training data): 3.51
 
 
-**Saved data sets 5: Trained on cut training data (form of SMOTE)**
+**Saved data sets 5: Trained on cut training data (form of SMOTE)**  
 Number of testing sets: 13, Number of training sets: 7
 
 * model_4
@@ -174,14 +174,14 @@ Number of testing sets: 13, Number of training sets: 7
 
 * model_10
   * Winter wheat, NDVI target variate, Stacked LSTM model 
-  * Model average percent error (testing data): 15.443398460234867 
-  * Model average RMSE (testing data): 19.362472391793705 
+  * Model average percent error (testing data): 15.44
+  * Model average RMSE (testing data): 19.36
   * Most accurate date (training data): 147 or 2022-05-27 
-  * Average accuracy (percent error) at best date (testing data): 8.023635734381115
-  * Model average percent error (training data): 4.8102368414500845 
-  * Model average RMSE (training data): 7.544310257157562 
+  * Average accuracy (percent error) at best date (testing data): 8.02
+  * Model average percent error (training data): 4.8
+  * Model average RMSE (training data): 7.54
   * Most accurate date (training data): 177 or 2022-06-26 
-  * Average accuracy (percent error) at best date (training data): 1.0775621786144052 
+  * Average accuracy (percent error) at best date (training data): 1.08
 
 
 **Saved data sets 6: Trained on bulked training data (form of SMOTE)**  
