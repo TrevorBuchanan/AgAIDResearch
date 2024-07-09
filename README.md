@@ -51,6 +51,7 @@ to the visualization (used later for multivariate LSTM model), train models with
 corresponding average of those best accuracies
 * 07/08/2024 - Train models for each data set, model type, and season, start work on multivariate LSTM, fix variety names 
 not being right in visualization
+* 07/09/2024 - 
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
