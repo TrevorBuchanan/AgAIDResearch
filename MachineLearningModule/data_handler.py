@@ -50,6 +50,7 @@ def prep_sequences_target_val(sequences: list[list], targets: list[float], know_
 
     if num_features == 1:  # Uni-variate
         a, b = np.array(sets), np.array(target_outputs)
+        a.reshape((a.shape[0], a.shape[1], num_features))
     else:  # Multivariate
         # Do extra stuff
         tup = tuple()

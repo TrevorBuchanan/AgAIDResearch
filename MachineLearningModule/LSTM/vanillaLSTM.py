@@ -30,8 +30,9 @@ class VanillaLSTM(LSTMModel):
         sets, target_outs = prep_sequences_target_val(training_sequences, target_values, 2)
         sets, target_outs = shuffle_in_unison(sets, target_outs)
         n_steps = sets.shape[1]
+        # TODO: Make sure n steps are right and sets are correct from
+        #  sets = sets.reshape((sets.shape[0], sets.shape[1], self.n_features))
         self.n_features = len(training_sequences[0])
-        sets = sets.reshape((sets.shape[0], sets.shape[1], self.n_features))
         print(f'Avg target: {sum(target_outs) / len(target_outs)}')
         # Define model
         if self.model is None:
