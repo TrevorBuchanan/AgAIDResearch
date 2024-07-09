@@ -120,31 +120,6 @@ if __name__ == '__main__':
     training_performance(visualize=True)
     testing_performance(visualize=True)
 
-
-
-    # Glee
-    # Kelse
-    # Alum
-    # Chet
-    # Louise
-    # Ryan
-    # Seahawk
-    # Whit
-    # Dayn
-    # Tekoa
-    # Net CL+
-    # Jedd
-
-    # Rosalyn
-    # Otto
-    # Puma
-    # Purl
-    # Jasper
-    # Inspire
-    # Piranha CL+
-    # Jameson
-
-
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
 

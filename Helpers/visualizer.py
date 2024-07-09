@@ -312,7 +312,7 @@ class Visualizer:
             if season == 'spring':
                 variety = spring_variety_map[pair[0] - 1]
             else:
-                variety = spring_variety_map[pair[1] - 1]
+                variety = winter_variety_map[pair[0] - 1]
             title_str += str(pair) + " " + variety + " "
 
         plt.title(title_str)
