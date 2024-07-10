@@ -58,7 +58,7 @@ As an extra frame of reference, below is the winter yield distribution as well:
 Number of testing sets: 6, Number of training sets: 24
 
 * model_1
-  * Spring wheat, NDVI target variate, Vanilla LSTM model
+  * Spring wheat, [ndvi] target variate, Vanilla LSTM model
   * Model average percent error (testing data): 3.41
   * Model average RMSE (testing data): 3.30
   * Most accurate date (training data): 188 or 2022-07-07 
@@ -69,7 +69,7 @@ Number of testing sets: 6, Number of training sets: 24
   * Average accuracy (percent error) at best date (training data): 0.23
 
 * model_7
-  * Spring wheat, NDVI target variate, Stacked LSTM model
+  * Spring wheat, [ndvi] target variate, Stacked LSTM model
   * Model average percent error (testing data): 4.66
   * Model average RMSE (testing data): 3.99
   * Most accurate date (training data): 171 or 2022-06-20 
@@ -83,7 +83,7 @@ Number of testing sets: 6, Number of training sets: 24
 Number of testing sets: 23, Number of training sets: 7
 
 * model_3
-  * Spring wheat, NDVI target variate, Vanilla LSTM model
+  * Spring wheat, [ndvi] target variate, Vanilla LSTM model
   * Model average percent error (testing data): 10.74
   * Model average RMSE (testing data): 9.56
   * Most accurate date (training data): 171 or 2022-06-20 
@@ -94,7 +94,7 @@ Number of testing sets: 23, Number of training sets: 7
   * Average accuracy (percent error) at best date (training data): 0.05
 
 * model_9
-  * Spring wheat, NDVI target variate, Stacked LSTM model 
+  * Spring wheat, [ndvi] target variate, Stacked LSTM model 
   * Model average percent error (testing data): 10.20
   * Model average RMSE (testing data): 8.87
   * Most accurate date (training data): 183 or 2022-07-02 
@@ -110,7 +110,7 @@ Number of testing sets: 23, Number of training sets: 7
 Number of testing sets: 6, Number of training sets: 49
 
 * model_5
-  * Spring wheat, NDVI target variate, Vanilla LSTM model 
+  * Spring wheat, [ndvi] target variate, Vanilla LSTM model 
   * Model average percent error (testing data): 9.43
   * Model average RMSE (testing data): 8.29
   * Most accurate date (training data): 166 or 2022-06-15 
@@ -121,7 +121,7 @@ Number of testing sets: 6, Number of training sets: 49
   * Average accuracy (percent error) at best date (training data): 0.17
 
 * model_11
-  * Spring wheat, NDVI target variate, Stacked LSTM model
+  * Spring wheat, [ndvi] target variate, Stacked LSTM model
   * Model average percent error (testing data): 12.54
   * Model average RMSE (testing data): 10.63
   * Most accurate date (training data): 171 or 2022-06-20 
@@ -136,7 +136,7 @@ Number of testing sets: 6, Number of training sets: 49
 Number of testing sets: 4, Number of training sets: 16
 
 * model_2
-  * Winter wheat, NDVI target variate, Vanilla LSTM model
+  * Winter wheat, [ndvi] target variate, Vanilla LSTM model
   * Model average percent error (testing data): 22.57
   * Model average RMSE (testing data): 30.35
   * Most accurate date (training data): 156 or 2022-06-05 
@@ -147,7 +147,7 @@ Number of testing sets: 4, Number of training sets: 16
   * Average accuracy (percent error) at best date (training data): 1.43
 
 * model_8
-  * Winter wheat, NDVI target variate, Stacked LSTM model
+  * Winter wheat, [ndvi] target variate, Stacked LSTM model
   * Model average percent error (testing data): 20.88
   * Model average RMSE (testing data): 28.16
   * Most accurate date (training data): 148 or 2022-05-28 
@@ -162,7 +162,7 @@ Number of testing sets: 4, Number of training sets: 16
 Number of testing sets: 13, Number of training sets: 7
 
 * model_4
-  * Winter wheat, NDVI target variate, Vanilla LSTM model
+  * Winter wheat, [ndvi] target variate, Vanilla LSTM model
   * Model average percent error (testing data): 9.20
   * Model average RMSE (testing data): 13.08
   * Most accurate date (training data): 167 or 2022-06-16
@@ -173,7 +173,7 @@ Number of testing sets: 13, Number of training sets: 7
   * Average accuracy (percent error) at best date (training data): 1.33
 
 * model_10
-  * Winter wheat, NDVI target variate, Stacked LSTM model 
+  * Winter wheat, [ndvi] target variate, Stacked LSTM model 
   * Model average percent error (testing data): 15.44
   * Model average RMSE (testing data): 19.36
   * Most accurate date (training data): 147 or 2022-05-27 
@@ -188,7 +188,7 @@ Number of testing sets: 13, Number of training sets: 7
 Number of testing sets: 4, Number of training sets: 21
 
 * model_6
-  * Winter wheat, NDVI target variate, Vanilla LSTM model
+  * Winter wheat, [ndvi] target variate, Vanilla LSTM model
   * Model average percent error (testing data): 8.65 
   * Model average RMSE (testing data): 12.94 
   * Most accurate date (training data): 160 or 2022-06-09 
@@ -199,7 +199,7 @@ Number of testing sets: 4, Number of training sets: 21
   * Average accuracy (percent error) at best date (training data): 0.19
 
 * model_12
-  * Winter wheat, NDVI target variate, Stacked LSTM model
+  * Winter wheat, [ndvi] target variate, Stacked LSTM model
   * Model average percent error (testing data): 6.68
   * Model average RMSE (testing data): 9.71
   * Most accurate date (training data): 171 or 2022-06-20 
@@ -209,7 +209,25 @@ Number of testing sets: 4, Number of training sets: 21
   * Most accurate date (training data): 163 or 2022-06-12 
   * Average accuracy (percent error) at best date (training data): 4.87
 
+**Saved data sets 7: Trained on raw data**  
+Number of testing sets: , Number of training sets: 
+* model_13
+  * Spring wheat, [cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr] target variates, Vanilla LSTM model
 
+* model_15
+  * Spring wheat, [cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr] target variates, Stacked LSTM model
+  * 
+
+**Saved data sets 8: Trained on raw data**  
+Number of testing sets: , Number of training sets: 
+
+* model_14
+  * Winter wheat, [cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr] target variates, Vanilla LSTM model
+  * 
+
+* model_16
+  * Winter wheat, [cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr] target variates, Stacked LSTM model
+  * 
 
 ### VI to Yield Correlation Notes:
 Note: Offset means the amount of days from the beginning of the data collection. Split size is the

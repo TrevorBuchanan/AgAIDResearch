@@ -81,11 +81,11 @@ if __name__ == '__main__':
     plots: list[Plot] = []
 
     # Parsing selections
-    season = "spring"
+    season = "winter"
 
     # ML model selections
-    model_num = 1
-    saved_data_set_num = 1
+    model_num = 14
+    saved_data_set_num = 8
 
     # Perform parsing based on selections
     parser = Parser()
@@ -115,9 +115,9 @@ if __name__ == '__main__':
     learning_model = VanillaLSTM()
 
     # Train model
-    learning_model.load_trained_model(model_num)
-    # data_handler.train_on_training_sets(learning_model)
-    # learning_model.save_trained_model(model_num)
+    # learning_model.load_trained_model(model_num)
+    data_handler.train_on_training_sets(learning_model)
+    learning_model.save_trained_model(model_num)
 
     # Create visualizer
     visualizer = Visualizer()
@@ -127,8 +127,8 @@ if __name__ == '__main__':
     visualizer.show_prediction = True
     visualizer.show_ndvi = True
 
-    training_performance(visualize=True)
-    testing_performance(visualize=True)
+    training_performance(visualize=False)
+    testing_performance(visualize=False)
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
