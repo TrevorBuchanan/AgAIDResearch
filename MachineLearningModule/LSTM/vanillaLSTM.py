@@ -1,3 +1,5 @@
+import numpy as np
+
 from Helpers.utility import shuffle_in_unison
 
 from numpy import array
@@ -30,8 +32,6 @@ class VanillaLSTM(LSTMModel):
         sets, target_outs = prep_sequences_target_val(training_sequences, target_values, 2)
         sets, target_outs = shuffle_in_unison(sets, target_outs)
         n_steps = sets.shape[1]
-        # TODO: Make sure n steps are right and sets are correct from
-        #  sets = sets.reshape((sets.shape[0], sets.shape[1], self.n_features))
         self.n_features = len(training_sequences[0])
         print(f'Avg target: {sum(target_outs) / len(target_outs)}')
         # Define model
@@ -43,8 +43,8 @@ class VanillaLSTM(LSTMModel):
         self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose,
                        validation_split=0.2, callbacks=[early_stopping])
 
-    def predict(self, sequence: list):
-        sequence = array(sequence)
-        sequence = sequence.reshape((1, len(sequence), self.n_features))
+    def predict(self, sequence: np.array):
+        self.n_features = sequence[0].size
+        sequence = array([sequence])
         predicted = self.model.predict(sequence, verbose=self.verbose)
         return predicted[0][0]

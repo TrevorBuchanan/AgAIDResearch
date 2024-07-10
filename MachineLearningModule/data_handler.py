@@ -35,7 +35,9 @@ def prep_sequences_target_val(sequences: list[list], targets: list[float], know_
     sets = []
     target_outputs = []
     for plot_sequences, target in zip(sequences, targets):
-        for variate_sequence in plot_sequences:
+        plot_step_list_seqs = {}
+        plot_step_list_targets = []
+        for j, variate_sequence in enumerate(plot_sequences):
             end_i_set = len(variate_sequence)
             for i, _ in enumerate(variate_sequence):
                 if end_i_set - i < know_threshold:  # Stop adding to the set when past know threshold
@@ -45,20 +47,29 @@ def prep_sequences_target_val(sequences: list[list], targets: list[float], know_
                 if end_i_set < max_len:
                     ignore_padding_len = max_len - end_i_set
                     seq_set = pad_list(seq_set, 0, ignore_padding_len, 0)
-                sets.append(seq_set)
-                target_outputs.append(seq_target_output)
+                if j == 0:
+                    plot_step_list_targets.append(seq_target_output)
+                if i not in plot_step_list_seqs.keys():
+                    plot_step_list_seqs[i] = []
+                plot_step_list_seqs[i].append(seq_set)
 
-    if num_features == 1:  # Uni-variate
-        a, b = np.array(sets), np.array(target_outputs)
-        a.reshape((a.shape[0], a.shape[1], num_features))
-    else:  # Multivariate
-        # Do extra stuff
-        tup = tuple()
-        for i, a_set in enumerate(sets):
-            if i % num_features == 0:
-                pass
-        # multivariate_set = np.hstack((in_seq1, in_seq2, out_seq, ))
-        a, b = np.array(sets), np.array(target_outputs)
+        sets.append(list(plot_step_list_seqs.values()))
+        target_outputs.append(plot_step_list_targets)
+
+    # if num_features == 1:  # Uni-variate
+    #     a, b = np.array(sets), np.array(target_outputs)
+    #     a = a.reshape((a.shape[0], a.shape[1], num_features))
+    # else:  # Multivariate
+    full_sets = []
+    full_targets = []
+    for plot_sets, plot_targets in zip(sets, target_outputs):
+        for know_day_set, know_day_target in zip(plot_sets, plot_targets):
+            know_day_array = np.array(know_day_set)
+            know_day_array_t = know_day_array.T
+            full_sets.append(know_day_array_t)
+            full_targets.append(know_day_target)
+    a = np.array(full_sets)
+    b = np.array(full_targets)
     return a, b
 
 
@@ -418,3 +429,4 @@ class DataHandler:
         model.num_epochs = num_epochs
         model.train(test_sets, targets)
         model.num_epochs = temp
+
