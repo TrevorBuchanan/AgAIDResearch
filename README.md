@@ -52,7 +52,8 @@ corresponding average of those best accuracies
 * 07/07/2024 - Finished error logging and accuracy tracking
 * 07/08/2024 - Train models for each data set, model type, and season, start work on multivariate LSTM, fix variety names 
 not being right in visualization
-* 07/10/2024 - Finish up implementing multivariate model, train model and log performance
+* 07/09/2024 - Finish up implementing multivariate model, train model and log performance
+* 07/10/2024 - Perform training for multivariate models for both seasons and model types
 * 07/11/2024 - Fix bulk and cut sets functionality with multivariate changes, train additional multivariate models, remove 
 unused (ineffective) strategy of training on weak sets
 

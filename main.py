@@ -116,8 +116,8 @@ if __name__ == '__main__':
 
     # Train model
     learning_model.load_trained_model(model_num)
-    data_handler.train_on_training_sets(learning_model)
-    learning_model.save_trained_model(model_num + 1)
+    # data_handler.train_on_training_sets(learning_model)
+    # learning_model.save_trained_model(model_num)
 
     # Create visualizer
     visualizer = Visualizer()
