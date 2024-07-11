@@ -12,7 +12,7 @@ from Helpers.utility import convert_int_to_str_date, spring_variety_map, winter_
 class Visualizer:
     def __init__(self):
         # Visual settings
-        self.line_mode = False
+        self.line_mode = True
         self.point_mode = False
         # Data selection
         self.show_cigreen0 = False

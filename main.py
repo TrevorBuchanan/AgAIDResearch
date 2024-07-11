@@ -81,11 +81,11 @@ if __name__ == '__main__':
     plots: list[Plot] = []
 
     # Parsing selections
-    season = "winter"
+    season = "spring"
 
     # ML model selections
-    model_num = 14
-    saved_data_set_num = 8
+    model_num = 17
+    saved_data_set_num = 9
 
     # Perform parsing based on selections
     parser = Parser()
@@ -105,23 +105,22 @@ if __name__ == '__main__':
 
     # Data preparation for machine learning
     # data_handler.make_sets(target_variates=["cigreen0", "cigreen", "evi2", "gndvi0", "gndvi", "ndvi", "rdvi",
-    #                                         "savi", "sr"], training_percentage_amt=80)
+    #                                         "savi", "sr"], training_percentage_amt=80, bulk_sets=True)
     # data_handler.make_sets(target_variates=["ndvi"], training_percentage_amt=80)
     # data_handler.save_sets(saved_data_set_num)
     data_handler.load_saved_sets(100, saved_data_set_num)
 
     # Create model
     # learning_model = StackedLSTM()
-    learning_model = VanillaLSTM()
+    learning_model = VanillaLSTM(num_epochs=100)
 
     # Train model
-    # learning_model.load_trained_model(model_num)
+    learning_model.load_trained_model(model_num)
     data_handler.train_on_training_sets(learning_model)
-    learning_model.save_trained_model(model_num)
+    learning_model.save_trained_model(model_num + 1)
 
     # Create visualizer
     visualizer = Visualizer()
-    visualizer.line_mode = True
     visualizer.show_heading_date = True
     visualizer.show_yield = True
     visualizer.show_prediction = True
@@ -134,7 +133,7 @@ if __name__ == '__main__':
     # visualizer.visualize_plots(plots, [(1, 1)])
 
     # Variety plot visualization
-    # visualizer.visualize_variety(plots, "Jameson")
+    # visualizer.visualize_variety(plots, "Piranha CL+")
 
     # Visualize all plots
     # visualizer.visualize_num_plots(plots, 35)

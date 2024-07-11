@@ -341,10 +341,13 @@ class DataHandler:
         :param max_deviation: The maximum deviation for adjusting the values in the original set.
         :return: A new set with adjusted values and the same integers as the original set.
         """
-        new_set = []
-        for val in original_set[0]:
-            new_set.append(val + random.uniform(-max_deviation, max_deviation))
-        return new_set, original_set[1], original_set[2]
+        new_multi_set = []
+        for orig_uni_set in original_set[0]:
+            new_uni_set = []
+            for uni_val in orig_uni_set:
+                new_uni_set.append(uni_val + random.uniform(-max_deviation, max_deviation))
+            new_multi_set.append(new_uni_set)
+        return new_multi_set, original_set[1], original_set[2]
 
     @staticmethod
     def get_bucket_index(num: float, min_value: float, max_value: float, num_buckets: int) -> int:
@@ -364,69 +367,3 @@ class DataHandler:
         if bucket_index == num_buckets:
             bucket_index -= 1
         return bucket_index
-
-    def continue_training_on_weak_sets(self, model, num_worst, num_epochs=50):
-        """
-        Continues training a given model on the weakest performing training sets. The weakest sets are determined by
-        their average accuracies, and the model is retrained on these sets for a specified number of epochs.
-        :param model: The machine learning model to be retrained.
-        :param num_worst: The number of weakest performing sets to select for further training.
-        :param num_epochs: The number of epochs for which to continue training the model (default is 50).
-        :return: None
-        """
-        if not self.accuracies:
-            print("Accuracies list empty so could not find weak sets")
-
-        def avg(acc_set):
-            return sum(acc_set[0]) / len(acc_set[0])
-
-        def get_training_set_in_bucket(bucket_index):
-            while True:
-                index = random.randint(0, len(self.training_sets) - 1)
-                plot = get_plot(self.training_sets[index][1], self.training_sets[index][2], self.plots)
-                if self.get_bucket_index(plot.crop_yield, min_val, max_val, self.num_buckets) == bucket_index:
-                    return self.training_sets[index]
-
-        def offset_set(t_set, ofs):
-            n_set = []
-            for val in t_set[0]:
-                n_set.append(val + ofs)
-            return n_set, t_set[1], t_set[2]
-
-        # Min-heap to keep track of the lowest 3 averages
-        lowest_avgs = []
-        for accuracy_set in self.accuracies:
-            current_avg = avg(accuracy_set)
-            if len(lowest_avgs) < num_worst:
-                heapq.heappush(lowest_avgs, (current_avg, accuracy_set))
-            else:
-                heapq.heappushpop(lowest_avgs, (current_avg, accuracy_set))
-        lowest_avg_sets = [set_info[1] for set_info in lowest_avgs]
-
-        yields = []
-        for tup in self.training_sets:
-            yields.append(get_plot(tup[1], tup[2], self.plots).crop_yield)
-
-        offset = random.uniform(0, 0.05)
-        min_val = min(yields)
-        max_val = max(yields)
-        new_training_sets = []
-        for lowest_avg_set in lowest_avg_sets:
-            bucket_i = self.get_bucket_index(get_plot(lowest_avg_set[1], lowest_avg_set[2], self.plots).crop_yield,
-                                             min_val, max_val, self.num_buckets)
-            training_set = get_training_set_in_bucket(bucket_i)
-            # new_set = self.fabricate_set(training_set)
-            new_set = offset_set(training_set, offset)
-            new_training_sets.append(new_set)
-
-        test_sets = []
-        targets = []
-        for test_set in new_training_sets:
-            test_sets.append(test_set[0])
-            targets.append(get_plot(test_set[1], test_set[2], self.plots).crop_yield + offset * 10)
-
-        temp = model.num_epochs
-        model.num_epochs = num_epochs
-        model.train(test_sets, targets)
-        model.num_epochs = temp
-

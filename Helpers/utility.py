@@ -193,7 +193,8 @@ def get_plot(variety_index: int, replication_variety: int, plots: list) -> Plot:
     if len(same_plots) > 1:
         print("More than 1 same plot")
     if len(same_plots) == 0:
-        print("No same plots found")
+        raise Exception(f'No same plots found with variety: {variety_index} and '
+                        f'replication: {replication_variety} in {plots[0].season_type}')
     return same_plots[0]
 
 
