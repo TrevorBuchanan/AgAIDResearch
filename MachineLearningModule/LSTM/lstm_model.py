@@ -1,4 +1,11 @@
+import numpy as np
+
+from Helpers.utility import shuffle_in_unison
+
 from tensorflow.keras.models import load_model
+from tensorflow.keras.callbacks import EarlyStopping
+
+from MachineLearningModule.data_handler import prep_sequences_target_val
 
 
 class LSTMModel:
@@ -29,12 +36,27 @@ class LSTMModel:
         :param target_values: list[float] - list of target values that lstm tries to train towards
         :return: None
         """
-        raise NotImplementedError("No train function implemented")
+        sets, target_outs = prep_sequences_target_val(training_sequences, target_values, 2)
+        sets, target_outs = shuffle_in_unison(sets, target_outs)
+        n_steps = sets.shape[0]
+        self.n_features = len(training_sequences[0])
+        print(f'Avg target: {sum(target_outs) / len(target_outs)}')
+        # Define model
+        if self.model is None:
+            self.build_model(n_steps)
+        # Early stopping
+        early_stopping = EarlyStopping(monitor='val_loss', patience=75, restore_best_weights=True)
+        # Fit model with validation split
+        self.model.fit(sets, target_outs, epochs=self.num_epochs, verbose=self.verbose,
+                       validation_split=0.2, callbacks=[early_stopping])
 
-    def predict(self, sequence: list) -> float:
+    def predict(self, sequence: np.array) -> float:
         """
         Function to be called to get predicted value after training
         :param sequence: list - Sequence of numbers to be tested and predicted for
         :return: float - Result of running the input sequence through the LSTM model
         """
-        raise NotImplementedError("No predict function implemented")
+        self.n_features = sequence[0].size
+        sequence = np.array([sequence])
+        predicted = self.model.predict(sequence, verbose=self.verbose)
+        return predicted[0][0]
