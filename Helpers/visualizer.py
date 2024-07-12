@@ -298,6 +298,11 @@ class Visualizer:
                 offset += 1
             if self.show_prediction and predictions:
                 print(f'Final expected yield: {predictions[len(predictions) - 1]}')
+                error_amts = [abs(plot.crop_yield - prediction) for prediction in predictions]
+                best_index = error_amts.index(min(error_amts))
+                best_date = min_date + best_index
+                print(f'Best expected yield: {predictions[best_index]}')
+                print(f'Best expected yield date: {best_date} or {convert_int_to_str_date(best_date)}')
 
         # Graph logic
         if self.show_plant_height:
@@ -353,18 +358,15 @@ class Visualizer:
 
         self.visualize_by_plots(plots, entry_bloc_pairs)
 
-    def visualize_by_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple], predictions=None) -> None:
+    def visualize_by_plots(self, plots: list[Plot], entry_bloc_pairs: list[tuple]) -> None:
         """
         Create a graph visualization of given plots' data coloring by each plot
         :param plots: list[Plot] - List of all plots
         :param entry_bloc_pairs: list[tuple] - List of entry block pairs to create visualization for
-        :param predictions: list[float] - Optional list of predictions from ML model
         :return: None
         """
 
         # Start graph figure
-        if predictions is None:
-            predictions = []
         plt.figure(figsize=(16, 8))
 
         # Initialize colormap
@@ -488,11 +490,6 @@ class Visualizer:
                     if self.show_solar_radiation:
                         plt.scatter(date, solar_rads[index], color=plot_color)
 
-            if self.show_prediction and predictions:
-                for date in dates:
-                    index = dates.index(date)
-                    plt.bar(date, predictions[index], color='papayawhip')
-
             # Line graphs
             if self.line_mode:
                 if self.show_cigreen0:
@@ -547,8 +544,6 @@ class Visualizer:
                 plt.bar(max_date + offset, plot.crop_yield / 200, color=plot_color)
                 print(f'Actual yield: {plot.crop_yield}')
                 offset += 1
-            if self.show_prediction and predictions:
-                print(f'Final expected yield: {predictions[len(predictions) - 1]}')
 
         # Graph logic
         if self.show_plant_height:
