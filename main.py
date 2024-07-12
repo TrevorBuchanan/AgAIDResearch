@@ -81,11 +81,11 @@ if __name__ == '__main__':
     plots: list[Plot] = []
 
     # Parsing selections
-    season = "spring"
+    season = "winter"
 
     # ML model selections
-    model_num = 17
-    saved_data_set_num = 9
+    model_num = 6
+    saved_data_set_num = 6
 
     # Perform parsing based on selections
     parser = Parser()
@@ -126,14 +126,14 @@ if __name__ == '__main__':
     visualizer.show_prediction = True
     visualizer.show_ndvi = True
 
-    training_performance(visualize=False)
-    testing_performance(visualize=False)
+    training_performance(visualize=True)
+    testing_performance(visualize=True)
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
 
     # Variety plot visualization
-    # visualizer.visualize_variety(plots, "Piranha CL+")
+    # visualizer.visualize_variety(plots, "Glee")
 
     # Visualize all plots
     # visualizer.visualize_num_plots(plots, 35)

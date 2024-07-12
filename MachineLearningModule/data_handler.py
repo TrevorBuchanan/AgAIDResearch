@@ -6,7 +6,6 @@ import heapq
 from Helpers.utility import get_plot, percent_error
 
 from DataStructures.plot import Plot
-from MachineLearningModule.LSTM.lstm_model import LSTMModel
 
 
 def prep_sequences_target_val(sequences: list[list], targets: list[float], know_threshold: int) \
@@ -200,10 +199,10 @@ class DataHandler:
                 uni_variate_set.append(value)
         return uni_variate_set
 
-    def train_on_training_sets(self, model: LSTMModel) -> None:
+    def train_on_training_sets(self, model) -> None:
         """
         Train given model on class's training sets
-        :param model: keras.models.Sequential - Model to be trained
+        :param model: LSTMModel - Model to be trained
         :return: None
         """
         if not self.training_sets:
@@ -217,10 +216,10 @@ class DataHandler:
 
         model.train(training_sets, targets)
 
-    def make_predictions_and_accuracies_for_test_sets(self, model: LSTMModel) -> None:
+    def make_predictions_and_accuracies_for_test_sets(self, model) -> None:
         """
         Populate self's list of predictions for test sets (also populates accuracies)
-        :param model: keras.models.Sequential - Model to predict with
+        :param model: LSTMModel - Model to predict with
         :return: None
         """
         if not self.testing_sets:
@@ -246,10 +245,10 @@ class DataHandler:
             self.best_accuracies_dates.append(dates[accuracies.index(min(accuracies))])
             self.accuracies_at_bests.append(min(accuracies))
 
-    def make_predictions_and_accuracies_for_training_sets(self, model: LSTMModel) -> None:
+    def make_predictions_and_accuracies_for_training_sets(self, model) -> None:
         """
         Populate self's list of predictions for test sets (also populates accuracies)
-        :param model: keras.models.Sequential - Model to predict with
+        :param model: LSTMModel - Model to predict with
         :return: None
         """
         if not self.training_sets:
