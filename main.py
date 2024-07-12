@@ -85,7 +85,7 @@ if __name__ == '__main__':
     # Parsing selections
     season = "winter"
 
-    # Best winter: 14 or 6, best spring: 1
+    # Best winter: 14 with honorable mention 6, best spring: 1
     # ML model selections
     model_num = 14
     saved_data_set_num = 8
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     learning_model = VanillaLSTM(num_epochs=100)
 
     # Train model
-    # learning_model.load_trained_model(model_num)
+    learning_model.load_trained_model(model_num)
     # data_handler.train_on_training_sets(learning_model)
     # learning_model.save_trained_model(model_num)
 
@@ -129,14 +129,14 @@ if __name__ == '__main__':
     visualizer.show_prediction = True
     visualizer.show_ndvi = True
 
-    # training_performance(visualize=True)
-    # testing_performance(visualize=True)
+    training_performance(visualize=True)
+    testing_performance(visualize=True)
 
     # Visualize plot
     # visualizer.visualize_plots(plots, [(1, 1)])
     #
     # Variety plot visualization
-    visualizer.visualize_variety(plots, "Piranha CL+")
+    # visualizer.visualize_variety(plots, "Piranha CL+")
     #
     # Visualize all plots
     # visualizer.visualize_num_plots(plots, 35)

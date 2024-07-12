@@ -56,7 +56,7 @@ not being right in visualization
 * 07/10/2024 - Finish up implementing multivariate model, train model and log performance
 * 07/11/2024 - Fix bulk and cut sets functionality with multivariate changes, train additional multivariate models, remove 
 unused (ineffective) strategy of training on weak sets
-* 07/12/2024 - Fix best yield being shown to screen and their dates
+* 07/12/2024 - Fix best yield being shown to screen and their dates, add rmse units and description 
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
