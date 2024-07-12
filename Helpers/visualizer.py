@@ -297,11 +297,11 @@ class Visualizer:
                 print(f'Actual yield: {plot.crop_yield}')
                 offset += 1
             if self.show_prediction and predictions:
-                print(f'Final expected yield: {predictions[len(predictions) - 1]}')
+                print(f'Final expected yield: {round(predictions[len(predictions) - 1], 2)}')
                 error_amts = [abs(plot.crop_yield - prediction) for prediction in predictions]
                 best_index = error_amts.index(min(error_amts))
                 best_date = min_date + best_index
-                print(f'Best expected yield: {predictions[best_index]}')
+                print(f'Best expected yield: {round(predictions[best_index], 2)}')
                 print(f'Best expected yield date: {best_date} or {convert_int_to_str_date(best_date)}')
 
         # Graph logic
