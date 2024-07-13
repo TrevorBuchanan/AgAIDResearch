@@ -14,7 +14,11 @@ By: **Trevor Buchanan**
 
 ---
 
-## Project progress summary:
+## Project Summary:
+This project encompasses using convolutional neural networks to parse images for VIs (Vegetation Indices) and
+utilizing time series machine learning to predict wheat yield from VIs. 
+
+## Project Progress Summary:
 * 06/10/2024 - Familiarization with data and begin to parse
 * 06/11/2024 - Continue to parse data and begin create visualizations for it
 * 06/12/2024 - Expand and refine visualizations and interpolate between missing 
@@ -56,7 +60,9 @@ not being right in visualization
 * 07/10/2024 - Finish up implementing multivariate model, train model and log performance
 * 07/11/2024 - Fix bulk and cut sets functionality with multivariate changes, train additional multivariate models, remove 
 unused (ineffective) strategy of training on weak sets
-* 07/12/2024 - Fix best yield being shown to screen and their dates, add rmse units and description 
+* 07/12/2024 - Fix best yield being shown to screen and their dates, add rmse units and description, begin working on image
+processing
+* 
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
@@ -66,4 +72,11 @@ unused (ineffective) strategy of training on weak sets
 * [3] C. Olah, “Understanding LSTM Networks,” Github.io, Aug. 27, 2015. https://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
 * [4] Liu, G., Zhong, K., Li, H., Chen, T., Wang Y., 2023b. A state of art review on time series forecasting with machine learning for environmental parameters in agricultural greenhouses. Inf. Process. Agric. https://doi.org/10.1016/j.inpa.2022.10.005.
+
+* [5] W. Sangjan, A. H. Carter, M. O. Pumphrey, V. Jitkov, and S. Sankaran, “Development of a Raspberry Pi-Based Sensor System for Automated In-Field Monitoring to Support Crop Breeding Programs,” Inventions, vol. 6, no. 2, p. 42, Jun. 2021, doi: https://doi.org/10.3390/inventions6020042.
+
+* [6] H. Zhang, Y. Zhang, K. Liu, S. Lan, T. Gao, and M. Li, “Winter wheat yield prediction using integrated Landsat 8 and Sentinel-2 vegetation index time-series data and machine learning algorithms,” Computers and electronics in agriculture, vol. 213, pp. 108250–108250, Oct. 2023, doi: https://doi.org/10.1016/j.compag.2023.108250.
+
+* [7] J. Dempewolf et al., “Wheat Yield Forecasting for Punjab Province from Vegetation Index Time Series and Historic Crop Statistics,” Remote Sensing, vol. 6, no. 10, pp. 9653–9675, Oct. 2014, doi: https://doi.org/10.3390/rs6109653.
+
 
