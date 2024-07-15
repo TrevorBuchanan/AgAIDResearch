@@ -305,6 +305,12 @@ class Visualizer:
                 print(f'Best expected yield date: {best_date} or {convert_int_to_str_date(best_date)}')
 
         # Graph logic
+        current_ticks = plt.gca().get_xticks()
+        temp_ticks = [int(val) for val in current_ticks]
+        str_dates = [convert_int_to_str_date(num) for num in temp_ticks]
+        label_dict = {key: value for key, value in zip(temp_ticks, str_dates)}
+        new_labels = [label_dict.get(tick, '') for tick in current_ticks]
+        plt.xticks(ticks=current_ticks, labels=new_labels)
         if self.show_plant_height:
             plt.xlim(min_date, max_date + 21 + offset)
         elif self.show_test_pounds_per_bushel:
@@ -319,7 +325,6 @@ class Visualizer:
             else:
                 variety = winter_variety_map[pair[0] - 1]
             title_str += str(pair) + " " + variety + " "
-
         plt.title(title_str)
         plt.xlabel('Dates')
         plt.ylabel('Plot Values')
@@ -451,23 +456,23 @@ class Visualizer:
                     index = dates.index(date)
                     # VI means
                     if self.show_cigreen0:
-                        plt.scatter(date, cigreen0s[index], color='purple')
+                        plt.scatter(date, cigreen0s[index], color=plot_color)
                     if self.show_cigreen:
-                        plt.scatter(date, cigreens[index], color='peru')
+                        plt.scatter(date, cigreens[index], color=plot_color)
                     if self.show_evi2:
-                        plt.scatter(date, evi2s[index], color='violet')
+                        plt.scatter(date, evi2s[index], color=plot_color)
                     if self.show_gndvi0:
-                        plt.scatter(date, gndvi0s[index], color='indigo')
+                        plt.scatter(date, gndvi0s[index], color=plot_color)
                     if self.show_gndvi:
-                        plt.scatter(date, gndvis[index], color='navy')
+                        plt.scatter(date, gndvis[index], color=plot_color)
                     if self.show_ndvi:
-                        plt.scatter(date, ndvis[index], color='springgreen')
+                        plt.scatter(date, ndvis[index], color=plot_color)
                     if self.show_rdvi:
-                        plt.scatter(date, rdvis[index], color='seagreen')
+                        plt.scatter(date, rdvis[index], color=plot_color)
                     if self.show_savi:
-                        plt.scatter(date, savis[index], color='darkkhaki')
+                        plt.scatter(date, savis[index], color=plot_color)
                     if self.show_sr:
-                        plt.scatter(date, srs[index], color='rosybrown')
+                        plt.scatter(date, srs[index], color=plot_color)
                     # Air temp
                     if self.show_air_temp:
                         plt.scatter(date, air_temps[index], color=plot_color)
@@ -524,6 +529,8 @@ class Visualizer:
                     plt.plot(dates, precip_means, color=plot_color)
                 if self.show_solar_radiation:
                     plt.plot(dates, solar_rads, color=plot_color)
+            # Plot
+            print(f'Plot variety: {plot.variety_index}, replication: {plot.replication_variety}')
 
             # Heading date
             if self.show_heading_date:
@@ -546,12 +553,19 @@ class Visualizer:
                 offset += 1
 
         # Graph logic
+        current_ticks = plt.gca().get_xticks()
+        temp_ticks = [int(val) for val in current_ticks]
+        str_dates = [convert_int_to_str_date(num) for num in temp_ticks]
+        label_dict = {key: value for key, value in zip(temp_ticks, str_dates)}
+        new_labels = [label_dict.get(tick, '') for tick in current_ticks]
+        plt.xticks(ticks=current_ticks, labels=new_labels)
         if self.show_plant_height:
             plt.xlim(min_date, max_date + 21 + offset)
         elif self.show_test_pounds_per_bushel:
             plt.xlim(min_date, max_date + 11 + offset)
         else:
             plt.xlim(min_date, max_date + 1 + offset)
+
         # Make title string
         title_str: str = "Values for Plots: "
         for pair in entry_bloc_pairs:
