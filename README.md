@@ -62,7 +62,7 @@ not being right in visualization
 unused (ineffective) strategy of training on weak sets
 * 07/12/2024 - Fix best yield being shown to screen and their dates, add rmse units and description, begin working on image
 processing
-* 07/15/2024 - Search for explanations for irregularities in VI to yield, make dates more readable in graphs
+* 07/15/2024 - Search for explanations for irregularities in VI to yield, make dates more readable in graphs, further advancements to CNN
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
