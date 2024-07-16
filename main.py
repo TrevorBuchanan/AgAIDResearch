@@ -1,5 +1,5 @@
 # By: Trevor Buchanan
-
+#
 # from DataStructures.plot import Plot
 #
 # from Helpers.utility import get_plot, normalize_all_of_attr, calculate_rmse, convert_int_to_str_date
@@ -72,12 +72,28 @@
 #     print()
 #     learning_model.verbose = temp
 
+from ImageHandling.image_loader import ImageLoader
+from ImageHandling.image_processor import ImageProcessor
+from ImageHandling.image_displayer import ImageDisplayer
+
 
 if __name__ == '__main__':
     print("AgAID Project\n")
 
+    image_loader = ImageLoader()
+    image_processor = ImageProcessor()
+    image_displayer = ImageDisplayer()
 
+    # Get image
+    image = image_loader.load_image('date_1-5-2024_10.0.11_1')
 
+    # Process image
+    gray_image = image_processor.convert_to_gray(image)
+    rectangles = image_processor.detect_rects(gray_image)
+    image_processor.draw_rects_to_image(image, rectangles)
+
+    # Display image
+    image_displayer.plot_images([gray_image, image])
 
 
 
