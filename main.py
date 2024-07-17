@@ -93,7 +93,7 @@ if __name__ == '__main__':
     image_processor.draw_rects_to_image(image, rectangles)
 
     # Display image
-    image_displayer.plot_images([gray_image, image])
+    image_displayer.plot_images([gray_image, image], ['gray'])
 
 
 
