@@ -7,26 +7,20 @@ class ImageLoader:
         pass
 
     @staticmethod
-    def load_image(image_name: str):
+    def load_image(camera_name: str, image_name: str):
         """
-        Gets image at given image name from files in ReferencePanelData
+        Gets image at given image name from files in ReferencePanelData/<camera_name>
+        :param camera_name: str - Name of the camera directory to search in
         :param image_name: str - Name of image file to load
         :return: Image
         """
         root_dir = 'ReferencePanelData'
-        image_path = None
+        camera_dir = os.path.join(root_dir, camera_name)
+        image_path = os.path.join(camera_dir, f"{image_name}.png")
 
-        # Walk through all directories and files under root_dir
-        for root, dirs, files in os.walk(root_dir):
-            for file in files:
-                if file == f"{image_name}.png":
-                    image_path = os.path.join(root, file)
-                    break
-            if image_path:
-                break
-        if not image_path:
-            print(f"Image {image_name}.png not found in {root_dir} or its subdirectories.")
-            return
+        if not os.path.exists(image_path):
+            raise FileNotFoundError(f"Image {image_name}.png not found in {camera_dir}.")
+
         image = cv2.imread(image_path)
         # Convert BGR image to RGB
         img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

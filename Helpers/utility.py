@@ -315,6 +315,7 @@ def get_plots_min_max_for_attr(plots: list[Plot], attr_name: str) -> tuple[float
 
 
 def get_min_date(plots: list[Plot]):
+    # TODO: Function def
     try:
         return min(dp.date for p in plots for dp in p.data_points)
     except ValueError:
@@ -322,9 +323,78 @@ def get_min_date(plots: list[Plot]):
 
 
 def get_max_date(plots: list[Plot]):
+    # TODO: Function def
     max_date = 0
     for p in plots:
         for dp in p.data_points:
             if dp.date > max_date:
                 max_date = dp.date
     return max_date
+
+
+def max_histogram_area(row):
+    """
+    Helper function to find the maximum rectangular area in a histogram row.
+    :param row: (list of int) - A list representing the histogram row.
+    :return: tuple - (max_area, left, height, width) of the largest rectangle.
+    """
+    stack = []
+    max_area = 0
+    max_left = -1
+    max_height = 0
+    max_width = 0
+    index = 0
+
+    while index < len(row):
+        if not stack or row[stack[-1]] <= row[index]:
+            stack.append(index)
+            index += 1
+        else:
+            top_of_stack = stack.pop()
+            height = row[top_of_stack]
+            width = index if not stack else index - stack[-1] - 1
+            area = height * width
+            if area > max_area:
+                max_area = area
+                max_left = stack[-1] + 1 if stack else 0
+                max_height = height
+                max_width = width
+
+    while stack:
+        top_of_stack = stack.pop()
+        height = row[top_of_stack]
+        width = index if not stack else index - stack[-1] - 1
+        area = height * width
+        if area > max_area:
+            max_area = area
+            max_left = stack[-1] + 1 if stack else 0
+            max_height = height
+            max_width = width
+
+    return max_area, max_left, max_height, max_width
+
+
+def find_max_rectangle(matrix):
+    """
+    Finds the maximum rectangle of 1s in a binary matrix.
+    :param matrix: list[list[int]] - A binary matrix (list of lists) with 1s and 0s.
+    :return: tuple - (top_left_coordinates, size) where top_left_coordinates is a tuple (row, col)
+           and size is a tuple (height, width) of the maximum rectangle.
+    """
+    max_area = 0
+    top_left_coordinates = (0, 0)
+    max_size = (0, 0)
+
+    for row in range(len(matrix)):
+        if row > 0:
+            for col in range(len(matrix[row])):
+                if matrix[row][col]:
+                    matrix[row][col] += matrix[row - 1][col]
+
+        area, left, height, width = max_histogram_area(matrix[row])
+        if area > max_area:
+            max_area = area
+            top_left_coordinates = (row - height + 1, left)
+            max_size = (height, width)
+
+    return int(top_left_coordinates[0]), int(top_left_coordinates[1]), int(max_size[0]), int(max_size[1])

@@ -76,7 +76,6 @@ from ImageHandling.image_loader import ImageLoader
 from ImageHandling.image_processor import ImageProcessor
 from ImageHandling.image_displayer import ImageDisplayer
 
-
 if __name__ == '__main__':
     print("AgAID Project\n")
 
@@ -85,15 +84,25 @@ if __name__ == '__main__':
     image_displayer = ImageDisplayer()
 
     # Get image
-    image = image_loader.load_image('date_1-5-2024_10.0.11_1')
+    image = image_loader.load_image('cam4', 'date_30-5-2024_10.0.11_1')
 
     # Process image
-    gray_image = image_processor.convert_to_gray(image)
-    rectangles = image_processor.detect_rects(gray_image)
-    image_processor.draw_rects_to_image(image, rectangles)
-
+    image_cpy = image.copy()
+    red_channel, green_channel, blue_channel = image_processor.separate_colors(image_cpy)
+    values_channel = image_processor.convert_to_gray(image_cpy)
+    channel_image = green_channel
+    w = channel_image.shape[1]
+    h = channel_image.shape[0]
+    channel_image = channel_image[0:int(h / 2.5), 0:w]
+    left_gray_image, right_gray_image = image_processor.vertical_image_split(channel_image)
+    left_rectangles = image_processor.detect_rects(left_gray_image, show_mask=True, show_contours=True)
+    image_processor.draw_rects_to_left_image(image, left_rectangles)
+    right_rectangles = image_processor.detect_rects(right_gray_image, show_mask=True, show_contours=True)
+    image_processor.draw_rects_to_right_image(image, right_rectangles)
     # Display image
-    image_displayer.plot_images([gray_image, image], ['gray'])
+    image_displayer.plot_images([red_channel, green_channel, blue_channel, green_channel], ['Reds', 'Greens', 'Blues',
+                                                                                            'gray'])
+    image_displayer.plot_images([image], [])
 
 
 
