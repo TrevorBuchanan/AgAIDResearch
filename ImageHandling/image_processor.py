@@ -48,62 +48,80 @@ class ImageProcessor:
         # Convert to grayscale
         return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
-    def detect_rects(self, gray_scale_image, tolerance=4, show_mask=False, show_rects_masks=False, show_contours=False):
+    def detect_rects(self, image_channel, tolerance=3, show_mask=False, show_rects_masks=False, show_contours=False):
         # Create an empty mask
-        mask = np.zeros_like(gray_scale_image, dtype=np.uint8)
+        mask = np.zeros_like(image_channel, dtype=np.uint8)
 
         # Iterate over each pixel and compare with neighbors
-        rows, cols = gray_scale_image.shape
-        # x_center = int(cols / 2)
+        rows, cols = image_channel.shape
         for i in range(1, rows - 1):
             for j in range(1, cols - 1):
                 # Check if neighboring pixels are within the tolerance
-                if (abs(int(gray_scale_image[i, j]) - int(gray_scale_image[i - 1, j])) < tolerance and
-                        abs(int(gray_scale_image[i, j]) - int(gray_scale_image[i + 1, j])) < tolerance and
-                        abs(int(gray_scale_image[i, j]) - int(gray_scale_image[i, j - 1])) < tolerance and
-                        abs(int(gray_scale_image[i, j]) - int(gray_scale_image[i, j + 1])) < tolerance):
+                if (abs(int(image_channel[i, j]) - int(image_channel[i - 1, j])) < tolerance and
+                        abs(int(image_channel[i, j]) - int(image_channel[i + 1, j])) < tolerance and
+                        abs(int(image_channel[i, j]) - int(image_channel[i, j - 1])) < tolerance and
+                        abs(int(image_channel[i, j]) - int(image_channel[i, j + 1])) < tolerance):
                     mask[i, j] = 255
 
         # Show mask
         if show_mask:
             plt.figure(figsize=(16, 8))
             plt.imshow(mask, cmap='gray')
+            plt.title('Mask')
             plt.axis('off')
             plt.tight_layout()
             plt.show()
 
-        edges = cv2.Canny(mask, 50, 150)
-        plt.figure(figsize=(16, 8))
-        plt.imshow(edges, cmap='gray')
-        plt.axis('off')
-        plt.tight_layout()
-        plt.show()
-
         # Find contours in the mask
-        contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # Draw contours on a copy of the original image
-        img_with_contours = gray_scale_image.copy()
-        cv2.drawContours(img_with_contours, contours, -1, (0, 255, 0), 2)
+        img_with_contours = image_channel.copy()
+        cv2.drawContours(img_with_contours, contours, -1, (255,), thickness=cv2.FILLED)
+
+        binary_contours = img_with_contours.copy()
+        binary_contours[binary_contours != 255] = 0
+        binary_contours[binary_contours == 255] = 1
+        self.filter_lonelies(binary_contours, 5)
+
+        if binary_contours.dtype != np.uint8:
+            binary_contours = cv2.convertScaleAbs(binary_contours)
+        contours2, _ = cv2.findContours(binary_contours, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # Show the image with contours
         if show_contours:
             plt.figure(figsize=(16, 8))
             plt.imshow(img_with_contours, cmap='gray')
+            plt.title('Contours')
             plt.axis('off')
             plt.tight_layout()
             plt.show()
 
-        # Create a blank image to draw filled contours
-        outlines_image = np.zeros_like(img_with_contours)
-
-        for contour in contours:
-            # Draw filled contour on the blank image
-            cv2.drawContours(outlines_image, [contour], -1, (255,), thickness=cv2.FILLED)
+            plt.figure(figsize=(16, 8))
+            plt.imshow(binary_contours, cmap='gray')
+            plt.title('Binary contours')
+            plt.axis('off')
+            plt.tight_layout()
+            plt.show()
 
         rects = []
-
         # Loop through contours and approximate to polygon
+        for contour in contours:
+            # Get bounding rect and draw it
+            x, y, w, h = cv2.boundingRect(contour)
+            # Check if valid
+            min_required_area = 300
+            max_width = 50
+            max_height = 50
+            # Check width and height
+            if w > max_width or h > max_height:
+                pass
+                continue
+            # Check if area is greater than the minimum required
+            if w * h < min_required_area:
+                pass
+                continue
+            rects.append((x, y, w, h))
         for contour in contours:
             epsilon = 0.01 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
@@ -111,19 +129,51 @@ class ImageProcessor:
             # Get bounding rect and draw it
             x, y, w, h = cv2.boundingRect(approx)
             # Check if valid
-            min_required_area = 250
+            min_required_area = 300
             max_width = 50
             max_height = 50
             # Check width and height
             if w > max_width or h > max_height:
                 pass
-                # continue
+                continue
             # Check if area is greater than the minimum required
             if w * h < min_required_area:
                 pass
-                # continue
+                continue
             rects.append((x, y, w, h))
-        rects = self.filter_rects(gray_scale_image, rects, 7, show_mask=show_rects_masks)
+        for contour in contours2:
+            # Get bounding rect and draw it
+            x, y, w, h = cv2.boundingRect(contour)
+            # Check if valid
+            min_required_area = 300
+            max_width = 40
+            max_height = 40
+            # Check width and height
+            if w > max_width or h > max_height:
+                continue
+            # Check if area is greater than the minimum required
+            if w * h < min_required_area:
+                continue
+            rects.append((x, y, w, h))
+        for contour in contours2:
+            epsilon = 0.01 * cv2.arcLength(contour, True)
+            approx = cv2.approxPolyDP(contour, epsilon, True)
+
+            # Get bounding rect and draw it
+            x, y, w, h = cv2.boundingRect(approx)
+            # Check if valid
+            min_required_area = 300
+            max_width = 40
+            max_height = 40
+            # Check width and height
+            if w > max_width or h > max_height:
+                continue
+            # Check if area is greater than the minimum required
+            if w * h < min_required_area:
+                continue
+            rects.append((x, y, w, h))
+
+        rects = self.filter_rects_by_uniform_value(image_channel, rects, 8, show_mask=show_rects_masks)
         return rects
 
     @staticmethod
@@ -182,7 +232,7 @@ class ImageProcessor:
 
         return max_pixel_value - min_pixel_value
 
-    def filter_rects(self, gray_scale_image, rectangles, tolerance, show_mask=False):  # Temp Name
+    def filter_rects_by_uniform_value(self, gray_scale_image, rectangles, tolerance, show_mask=False):  # Temp Name
         valid_rects = []
         for rect in rectangles:
             scaled_image = gray_scale_image[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
@@ -207,9 +257,9 @@ class ImageProcessor:
                 plt.imshow(mask, cmap='gray')
                 plt.axis('off')
                 plt.subplot(1, 2, 2)
-                temp = gray_scale_image
+                temp = gray_scale_image.copy()
                 self.draw_rects_to_left_image(temp, [rect])
-                plt.imshow(gray_scale_image, cmap='gray')
+                plt.imshow(temp, cmap='gray')
                 plt.axis('off')
                 plt.tight_layout()
                 plt.show()
@@ -221,28 +271,90 @@ class ImageProcessor:
             total_y = y + rect[1]
 
             # Check if valid
-            min_required_area = 250
-            max_width = 50
-            max_height = 50
-            # Check width and height
-            if w > max_width or h > max_height:
-                pass
-                # continue
+            min_required_area = 200
+            min_width = 8
+            min_height = 8
             # Check if area is greater than the minimum required
             if w * h < min_required_area:
-                pass
-                # continue
-
+                continue
+            # Check if length and width are greater than min
+            if w < min_width or h < min_height:
+                continue
             valid_rects.append((total_x, total_y, w, h))
 
         return valid_rects
 
     @staticmethod
-    def filter_rects_to_similar_location(rects1, rects2):
+    def filter_rects_to_similar_location(rects1, rects2, tolerance=50):
         """
 
         :param rects1:
         :param rects2:
+        :param tolerance:
         :return:
         """
-        pass
+        filtered_rects1, filtered_rects2 = [], []
+
+        for r1 in rects1:
+            for r2 in rects2:
+                if (r1[0] + (int(r1[2])/2)) - (r2[0] + (int(r2[2])/2)) < tolerance and \
+                        (r1[1] + (int(r1[3])/2)) - (r2[1] + (int(r2[3])/2)) < tolerance:
+                    filtered_rects1.append(r1)
+                    filtered_rects2.append(r2)
+        return filtered_rects1, filtered_rects2
+
+    @staticmethod
+    def filter_lonelies(image, max_length):
+        """
+
+        :param image:
+        :param max_length:
+        :return:
+        """
+        for row in image:
+            indices = []
+            for i, col_val in enumerate(row):
+                if col_val == 1:
+                    indices.append(i)
+                else:
+                    if len(indices) <= max_length:
+                        for index in indices:
+                            row[index] = 0
+                    indices = []
+        for col in range(image.shape[1]):  # arr.shape[1] gives the number of columns
+            indices = []
+            for i, row_val in enumerate(image[:, col]):
+                if row_val == 1:
+                    indices.append(i)
+                else:
+                    if len(indices) <= max_length:
+                        for index in indices:
+                            image[index][col] = 0
+                    indices = []
+        return image
+
+    @staticmethod
+    def filter_near_duplicates(rects, tolerance=10):
+        """
+        Filters out near duplicate rectangles based on the given tolerance.
+        :param rects: List of rectangles, where each rectangle is represented as a tuple (x1, y1, x2, y2).
+        :param tolerance: Tolerance for considering rectangles as near duplicates.
+        :return: List of filtered rectangles with duplicates removed.
+        """
+        filtered_rects = []
+
+        for rect1 in rects:
+            is_duplicate = False
+            for rect2 in filtered_rects:
+                if (abs(rect1[0] - rect2[0]) <= tolerance and
+                        abs(rect1[1] - rect2[1]) <= tolerance and
+                        abs(rect1[2] - rect2[2]) <= tolerance and
+                        abs(rect1[3] - rect2[3]) <= tolerance):
+                    is_duplicate = True
+                    break
+
+            if not is_duplicate:
+                filtered_rects.append(rect1)
+
+        return filtered_rects
+

@@ -75,6 +75,7 @@
 from ImageHandling.image_loader import ImageLoader
 from ImageHandling.image_processor import ImageProcessor
 from ImageHandling.image_displayer import ImageDisplayer
+from tqdm import tqdm
 
 if __name__ == '__main__':
     print("AgAID Project\n")
@@ -83,27 +84,43 @@ if __name__ == '__main__':
     image_processor = ImageProcessor()
     image_displayer = ImageDisplayer()
 
+    # Image loading
+    camera_name = 'cam4'
     # Get image
-    image = image_loader.load_image('cam4', 'date_30-5-2024_10.0.11_1')
+    image_name = 'date_3-6-2024_15.0.10_1'
+    image = image_loader.load_image(camera_name, image_name)
+    images = [image]
+    image_names = [image_name]
 
-    # Process image
-    image_cpy = image.copy()
-    red_channel, green_channel, blue_channel = image_processor.separate_colors(image_cpy)
-    values_channel = image_processor.convert_to_gray(image_cpy)
-    channel_image = green_channel
-    w = channel_image.shape[1]
-    h = channel_image.shape[0]
-    channel_image = channel_image[0:int(h / 2.5), 0:w]
-    left_gray_image, right_gray_image = image_processor.vertical_image_split(channel_image)
-    left_rectangles = image_processor.detect_rects(left_gray_image, show_mask=True, show_contours=True)
-    image_processor.draw_rects_to_left_image(image, left_rectangles)
-    right_rectangles = image_processor.detect_rects(right_gray_image, show_mask=True, show_contours=True)
-    image_processor.draw_rects_to_right_image(image, right_rectangles)
+    # Get images
+    # images, image_names = image_loader.load_all_images(camera_name)
+
+    # Process images
+    for i, image in enumerate(tqdm(images, desc="Processing Images")):
+        image_cpy = image.copy()
+        red_channel, green_channel, blue_channel = image_processor.separate_colors(image_cpy)
+        gray_channel = image_processor.convert_to_gray(image_cpy)
+        image_channels = [red_channel, green_channel, blue_channel, gray_channel]
+        for image_channel in image_channels:
+            w = image_channel.shape[1]
+            h = image_channel.shape[0]
+            image_channel = image_channel[0:int(h / 2.5), 0:w]
+            left_gray_image, right_gray_image = image_processor.vertical_image_split(image_channel)
+            left_rectangles = image_processor.detect_rects(left_gray_image, show_mask=True, show_contours=True)
+            right_rectangles = image_processor.detect_rects(right_gray_image, show_mask=True, show_contours=True)
+            left_rectangles, right_rectangles = image_processor.filter_rects_to_similar_location(left_rectangles,
+                                                                                                 right_rectangles)
+            left_rectangles = image_processor.filter_near_duplicates(left_rectangles)
+            right_rectangles = image_processor.filter_near_duplicates(right_rectangles)
+            image_processor.draw_rects_to_left_image(image, left_rectangles)
+            image_processor.draw_rects_to_right_image(image, right_rectangles)
+            # image_displayer.plot_images([image])
+
     # Display image
-    image_displayer.plot_images([red_channel, green_channel, blue_channel, green_channel], ['Reds', 'Greens', 'Blues',
-                                                                                            'gray'])
-    image_displayer.plot_images([image], [])
-
+    for image, image_name in zip(images, image_names):
+        # image_displayer.plot_images([red_channel, green_channel, blue_channel, green_channel],
+        #                             ['Reds', 'Greens', 'Blues', 'gray'])
+        image_displayer.plot_images([image], labels=[image_name])
 
 
 

@@ -65,6 +65,8 @@ processing
 * 07/15/2024 - Search for explanations for irregularities in VI to yield, make dates more readable in graphs, work on image processing directly (rather than with ML)
 * 07/16/2024 - Make advancements in image processing 
 * 07/18/2024 - Image processing work for detecting panel
+* 07/19/2024 - Add ability to scan multiple channels, further filtering on found bounding rectangles, layer found 
+rectangles for better accuracy
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

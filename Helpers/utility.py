@@ -397,4 +397,4 @@ def find_max_rectangle(matrix):
             top_left_coordinates = (row - height + 1, left)
             max_size = (height, width)
 
-    return int(top_left_coordinates[0]), int(top_left_coordinates[1]), int(max_size[0]), int(max_size[1])
+    return int(top_left_coordinates[0]), int(top_left_coordinates[1]), int(max_size[1]), int(max_size[0])
