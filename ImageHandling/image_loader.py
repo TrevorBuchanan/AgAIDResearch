@@ -34,7 +34,6 @@ class ImageLoader:
     def load_all_images(camera_name: str):
         """
         Gets all images from the specified camera directory within ReferencePanelData.
-
         :param camera_name: str - Name of the camera directory to get images from.
         :return: List of images as NumPy arrays in RGB format.
         """

@@ -96,6 +96,7 @@ if __name__ == '__main__':
     # images, image_names = image_loader.load_all_images(camera_name)
 
     # Process images
+    last_left_rects, last_right_rects = [], []
     for i, image in enumerate(tqdm(images, desc="Processing Images")):
         image_cpy = image.copy()
         red_channel, green_channel, blue_channel = image_processor.separate_colors(image_cpy)
@@ -106,13 +107,13 @@ if __name__ == '__main__':
             h = image_channel.shape[0]
             image_channel = image_channel[0:int(h / 2.5), 0:w]
             left_gray_image, right_gray_image = image_processor.vertical_image_split(image_channel)
-            left_rectangles = image_processor.detect_rects(left_gray_image, show_mask=True, show_contours=True)
-            right_rectangles = image_processor.detect_rects(right_gray_image, show_mask=True, show_contours=True)
+            left_rectangles = image_processor.detect_rects(left_gray_image, show_mask=False, show_contours=False)
+            right_rectangles = image_processor.detect_rects(right_gray_image, show_mask=False, show_contours=False)
             left_rectangles, right_rectangles = image_processor.filter_rects_to_similar_location(left_rectangles,
                                                                                                  right_rectangles)
             left_rectangles = image_processor.filter_near_duplicates(left_rectangles)
             right_rectangles = image_processor.filter_near_duplicates(right_rectangles)
-            image_processor.draw_rects_to_left_image(image, left_rectangles)
+            image_processor.draw_rects_to_image(image, left_rectangles)
             image_processor.draw_rects_to_right_image(image, right_rectangles)
             # image_displayer.plot_images([image])
 

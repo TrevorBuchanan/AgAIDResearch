@@ -105,13 +105,14 @@ class ImageProcessor:
             plt.show()
 
         rects = []
+        # Check if valid
+        min_required_area = 300
+        max_width = 40
+        max_height = 40
         # Loop through contours and approximate to polygon
         for contour in contours:
             # Get bounding rect and draw it
             x, y, w, h = cv2.boundingRect(contour)
-            # Check if valid
-            min_required_area = 300
-            max_width = 50
             max_height = 50
             # Check width and height
             if w > max_width or h > max_height:
@@ -128,26 +129,16 @@ class ImageProcessor:
 
             # Get bounding rect and draw it
             x, y, w, h = cv2.boundingRect(approx)
-            # Check if valid
-            min_required_area = 300
-            max_width = 50
-            max_height = 50
             # Check width and height
             if w > max_width or h > max_height:
-                pass
                 continue
             # Check if area is greater than the minimum required
             if w * h < min_required_area:
-                pass
                 continue
             rects.append((x, y, w, h))
         for contour in contours2:
             # Get bounding rect and draw it
             x, y, w, h = cv2.boundingRect(contour)
-            # Check if valid
-            min_required_area = 300
-            max_width = 40
-            max_height = 40
             # Check width and height
             if w > max_width or h > max_height:
                 continue
@@ -161,10 +152,6 @@ class ImageProcessor:
 
             # Get bounding rect and draw it
             x, y, w, h = cv2.boundingRect(approx)
-            # Check if valid
-            min_required_area = 300
-            max_width = 40
-            max_height = 40
             # Check width and height
             if w > max_width or h > max_height:
                 continue
@@ -177,7 +164,7 @@ class ImageProcessor:
         return rects
 
     @staticmethod
-    def draw_rects_to_left_image(image, rectangles: list) -> None:
+    def draw_rects_to_image(image, rectangles: list) -> None:
         """
         Draws given rectangle list on to image
         :param image: The image to draw to
@@ -191,7 +178,7 @@ class ImageProcessor:
     @staticmethod
     def draw_rects_to_right_image(image, rectangles: list) -> None:
         """
-        Draws given rectangle list on to image
+        Draws given rectangle list on to right half of image
         :param image: The image to draw to
         :param rectangles: list - List of tuple rectangles in the form (x pos, y pos, width, height)
         :return: None
@@ -258,7 +245,7 @@ class ImageProcessor:
                 plt.axis('off')
                 plt.subplot(1, 2, 2)
                 temp = gray_scale_image.copy()
-                self.draw_rects_to_left_image(temp, [rect])
+                self.draw_rects_to_image(temp, [rect])
                 plt.imshow(temp, cmap='gray')
                 plt.axis('off')
                 plt.tight_layout()
@@ -358,3 +345,9 @@ class ImageProcessor:
 
         return filtered_rects
 
+    def temp(self, images, rects_s):
+        # Needs to take left half right half and return the best
+        pass
+
+    def compare_2_images(self, image1, image2, rects1, rects2):
+        pass
