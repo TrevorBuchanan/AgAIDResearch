@@ -1,7 +1,9 @@
+from math import sqrt
+
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-
+from scipy.ndimage import convolve
 from Helpers.utility import find_max_rectangle
 
 
@@ -47,6 +49,76 @@ class ImageProcessor:
         """
         # Convert to grayscale
         return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+    def get_rects(self, image):
+        image_cpy = image.copy()
+        w = image_cpy.shape[1]
+        h = image_cpy.shape[0]
+        image_cpy = image_cpy[0:int(h / 2), 0:w]
+        red_channel, green_channel, blue_channel = self.separate_colors(image_cpy)
+        gray_channel = self.convert_to_gray(image_cpy)
+        image_channels = [red_channel, green_channel, blue_channel, gray_channel]
+        rects_list = []
+        for image_channel in image_channels:
+            rectangles = self.detect_rects(image_channel, show_mask=False, show_contours=False)
+            rects_list.append(rectangles)
+
+        # TEMP
+        # colors = ['Reds', 'Greens', 'Blues', 'gray']
+        # for ch, r, c in zip(image_channels, rects_list, colors):
+        #     cpy = ch.copy()
+        #     self.draw_rects_to_image(cpy, r)
+        #     plt.figure(figsize=(16, 8))
+        #     plt.imshow(cpy, cmap=c)
+        #     plt.axis('off')
+        #     plt.tight_layout()
+        #     plt.show()
+        # TEMP
+        rects = self.get_best_rects(image_channels, rects_list)
+        rects = self.filter_near_duplicates(rects)
+        # rects = self.filter_rects_using_vertical_lines(image_channels, rects)
+        # TEMP
+        # cpy = image.copy()
+        # self.draw_rects_to_image(cpy, rects)
+        # plt.figure(figsize=(16, 8))
+        # plt.imshow(cpy)
+        # plt.title('Total rects')
+        # plt.axis('off')
+        # plt.tight_layout()
+        # plt.show()
+        # TEMP
+        return rects
+
+    def get_best_rects(self, image_channels, rects_list):
+        best_rects = []
+        tolerance = 10
+        for image_channel1, rects1 in zip(image_channels, rects_list):
+            for image_channel2, rects2 in zip(image_channels, rects_list):
+                if image_channel1 is not image_channel2:
+                    for rect1 in rects1:
+                        for rect2 in rects2:
+                            if self.is_near(rect1, rect2, tolerance):
+                                pixel_ranges1 = []
+                                pixel_ranges2 = []
+                                for image_channel in image_channels:
+                                    pixel_ranges1.append(self.get_pixel_range_for_rect(image_channel, rect1))
+                                    pixel_ranges2.append(self.get_pixel_range_for_rect(image_channel, rect2))
+                                pixel_range1 = sum(pixel_ranges1) / len(pixel_ranges1)
+                                pixel_range2 = sum(pixel_ranges2) / len(pixel_ranges2)
+                                if pixel_range1 < pixel_range2:
+                                    best_rects.append(rect1)
+                                else:
+                                    best_rects.append(rect2)
+        return best_rects
+
+    @staticmethod
+    def is_near(rect1, rect2, tolerance):
+        center1_x = rect1[0] + rect1[2] / 2
+        center1_y = rect1[1] + rect1[3] / 2
+        center2_x = rect2[0] + rect2[2] / 2
+        center2_y = rect2[1] + rect2[3] / 2
+        distance = sqrt((center2_x - center1_x)**2 + (center2_y - center1_y)**2)
+        return distance < tolerance
 
     def detect_rects(self, image_channel, tolerance=3, show_mask=False, show_rects_masks=False, show_contours=False):
         # Create an empty mask
@@ -159,8 +231,11 @@ class ImageProcessor:
             if w * h < min_required_area:
                 continue
             rects.append((x, y, w, h))
-
+        for r in rects:
+            self.get_pixel_range_for_rect(image_channel, r)
         rects = self.filter_rects_by_uniform_value(image_channel, rects, 8, show_mask=show_rects_masks)
+        for r in rects:
+            self.get_pixel_range_for_rect(image_channel, r)
         return rects
 
     @staticmethod
@@ -173,33 +248,18 @@ class ImageProcessor:
         """
         # Draw rectangles on the original image
         for rect in rectangles:
-            cv2.rectangle(image, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 2)
+            cv2.rectangle(image, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 1)
 
     @staticmethod
-    def draw_rects_to_right_image(image, rectangles: list) -> None:
-        """
-        Draws given rectangle list on to right half of image
-        :param image: The image to draw to
-        :param rectangles: list - List of tuple rectangles in the form (x pos, y pos, width, height)
-        :return: None
-        """
-        width_offset = int(image.shape[1] / 2)
-        # Draw rectangles on the original image
-        for rect in rectangles:
-            cv2.rectangle(image, (rect[0] + width_offset, rect[1]), (rect[0] + width_offset + rect[2],
-                                                                     rect[1] + rect[3]), (0, 255, 0), 2)
-
-    @staticmethod
-    def get_pixel_range_for_rect(image, x: int, y: int, width: int, height: int):
+    def get_pixel_range_for_rect(image, rect):
         """
         Finds the range from the darkest to the lightest pixel in a given rectangle portion of an image
         :param image: The image to find pixel range from (in given rectangle)
-        :param x: int - The x position of the desired rectangle
-        :param y: int - The y position of the desired rectangle
-        :param width: int - The width position of the desired rectangle
-        :param height: int - The height position of the desired rectangle
+        :param rect:
         :return: Range from the highest value pixel to the lowest value pixel in the given rectangle region
         """
+        # TODO: Add function def
+        x, y, width, height = rect
         # Ensure the provided rectangle coordinates are within the image bounds
         h, w = image.shape[:2]
         if x < 0 or y < 0 or x + width > w or y + height > h:
@@ -219,10 +279,20 @@ class ImageProcessor:
 
         return max_pixel_value - min_pixel_value
 
-    def filter_rects_by_uniform_value(self, gray_scale_image, rectangles, tolerance, show_mask=False):  # Temp Name
+    def filter_rects_by_uniform_value(self, image_channel, rectangles, tolerance, show_mask=False):
+        """
+
+        :param image_channel:
+        :param rectangles:
+        :param tolerance:
+        :param show_mask:
+        :return:
+        """
+        # TODO: Add def
         valid_rects = []
         for rect in rectangles:
-            scaled_image = gray_scale_image[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
+            scaled_image = image_channel[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
+
             # Create an empty mask
             mask = np.zeros_like(scaled_image, dtype=np.uint8)
 
@@ -244,7 +314,7 @@ class ImageProcessor:
                 plt.imshow(mask, cmap='gray')
                 plt.axis('off')
                 plt.subplot(1, 2, 2)
-                temp = gray_scale_image.copy()
+                temp = image_channel.copy()
                 self.draw_rects_to_image(temp, [rect])
                 plt.imshow(temp, cmap='gray')
                 plt.axis('off')
@@ -258,7 +328,7 @@ class ImageProcessor:
             total_y = y + rect[1]
 
             # Check if valid
-            min_required_area = 200
+            min_required_area = 275
             min_width = 8
             min_height = 8
             # Check if area is greater than the minimum required
@@ -280,6 +350,7 @@ class ImageProcessor:
         :param tolerance:
         :return:
         """
+        # TODO: Func def
         filtered_rects1, filtered_rects2 = [], []
 
         for r1 in rects1:
@@ -320,8 +391,7 @@ class ImageProcessor:
                     indices = []
         return image
 
-    @staticmethod
-    def filter_near_duplicates(rects, tolerance=10):
+    def filter_near_duplicates(self, rects, tolerance=10):
         """
         Filters out near duplicate rectangles based on the given tolerance.
         :param rects: List of rectangles, where each rectangle is represented as a tuple (x1, y1, x2, y2).
@@ -333,10 +403,7 @@ class ImageProcessor:
         for rect1 in rects:
             is_duplicate = False
             for rect2 in filtered_rects:
-                if (abs(rect1[0] - rect2[0]) <= tolerance and
-                        abs(rect1[1] - rect2[1]) <= tolerance and
-                        abs(rect1[2] - rect2[2]) <= tolerance and
-                        abs(rect1[3] - rect2[3]) <= tolerance):
+                if self.is_near(rect1, rect2, tolerance):
                     is_duplicate = True
                     break
 
@@ -345,9 +412,136 @@ class ImageProcessor:
 
         return filtered_rects
 
-    def temp(self, images, rects_s):
-        # Needs to take left half right half and return the best
-        pass
+    @staticmethod
+    def find_vertical_lines(image_channel):
+        """
 
-    def compare_2_images(self, image1, image2, rects1, rects2):
-        pass
+        :param image_channel:
+        :return:
+        """
+        # TODO: Function def
+        same_length = 3
+        diff_length = 2
+        same_tolerance = 8
+        diff_tolerance = 7
+
+        def safe_access(arr, i, j):
+            if 0 <= i < arr.shape[0] and 0 <= j < arr.shape[1]:
+                return arr[i, j]
+            return None
+
+        def filter_vertical_lonelies(arr, max_length):
+            for col in range(arr.shape[1]):  # arr.shape[1] gives the number of columns
+                indices = []
+                for k, r_val in enumerate(arr[:, col]):
+                    if r_val == 1:
+                        indices.append(k)
+                    else:
+                        if len(indices) <= max_length:
+                            for index in indices:
+                                arr[index][col] = 0
+                        indices = []
+            return arr
+
+        mask = np.zeros_like(image_channel)
+        bin_mask = np.zeros_like(image_channel)
+
+        for j in range(image_channel.shape[1]):
+            for i in range(image_channel.shape[0]):
+                row_val = image_channel[i, j]
+                left_good, right_good = False, False
+                for offset in range(1, diff_length + 1):
+                    right = safe_access(image_channel, i, j + offset)
+                    left = safe_access(image_channel, i, j - offset)
+                    if right is not None and left is not None:
+                        if abs(np.subtract(right, row_val, dtype=np.float64)) >= diff_tolerance:
+                            right_good = True
+                        if abs(np.subtract(left, row_val, dtype=np.float64)) >= diff_tolerance:
+                            left_good = True
+
+                is_within_tolerance = True
+                for offset in range(1, same_length + 1):
+                    above = safe_access(image_channel, i + offset, j)
+                    below = safe_access(image_channel, i - offset, j)
+                    if above is not None and below is not None:
+                        if abs(np.subtract(above, row_val, dtype=np.float64)) >= same_tolerance or \
+                                abs(np.subtract(below, row_val, dtype=np.float64)) >= same_tolerance:
+                            is_within_tolerance = False
+                            break
+                    else:
+                        is_within_tolerance = False
+                        break
+
+                if is_within_tolerance and left_good and right_good:
+                    mask[i, j] = 0
+                    bin_mask[i, j] = 1
+                else:
+                    mask[i, j] = image_channel[i, j]
+
+        bin_mask = filter_vertical_lonelies(bin_mask, 10)
+        # plt.figure(figsize=(16, 8))
+        # plt.title('Bin Mask')
+        # plt.imshow(bin_mask, cmap='gray')
+        # plt.axis('off')
+        # plt.tight_layout()
+        # plt.show()
+        #
+        # plt.figure(figsize=(16, 8))
+        # plt.title('Mask')
+        # plt.imshow(mask, cmap='gray')
+        # plt.axis('off')
+        # plt.tight_layout()
+        # plt.show()
+        return bin_mask
+
+    def filter_rects_using_vertical_lines(self, image_channels, rects):
+        """
+
+        :param image_channels:
+        :param rects:
+        :return:
+        """
+
+        def get_segment(arr, rect, h):
+            x = rect[0]
+            y = rect[1]
+            width = rect[2]
+            height = rect[3]
+            end_x = x + width
+            end_y = y + h + height
+            if end_x > arr.shape[1]:
+                end_x = arr.shape[1]
+            if end_y > arr.shape[0]:
+                end_y = arr.shape[0]
+            segment = arr[y:end_y, x:end_x]
+            return segment
+
+        def pad_ones(array, pad):
+            kernel = np.ones((2 * pad + 1, 2 * pad + 1), dtype=np.uint8)
+            padded_array = convolve(array, kernel, mode='constant', cval=0)
+            padded_array = (padded_array > 0).astype(np.uint8)
+            return padded_array
+
+        # TODO: Function def
+        valid_rects = []
+        segment_height = 150
+        total_bin_mask = np.zeros_like(image_channels[0])
+        for k, image_channel in enumerate(image_channels):
+            bin_mask = self.find_vertical_lines(image_channel)
+            bin_mask = pad_ones(bin_mask, 1)
+            total_bin_mask = bin_mask
+            total_bin_mask = total_bin_mask & bin_mask
+
+        # plt.figure(figsize=(16, 8))
+        # plt.title('Full bin mask')
+        # plt.imshow(total_bin_mask, cmap='gray')
+        # plt.axis('off')
+        # plt.tight_layout()
+        # plt.show()
+        for i, r in enumerate(rects):
+            array_segment = get_segment(total_bin_mask, r, segment_height)
+            if np.isin(1, array_segment):
+                valid_rects.append(r)
+        if len(valid_rects) == 0:
+            return rects
+        return valid_rects

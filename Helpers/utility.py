@@ -395,6 +395,6 @@ def find_max_rectangle(matrix):
         if area > max_area:
             max_area = area
             top_left_coordinates = (row - height + 1, left)
-            max_size = (height, width)
+            max_size = (width, height)
 
-    return int(top_left_coordinates[0]), int(top_left_coordinates[1]), int(max_size[1]), int(max_size[0])
+    return int(top_left_coordinates[1]), int(top_left_coordinates[0]), int(max_size[0]), int(max_size[1])
