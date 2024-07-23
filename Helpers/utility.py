@@ -1,9 +1,10 @@
-import datetime
 import random
 import numpy as np
 
+from datetime import datetime
 from DataStructures.plot import Plot
 from colorama import Fore, Style
+from scipy.ndimage import label
 
 # ______________________________ Utility containers _________________________________
 
@@ -398,3 +399,83 @@ def find_max_rectangle(matrix):
             max_size = (width, height)
 
     return int(top_left_coordinates[1]), int(top_left_coordinates[0]), int(max_size[0]), int(max_size[1])
+
+
+def sort_list_by_datetime(l):
+    """
+    Sort a list of strings containing datetime in the format date_3-6-2024_15.0.10_1.png.
+
+    :param l: List of strings to sort
+    :return: Sorted list of strings
+    """
+
+    def extract_datetime(key):
+        # Extract the datetime part from the key
+        date_part, time_part, _ = key.split('_')[1:4]
+        # Replace dots in the time part with colons to form a valid datetime string
+        time_part = time_part.replace('.', ':')
+        # Combine date and time parts
+        datetime_str = f"{date_part} {time_part}"
+        # Parse the datetime string to a datetime object
+        return datetime.strptime(datetime_str, "%d-%m-%Y %H:%M:%S")
+
+    # Sort the list by the extracted datetime
+    sorted_list = sorted(l, key=extract_datetime)
+    return sorted_list
+
+
+def calculate_subsection_areas(arr):
+    """
+
+    :param arr:
+    :return:
+    """
+    # TODO: Function def
+    arr = arr.astype(np.float32)
+
+    # Identify connected components of 1s in the array
+    labeled_array, num_features = label(arr)
+
+    # Create a new array to store the areas
+    area_array = np.zeros_like(arr)
+
+    for feature in range(1, num_features + 1):
+        # Find the area of each connected component
+        area = np.sum(labeled_array == feature)
+
+        # Assign the area to the corresponding positions in the new array
+        area_array[labeled_array == feature] = area
+
+    return area_array
+
+
+def get_bounding_rects(binary_array):
+    """
+
+    :param binary_array:
+    :return:
+    """
+    # TODO: Func def
+    # Label connected components
+    labeled_array, num_features = label(binary_array)
+
+    # Initialize an empty list to store the bounding rectangles
+    bounding_rects = []
+
+    # Iterate through each component
+    for component in range(1, num_features + 1):
+        # Find the indices of the current component
+        indices = np.argwhere(labeled_array == component)
+
+        # Get the bounding rectangle
+        y_min, x_min = indices.min(axis=0)
+        y_max, x_max = indices.max(axis=0)
+
+        # Calculate width and height
+        height = y_max - y_min + 1
+        width = x_max - x_min + 1
+
+        # Add the bounding rectangle to the list (x, y, width, height)
+        bounding_rects.append((x_min, y_min, width, height))
+
+    return bounding_rects

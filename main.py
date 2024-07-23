@@ -71,11 +71,13 @@
 #           f'{round(sum(data_handler.accuracies_at_bests) / len(data_handler.accuracies_at_bests), 2)}')
 #     print()
 #     learning_model.verbose = temp
-
+from Helpers.utility import sort_list_by_datetime
 from ImageHandling.image_loader import ImageLoader
 from ImageHandling.image_processor import ImageProcessor
 from ImageHandling.image_displayer import ImageDisplayer
 from tqdm import tqdm
+
+from ImageHandling.panel_detector import PanelDetector
 
 if __name__ == '__main__':
     print("AgAID Project\n")
@@ -85,32 +87,38 @@ if __name__ == '__main__':
     image_displayer = ImageDisplayer()
 
     # Image loading
-    camera_name = 'cam4'
+    camera_name = 'cam2'
     # Get image
-    # image_name = 'date_3-6-2024_15.0.10_1'
-    # image = image_loader.load_image(camera_name, image_name)
-    # images = [image]
-    # image_names = [image_name]
+    image_name = 'date_29-4-2024_10.0.10_1'
+    image = image_loader.load_image(camera_name, image_name)
+    images = [image]
+    image_names = [image_name]
 
     # Get images
-    images, image_names = image_loader.load_all_images(camera_name)
+    # images, image_names = image_loader.load_all_images(camera_name)
 
-    # Process images
-    nir_images, rgb_images = {}, {}
+    # Sort images
+    nir_images, rgb_images, full_images = {}, {}, {}
     for name, image in zip(image_names, images):
         nir_image, rgb_image = image_processor.vertical_image_split(image)
         nir_images[name] = nir_image
         rgb_images[name] = rgb_image
+        full_images[name] = image
+    sorted_names = sort_list_by_datetime(nir_images)
 
-    for i, image_name in enumerate(tqdm(image_names, desc="Processing NIR Images")):
-        nir_rects = image_processor.get_rects(nir_images[image_name])
-        rgb_rects = image_processor.get_rects(rgb_images[image_name])
+    # Find reference panel
+    temp_max_amt = 6
+    temp_using_img_names = sorted_names[0:temp_max_amt]
+    panel_detector = PanelDetector()
+    for i, image_name in enumerate(tqdm(temp_using_img_names, desc="Detecting Panel in Images")):
+        nir_rects = panel_detector.get_panel_rect(nir_images[image_name])
+        rgb_rects = panel_detector.get_panel_rect(rgb_images[image_name])
         image_processor.draw_rects_to_image(nir_images[image_name], nir_rects)
         image_processor.draw_rects_to_image(rgb_images[image_name], rgb_rects)
 
     # Display image
-    for image, image_name in zip(images, image_names):
-        image_displayer.plot_images([image], labels=[image_name])
+    for image_name in temp_using_img_names:
+        image_displayer.plot_images([full_images[image_name]], labels=[image_name])
 
 
 

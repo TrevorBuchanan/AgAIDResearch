@@ -68,6 +68,7 @@ processing
 * 07/19/2024 - Add ability to scan multiple channels, further filtering on found bounding rectangles, layer found 
 rectangles for better accuracy
 * 07/22/2024 - Parse NIR and RBG separately, use post (holding panel) search to isolate panel (too slow of algorithm), compare rects locations with other color channels
+* 07/23/2024 - Programmatically order images according to date and time, 
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
