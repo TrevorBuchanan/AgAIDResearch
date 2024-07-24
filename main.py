@@ -111,9 +111,9 @@ if __name__ == '__main__':
     temp_using_img_names = sorted_names[0:temp_max_amt]
     panel_detector = PanelDetector()
     for i, image_name in enumerate(tqdm(temp_using_img_names, desc="Detecting Panel in Images")):
-        nir_rects = panel_detector.get_panel_rect(nir_images[image_name])
+        # nir_rects = panel_detector.get_panel_rect(nir_images[image_name])
         rgb_rects = panel_detector.get_panel_rect(rgb_images[image_name])
-        image_processor.draw_rects_to_image(nir_images[image_name], nir_rects)
+        # image_processor.draw_rects_to_image(nir_images[image_name], nir_rects)
         image_processor.draw_rects_to_image(rgb_images[image_name], rgb_rects)
 
     # Display image
