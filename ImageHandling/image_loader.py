@@ -7,6 +7,13 @@ class ImageLoader:
         pass
 
     @staticmethod
+    def get_image_path(image_name: str, root_dir: str = 'ReferencePanelData') -> str:
+        for subdir, _, files in os.walk(root_dir):
+            if image_name in files:
+                return os.path.join(subdir, image_name)
+        raise FileNotFoundError(f"{image_name} not found")
+
+    @staticmethod
     def load_image(camera_name: str, image_name: str):
         """
         Gets image at given image name from files in ReferencePanelData/<camera_name>

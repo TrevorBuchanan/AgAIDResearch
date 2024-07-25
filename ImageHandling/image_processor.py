@@ -1,10 +1,4 @@
-from math import sqrt
-
 import cv2
-import numpy as np
-from matplotlib import pyplot as plt
-from scipy.ndimage import convolve
-from Helpers.utility import find_max_rectangle
 
 
 class ImageProcessor:

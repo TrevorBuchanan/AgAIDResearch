@@ -37,6 +37,12 @@ class PanelDetector:
         self.temp_color_channel_index = 0
 
     def get_panel_rect(self, image):
+        """
+
+        :param image:
+        :return:
+        """
+        # TODO: Function def
         working_image = self.get_working_image(image)
         red_channel, green_channel, blue_channel = self.image_processor.separate_colors(working_image)
         gray_channel = self.image_processor.convert_to_gray(working_image)
@@ -57,6 +63,13 @@ class PanelDetector:
         return good_rects
 
     def filter_rects(self, color_channel, rects):
+        """
+
+        :param color_channel:
+        :param rects:
+        :return:
+        """
+        # TODO: Function def
         filtered_rects = rects
         filtered_rects = self.filter_by_uniform_values(color_channel, filtered_rects)
         filtered_rects = self.filter_by_pixel_range(color_channel, filtered_rects)
@@ -64,6 +77,12 @@ class PanelDetector:
         return filtered_rects
 
     def filter_by_pixel_range(self, color_channel, rects):
+        """
+
+        :param color_channel:
+        :param rects:
+        :return:
+        """
         filtered_rects = []
         for r in rects:
             pixel_range = self.get_pixel_range_for_rect(color_channel, r)
@@ -74,6 +93,13 @@ class PanelDetector:
         return filtered_rects
 
     def filter_by_uniform_values(self, color_channel, rects):
+        """
+
+        :param color_channel:
+        :param rects:
+        :return:
+        """
+        # TODO: Function def
         filtered_rects = []
         for rect in rects:
             scaled_image = color_channel[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
@@ -100,6 +126,13 @@ class PanelDetector:
         return filtered_rects
 
     def filter_by_edges(self, color_channel, rects):
+        """
+
+        :param color_channel:
+        :param rects:
+        :return:
+        """
+        # TODO: Function def
         filtered_rects = []
         for rect in rects:
             if self.check_edges(color_channel, rect):
@@ -109,11 +142,23 @@ class PanelDetector:
         return filtered_rects
 
     def get_possible_rects(self, color_channel):
+        """
+
+        :param color_channel:
+        :return:
+        """
+        # TODO: Function def
         areas_img = self.get_possible_areas(color_channel)
         bounding_rects = get_bounding_rects(areas_img)
         return bounding_rects
 
     def get_possible_areas(self, color_channel):
+        """
+
+        :param color_channel:
+        :return:
+        """
+        # TODO: Function def
         bin_contours_img = self.get_binary_contours_img(color_channel)
         areas_img = calculate_subsection_areas(bin_contours_img)
         areas_img[areas_img < self.area_min] = 0
@@ -122,6 +167,12 @@ class PanelDetector:
         return areas_img
 
     def get_binary_contours_img(self, color_channel):
+        """
+
+        :param color_channel:
+        :return:
+        """
+        # TODO: Function def
         similar_values_mask = np.zeros_like(color_channel, dtype=np.uint8)
         num_rows, num_cols = color_channel.shape
         for i in range(1, num_rows - 1):
@@ -144,6 +195,13 @@ class PanelDetector:
         return binary_contours_img
 
     def check_edges(self, color_channel, rect):
+        """
+
+        :param color_channel:
+        :param rect:
+        :return:
+        """
+        # TODO: Function def
         w = color_channel.shape[1]
         h = color_channel.shape[0]
         top_y = rect[1]
@@ -192,6 +250,13 @@ class PanelDetector:
         return num_good_pixels >= self.min_good_edge_pixels
 
     def remove_duplicates(self, image, rects):  # Removes if within similar tolerances
+        """
+
+        :param image:
+        :param rects:
+        :return:
+        """
+        # TODO: Function def
         filtered_rects = []
         similar_rects = -1
         remaining_rects = []
@@ -237,6 +302,7 @@ class PanelDetector:
         :param max_length:
         :return:
         """
+        # TODO: Function def
         # TODO: Func def
         for row in image:
             indices = []
@@ -262,6 +328,12 @@ class PanelDetector:
 
     @staticmethod
     def get_working_image(image):
+        """
+
+        :param image:
+        :return:
+        """
+        # TODO: Function def
         image_cpy = image.copy()
         w = image_cpy.shape[1]
         h = image_cpy.shape[0]
@@ -322,7 +394,7 @@ class PanelDetector:
         rect = image[y:y + height, x:x + width]
 
         # Compute the pixel values in the rectangle
-        # If the image is multi-channel, convert it to grayscale
+        # If the image is multichannel, convert it to grayscale
         if len(rect.shape) == 3:
             rect = np.mean(rect, axis=2)
 
@@ -332,7 +404,8 @@ class PanelDetector:
 
         return max_pixel_value - min_pixel_value
 
-# TODO: REMOVE
+
+# Inserted into code to visualize image or rects at specific points in image processing:
 # TEMP to see image
 # plt.figure(figsize=(16, 8))
 # plt.imshow(color_channel, cmap=self.temp_color_channels_names[self.temp_color_channel_index])
@@ -340,9 +413,7 @@ class PanelDetector:
 # plt.tight_layout()
 # plt.show()
 # TEMP
-# TODO: REMOVE
 
-# TODO: REMOVE
 # TEMP to see rects
 # plt.figure(figsize=(16, 8))
 # temp = color_channel.copy()
@@ -352,4 +423,3 @@ class PanelDetector:
 # plt.tight_layout()
 # plt.show()
 # TEMP
-# TODO: REMOVE
