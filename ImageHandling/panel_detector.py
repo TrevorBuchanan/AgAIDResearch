@@ -10,19 +10,29 @@ from Helpers.utility import find_max_rectangle, calculate_subsection_areas, get_
 class PanelDetector:
     def __init__(self):
         self.image_processor = ImageProcessor()
+        # Initial mask tolerance
         self.same_value_tolerance = 3
-        self.uniform_tolerance = 255
-        self.corner_diff_tol = 10
-        self.corner_check_dist = 5
-        self.min_num_corner_good = 2
-        self.area_min = 200
+        # Edge pixel filter
+        self.edge_diff_tol = 8
+        self.edge_check_dist = 7
+        self.min_good_edge_pixels = 70
+        # Pixel range filter
+        self.max_pixel_range = 8
+        # Uniform filter
+        self.uniform_tolerance = 8
+        self.area_min = 175
         self.area_max = 500
         self.min_width = 10
         self.min_height = 10
-
-        # Temporary maybe
-        self.show_mask = False
-        self.show_areas = False
+        # Similarities tolerances
+        self.near_tolerance = 12
+        self.shape_tolerance = 20
+        # Vertical line detection
+        self.same_length = 3
+        self.diff_length = 2
+        self.same_tolerance = 8
+        self.diff_tolerance = 7
+        # Temporary
         self.temp_color_channels_names = ['Reds', 'Greens', 'Blues', 'gray']
         self.temp_color_channel_index = 0
 
@@ -31,25 +41,39 @@ class PanelDetector:
         red_channel, green_channel, blue_channel = self.image_processor.separate_colors(working_image)
         gray_channel = self.image_processor.convert_to_gray(working_image)
         color_channels = [red_channel, green_channel, blue_channel, gray_channel]
-        working_rects = []
+        working_rects = set()
         for i, c in enumerate(color_channels):  # TODO: Change back to normal
             self.temp_color_channel_index = i
             for rec in self.get_possible_rects(c):
-                working_rects.append(rec)
-        good_rects = {}
-        print(len(working_rects))
+                working_rects.add(rec)
+        working_rects = self.remove_duplicates(image, working_rects)
+        good_rects = set()
         for i, c in enumerate(color_channels):  # TODO: Change back to normal
             self.temp_color_channel_index = i
-            good_rects = self.filter_rects(c, working_rects)
-        print(len(good_rects))
-        return list(good_rects)
+            filtered_rects = self.filter_rects(c, list(working_rects))
+            for r in filtered_rects:
+                good_rects.add(r)
+        good_rects = self.remove_duplicates(image, list(good_rects))
+        return good_rects
 
     def filter_rects(self, color_channel, rects):
-        filtered_rects = self.filter_by_corners(color_channel, rects)
-
+        filtered_rects = rects
+        filtered_rects = self.filter_by_uniform_values(color_channel, filtered_rects)
+        filtered_rects = self.filter_by_pixel_range(color_channel, filtered_rects)
+        filtered_rects = self.filter_by_edges(color_channel, filtered_rects)
         return filtered_rects
 
-    def filter_by_corners(self, color_channel, rects):
+    def filter_by_pixel_range(self, color_channel, rects):
+        filtered_rects = []
+        for r in rects:
+            pixel_range = self.get_pixel_range_for_rect(color_channel, r)
+            if pixel_range <= self.max_pixel_range:
+                filtered_rects.append(r)
+        if not filtered_rects:
+            return rects
+        return filtered_rects
+
+    def filter_by_uniform_values(self, color_channel, rects):
         filtered_rects = []
         for rect in rects:
             scaled_image = color_channel[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
@@ -70,6 +94,18 @@ class PanelDetector:
             if w * h < self.area_min or w < self.min_width or h < self.min_height:
                 continue
             filtered_rects.append((total_x, total_y, w, h))
+
+        if not filtered_rects:
+            return rects
+        return filtered_rects
+
+    def filter_by_edges(self, color_channel, rects):
+        filtered_rects = []
+        for rect in rects:
+            if self.check_edges(color_channel, rect):
+                filtered_rects.append(rect)
+        if not filtered_rects:
+            return rects
         return filtered_rects
 
     def get_possible_rects(self, color_channel):
@@ -107,30 +143,91 @@ class PanelDetector:
         binary_contours, _ = cv2.findContours(binary_contours_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return binary_contours_img
 
-    def check_corners(self, color_channel, rect):
-        num_good_corners = 0
+    def check_edges(self, color_channel, rect):
         w = color_channel.shape[1]
         h = color_channel.shape[0]
-        top_left_pos = (rect[0], rect[1])
-        top_right_pos = (rect[0] + rect[2], rect[1])
-        bottom_left_pos = (rect[0], rect[1] + rect[3])
-        bottom_right_pos = (rect[0] + rect[2], rect[1] + rect[3])
-        top_left_val = color_channel[top_left_pos]
-        top_right_val = color_channel[top_right_pos]
-        bottom_left_val = color_channel[bottom_left_pos]
-        bottom_right_val = color_channel[bottom_right_pos]
+        top_y = rect[1]
+        left_x = rect[0]
+        right_x = rect[0] + rect[2] - 1
+        bottom_y = rect[1] + rect[3] - 1
+        checks = [False] * ((rect[2] * 2) + (rect[3] * 2) + 4)
+        check_index = 0
+        # Top edge
+        for x in range(left_x, right_x + 1):
+            pixel_val = color_channel[top_y, x]
+            for offset in range(1, self.edge_check_dist + 1):
+                if top_y - offset >= 0:
+                    if abs(np.subtract(pixel_val, color_channel[top_y - offset, x],
+                                       dtype=np.float64)) > self.edge_diff_tol:
+                        checks[check_index] = True
+            check_index += 1
+        # Left edge
+        for y in range(top_y, bottom_y + 1):
+            pixel_val = color_channel[y, left_x]
+            for offset in range(1, self.edge_check_dist + 1):
+                if left_x - offset >= 0:
+                    if abs(np.subtract(pixel_val, color_channel[y, left_x - offset],
+                                       dtype=np.float64)) > self.edge_diff_tol:
+                        checks[check_index] = True
+            check_index += 1
+        # Right edge
+        for y in range(top_y, bottom_y + 1):
+            pixel_val = color_channel[y, right_x]
+            for offset in range(1, self.edge_check_dist + 1):
+                if right_x + offset < w:
+                    if abs(np.subtract(pixel_val, color_channel[y, right_x + offset],
+                                       dtype=np.float64)) > self.edge_diff_tol:
+                        checks[check_index] = True
+            check_index += 1
+        # Bottom edge
+        for x in range(left_x, right_x + 1):
+            pixel_val = color_channel[bottom_y, x]
+            for offset in range(1, self.edge_check_dist + 1):
+                if bottom_y + offset < h:
+                    if abs(np.subtract(pixel_val, color_channel[bottom_y + offset, x],
+                                       dtype=np.float64)) > self.edge_diff_tol:
+                        checks[check_index] = True
+            check_index += 1
+        num_good_pixels = len(list(filter(lambda check: check is True, checks)))
+        return num_good_pixels >= self.min_good_edge_pixels
 
-        # Check top left (move up) (move left)
-        # Move up
-        for offset in range(1, self.corner_check_dist + 1):
-            if top_left_pos[1] - offset > 0:
-                if abs(top_left_val - color_channel[top_left_pos[0], top_left_val[1] - offset]) < self.corner_diff_tol:
-                    pass
-        # Check top right (move up) (move right)
+    def remove_duplicates(self, image, rects):  # Removes if within similar tolerances
+        filtered_rects = []
+        similar_rects = -1
+        remaining_rects = []
+        for rect1 in rects:
+            if similar_rects == -1:
+                remaining_rects = rects
+            similar_rects = set()
+            for rect2 in remaining_rects:
+                if rect1 != rect2:
+                    if self.is_near(rect1, rect2, self.near_tolerance) and \
+                            self.is_shape_similar(rect1, rect2, self.shape_tolerance):
+                        similar_rects.add(rect1)
+                        similar_rects.add(rect2)
+            similar_rects_list = list(similar_rects)
+            if not similar_rects_list:
+                is_similar = False
+                for r in filtered_rects:
+                    if self.is_near(rect1, r, self.near_tolerance) and \
+                            self.is_shape_similar(rect1, r, self.shape_tolerance):
+                        is_similar = True
+                if not is_similar:
+                    similar_rects_list.append(rect1)
+                else:
+                    continue
+            pixel_ranges = []
+            for r in similar_rects_list:
+                pixel_ranges.append(self.get_pixel_range_for_rect(image, r))
+            lowest_range_index = pixel_ranges.index(min(pixel_ranges))
+            filtered_rects.append(similar_rects_list[lowest_range_index])
 
-        # Check bottom left (move down) (move left)
-
-        # Check bottom right (move down) (move right)
+            temp_remaining = []
+            for rect in remaining_rects:
+                if rect not in similar_rects_list:
+                    temp_remaining.append(rect)
+            remaining_rects = temp_remaining
+        return filtered_rects
 
     @staticmethod
     def filter_lonelies(image, max_length):
@@ -171,9 +268,88 @@ class PanelDetector:
         image_cpy = image_cpy[0:int(h / 2.5), 0:w]
         return image_cpy
 
+    @staticmethod
+    def is_shape_similar(rect1, rect2, tolerance):
+        """
+
+        :param rect1:
+        :param rect2:
+        :param tolerance:
+        :return:
+        """
+        # TODO: Func def
+        w1 = rect1[2]
+        h1 = rect1[3]
+        w2 = rect2[2]
+        h2 = rect2[3]
+        width_diff = abs(w2 - w1)
+        height_diff = abs(h2 - h1)
+        return width_diff < tolerance and height_diff < tolerance
+
+    @staticmethod
+    def is_near(rect1, rect2, tolerance):
+        """
+
+        :param rect1:
+        :param rect2:
+        :param tolerance:
+        :return:
+        """
+        # TODO: Func def
+        x1 = rect1[0]
+        y1 = rect1[1]
+        x2 = rect2[0]
+        y2 = rect2[1]
+        distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        return distance < tolerance
+
+    @staticmethod
+    def get_pixel_range_for_rect(image, rect):
+        """
+        Finds the range from the darkest to the lightest pixel in a given rectangle portion of an image
+        :param image: The image to find pixel range from (in given rectangle)
+        :param rect:
+        :return: Range from the highest value pixel to the lowest value pixel in the given rectangle region
+        """
+        # TODO: Add function def
+        x, y, width, height = rect
+        # Ensure the provided rectangle coordinates are within the image bounds
+        h, w = image.shape[:2]
+        if x < 0 or y < 0 or x + width > w or y + height > h:
+            raise ValueError("Rectangle coordinates are out of image bounds.")
+
+        # Extract the rectangle portion of the image
+        rect = image[y:y + height, x:x + width]
+
+        # Compute the pixel values in the rectangle
+        # If the image is multi-channel, convert it to grayscale
+        if len(rect.shape) == 3:
+            rect = np.mean(rect, axis=2)
+
+        # Find the minimum and maximum pixel values
+        min_pixel_value = np.min(rect)
+        max_pixel_value = np.max(rect)
+
+        return max_pixel_value - min_pixel_value
+
+# TODO: REMOVE
+# TEMP to see image
 # plt.figure(figsize=(16, 8))
-# plt.imshow(areas_img, cmap=self.temp_color_channels_names[self.temp_color_channel_index])
-# plt.title('Areas img')
+# plt.imshow(color_channel, cmap=self.temp_color_channels_names[self.temp_color_channel_index])
 # plt.axis('off')
 # plt.tight_layout()
 # plt.show()
+# TEMP
+# TODO: REMOVE
+
+# TODO: REMOVE
+# TEMP to see rects
+# plt.figure(figsize=(16, 8))
+# temp = color_channel.copy()
+# self.image_processor.draw_rects_to_image(temp, [rect])
+# plt.imshow(temp, cmap=self.temp_color_channels_names[self.temp_color_channel_index])
+# plt.axis('off')
+# plt.tight_layout()
+# plt.show()
+# TEMP
+# TODO: REMOVE

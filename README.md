@@ -70,6 +70,9 @@ rectangles for better accuracy
 * 07/22/2024 - Parse NIR and RBG separately, use post (holding panel) search to isolate panel (too slow of algorithm), compare rects locations with other color channels
 * 07/23/2024 - Programmatically order images according to date and time, attempt to use time sequentiality to improve accuracy, 
 scrap much of the image processor and make new panel detector
+* 07/23/2024 - Set up yolo model and creating image annotations, compare previous photo and current best rects to see if should stay 
+different or stay the same *Discarded because wasn’t pure image (meaning needed more than just the given image)  filter algorithm (needed context in time, 
+was inefficient, and was inaccurate), Filter by average pixel range, try running through 3 levels of edge detection, edge filter, remove similar (choose best) filter
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
