@@ -33,15 +33,15 @@ data may influence the accuracy of the ML models predicting the yield.
 12. Jedd
 * A form of SMOTE (Synthetic Minority Oversampling Technique) was used to increase ML model performance. 
 The distribution of the spring yields followed a normal distribution.
-![SpringDist.png](Images%2FSpringDist.png)
+![SpringDist.png](ProjectDataImages%2FSpringDist.png)
 In order to fix the issue of there being 
 less data points on the extremities for the ML model to train on, minority oversampling was used. The minority 
 sampling was done in two ways. Firstly, the data was cut down so that the distribution was level, as shown below.
-![CutDist.png](Images%2FCutDist.png)
+![CutDist.png](ProjectDataImages%2FCutDist.png)
 Secondly, the distribution was leveled by fabricating minority data.
-![BulkDist.png](Images%2FBulkDist.png)
+![BulkDist.png](ProjectDataImages%2FBulkDist.png)
 As an extra frame of reference, below is the winter yield distribution as well:
-![WinterDist.png](Images%2FWinterDist.png)
+![WinterDist.png](ProjectDataImages%2FWinterDist.png)
 * The way the RMSE is calculated for the error in this project is by getting the RMSE value for the predictions vs 
 actual values of yield of each time step (day) for each plot, and then taking the average of those RMSE values for all 
 the plots. 
@@ -267,37 +267,37 @@ Note: Offset means the amount of days from the beginning of the data collection.
 duration, in days, of how long the best correlation segment is. 
 
 * Spring full data average VI (ndvi) correlation:
-![SpringFullDataVItoYield.png](Images%2FSpringFullDataVItoYield.png)
+![SpringFullDataVItoYield.png](ProjectDataImages%2FSpringFullDataVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.30
 
 * Spring best split size (4) and offset (40) VI (ndvi) correlation:
-![SpringBestSplitSizeVItoYield.png](Images%2FSpringBestSplitSizeVItoYield.png)
+![SpringBestSplitSizeVItoYield.png](ProjectDataImages%2FSpringBestSplitSizeVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.50
 
 * Spring heading data VI correlation: 
-![SpringHeadingDateVItoYield.png](Images%2FSpringHeadingDateVItoYield.png)
+![SpringHeadingDateVItoYield.png](ProjectDataImages%2FSpringHeadingDateVItoYield.png)
 
 
 	Pearson correlation coefficient: -0.51
 
 * Winter full data average VI (ndvi) correlation:
-![WinterFullDataVitoYield.png](Images%2FWinterFullDataVitoYield.png)
+![WinterFullDataVitoYield.png](ProjectDataImages%2FWinterFullDataVitoYield.png)
 
 
 	Pearson correlation coefficient: 0.53
 
 * Winter best split size (3) and offset (45) VI (ndvi) correlation:
-![WinterBestSplitSizeVItoYield.png](Images%2FWinterBestSplitSizeVItoYield.png)
+![WinterBestSplitSizeVItoYield.png](ProjectDataImages%2FWinterBestSplitSizeVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.58
 
 * Winter heading data VI (ndvi) correlation: 
-![WinterHeadingDateVItoYield.png](Images%2FWinterHeadingDateVItoYield.png)
+![WinterHeadingDateVItoYield.png](ProjectDataImages%2FWinterHeadingDateVItoYield.png)
 
 
 	Pearson correlation coefficient: 0.62
