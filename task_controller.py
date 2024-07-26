@@ -19,8 +19,14 @@ from ImageHandling.panel_detector import PanelDetector
 
 
 class TaskController:
+
     @staticmethod
-    def run_image_panel_detection_code(self):
+    def run_image_panel_detection_code(use_image_processor):
+        """
+
+        :return:
+        """
+        # TODO: Write function def
         image_loader = ImageLoader()
         image_processor = ImageProcessor()
         image_displayer = ImageDisplayer()
@@ -60,7 +66,12 @@ class TaskController:
             image_displayer.plot_images([full_images[image_name]], labels=[image_name])
 
     @staticmethod
-    def run_yield_prediction_code(self):
+    def run_yield_prediction_code():
+        """
+
+        :return:
+        """
+        # TODO: Write function def
         # Functions for calculating and showing yield prediction models
         def testing_performance(visualize=True):
             temp = learning_model.verbose
@@ -123,6 +134,7 @@ class TaskController:
                   f'{round(sum(data_handler.accuracies_at_bests) / len(data_handler.accuracies_at_bests), 2)}')
             print()
             learning_model.verbose = temp
+
         # Yield prediction using time series VI (Vegetation indices)
         # cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
 
