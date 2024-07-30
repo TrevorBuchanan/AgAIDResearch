@@ -20,6 +20,7 @@ internship.
     * [Missing Data Interpolation Techniques:](#missing-data-interpolation-techniques)
     * [Date Ranges](#date-ranges)
   * [Object Detection](#object-detection)
+    * [Overview Notes:](#overview-notes-1)
     * [Image Processing](#image-processing)
     * [Machine Learning](#machine-learning)
 <!-- TOC -->
@@ -1125,6 +1126,15 @@ Date range: 80
 
 ## Object Detection
 
+### Overview Notes:
+* The machine learning object detection portion of this project was done near the end, so the testing of
+the models was very limited. 
+* The machine learning data was trained on data annotated with RoboFlow and can be found here https://app.roboflow.com/agaid-image-processing/agaid-object-detection/1
+* The annotated data set has also been saved to [AnnotatedReferencePanelData](AnnotatedReferencePanelData)
+* Although little tested, the machine learning models for object detection performed so much better than the image 
+processing object detection that the image processing object detection approach is obsolete.
+
+
 ### Image Processing
 **Approaches Taken:**
 * Uniform values mask - Using the fact that the panels' pixel values should be uniform (checks immediate surrounding pixels )
@@ -1166,7 +1176,14 @@ Correct Result Example:
 Incorrect Result Example:
 ![ImageProcessingIncorrect.png](ProjectDataImages%2FImageProcessingIncorrect.png)
 
-### Machine Learning
-* RoboFlow Object Detection Fast
-* Custom YOLOv5 m
 
+### Machine Learning
+* **RoboFlow Object Detection Fast**
+* Results:
+  * 100% accurate on all test data
+  * Example:
+
+* **Custom YOLOv5 m**
+* Results:
+  * 100% accurate on all test data
+  * Example:

@@ -16,10 +16,21 @@ By: **Trevor Buchanan**
 
 ## Project Summary:
 This project encompasses using convolutional neural networks to parse images for VIs (Vegetation Indices) and
-utilizing time series machine learning to predict wheat yield from VIs. 
+utilizing time series machine learning to predict wheat yield from VIs. For a more detailed description of the 
+project and its details, see [ProjectNotes.md](ProjectNotes.md).
 
 ## Table of Contents:
-...
+<!-- TOC -->
+* [AgAID Research Project](#agaid-research-project)
+    * [Washington State University](#washington-state-university)
+  * [Project Summary:](#project-summary)
+  * [Table of Contents:](#table-of-contents)
+  * [Project Progress Summary:](#project-progress-summary)
+  * [Tutorials:](#tutorials)
+    * [Time Series Yield Prediction:](#time-series-yield-prediction)
+    * [Object Detection:](#object-detection)
+  * [References:](#references-)
+<!-- TOC -->
 
 
 ## Project Progress Summary:
@@ -84,9 +95,14 @@ document object detection content
 * 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
 * 07/30/2024 - Further progress on presentation, 
 
+## Tutorials:
+### Time Series Yield Prediction:
 
 
-# References: 
+### Object Detection:
+
+
+## References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
 
 * [2] J. Brownlee, “Gentle Introduction to Models for Sequence Prediction with RNNs,” Machine Learning Mastery, Jul. 16, 2017. https://machinelearningmastery.com/models-sequence-prediction-recurrent-neural-networks/
