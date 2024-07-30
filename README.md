@@ -1,6 +1,6 @@
 # AgAID Research Project
 
-### Washington State University
+***Washington State University***
 
 ---
 
@@ -22,7 +22,6 @@ project and its details, see [ProjectNotes.md](ProjectNotes.md).
 ## Table of Contents:
 <!-- TOC -->
 * [AgAID Research Project](#agaid-research-project)
-    * [Washington State University](#washington-state-university)
   * [Project Summary:](#project-summary)
   * [Table of Contents:](#table-of-contents)
   * [Project Progress Summary:](#project-progress-summary)
@@ -93,7 +92,7 @@ processing and time series modular so easier to run both
 * 07/26/2024 - Work on project presentation, set up to integrate object detection models Roboflow Object Detection Fast and Custom Yolo v5 m
 document object detection content
 * 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
-* 07/30/2024 - Further progress on presentation, 
+* 07/30/2024 - Further progress on presentation, refactoring and organizing code and documentation, 
 
 ## Tutorials:
 ### Time Series Yield Prediction:

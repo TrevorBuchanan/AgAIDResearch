@@ -71,7 +71,8 @@ class TaskController:
             image_displayer.plot_images([full_images[image_name]], labels=[image_name])
 
     @staticmethod
-    def run_yield_prediction_code():
+    def run_yield_prediction_code(model_num, saved_data_set_num, season="", visualize_test=False,
+                                  visualize_training=False):
         """
 
         :return:
@@ -140,19 +141,17 @@ class TaskController:
             print()
             learning_model.verbose = temp
 
-        # Yield prediction using time series VI (Vegetation indices)
-        # cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr
-
         # Plots:
         plots: list[Plot] = []
 
         # Parsing selections
-        season = "winter"
+        if season != 'winter' and season != 'spring':
+            raise Exception("Please select a season: winter or spring")
 
         # Best winter: 14 on data 8 with honorable mention 6 on data 6, best spring: 1 on data 1
         # ML model selections
-        model_num = 14
-        saved_data_set_num = 8
+        # model_num = 14
+        # saved_data_set_num = 8
 
         # Perform parsing based on selections
         parser = Parser()
@@ -193,8 +192,10 @@ class TaskController:
         visualizer.show_prediction = True
         visualizer.show_ndvi = True
 
-        # training_performance(visualize=True)
-        testing_performance(visualize=True)
+        if visualize_training:
+            training_performance(visualize=True)
+        if visualize_test:
+            testing_performance(visualize=True)
 
         # Visualize plot
         # visualizer.visualize_plots(plots, [(1, 1)])

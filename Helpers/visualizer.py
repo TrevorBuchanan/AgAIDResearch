@@ -74,6 +74,7 @@ class Visualizer:
         test_pounds_per_bushel_patch = mpatches.Patch(color='coral', label='Lbs/bushel')
         yield_patch = mpatches.Patch(color='olive', label='Yield')
         handles = []
+        dates = []
         if self.show_prediction:
             handles.append(predictions_patch)
         if self.show_cigreen0:

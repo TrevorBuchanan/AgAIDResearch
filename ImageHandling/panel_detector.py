@@ -294,7 +294,6 @@ class PanelDetector:
         :return:
         """
         # TODO: Function def
-        # TODO: Func def
         for row in image:
             indices = []
             for i, col_val in enumerate(row):
