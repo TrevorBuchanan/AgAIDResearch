@@ -7,6 +7,7 @@ from Helpers.parser import Parser
 
 from MachineLearningModule.LSTM.vanillaLSTM import VanillaLSTM
 from MachineLearningModule.LSTM.stackedLSTM import StackedLSTM
+from MachineLearningModule.ObjectDetecters.RoboFlowDetector import RoboFlowDetector
 from MachineLearningModule.data_handler import DataHandler
 
 from Helpers.utility import sort_list_by_datetime
@@ -19,9 +20,14 @@ from ImageHandling.panel_detector import PanelDetector
 
 
 class TaskController:
+    @staticmethod
+    def run_machine_learning_panel_detection_code(camera_name, image_name):
+        robo_flow_detector = RoboFlowDetector()
+        rects = robo_flow_detector.get_rects(image_name)
+        print(rects)
 
     @staticmethod
-    def run_image_panel_detection_code(use_image_processor):
+    def run_image_processing_panel_detection_code(camera_name, find_max_amt=False, max_amt=1, image_name=""):
         """
 
         :return:
@@ -32,15 +38,15 @@ class TaskController:
         image_displayer = ImageDisplayer()
 
         # Image loading
-        camera_name = 'cam4'
-        # Get image
-        # image_name = 'date_29-4-2024_10.0.10_1'
-        # image = image_loader.load_image(camera_name, image_name)
-        # images = [image]
-        # image_names = [image_name]
-
-        # Get images
-        images, image_names = image_loader.load_all_images(camera_name)
+        # Get an image
+        if not find_max_amt:
+            image = image_loader.load_image(camera_name, image_name)
+            images = [image]
+            image_names = [image_name]
+            max_amt = 1
+        else:
+            # Get all images
+            images, image_names = image_loader.load_all_images(camera_name)
 
         # Sort images
         nir_images, rgb_images, full_images = {}, {}, {}
@@ -52,17 +58,16 @@ class TaskController:
         sorted_names = sort_list_by_datetime(nir_images)
 
         # Find reference panel
-        temp_max_amt = 20
-        temp_using_img_names = sorted_names[15:temp_max_amt]
+        using_img_names = sorted_names[0:max_amt]
         panel_detector = PanelDetector()
-        for i, image_name in enumerate(tqdm(temp_using_img_names, desc="Detecting Panel in Images")):
-            nir_rects = panel_detector.get_panel_rect(nir_images[image_name])
-            rgb_rects = panel_detector.get_panel_rect(rgb_images[image_name])
+        for i, image_name in enumerate(tqdm(using_img_names, desc="Detecting Panel in Images")):
+            nir_rects = panel_detector.get_panel_rects(nir_images[image_name])
+            rgb_rects = panel_detector.get_panel_rects(rgb_images[image_name])
             image_processor.draw_rects_to_image(nir_images[image_name], nir_rects)
             image_processor.draw_rects_to_image(rgb_images[image_name], rgb_rects)
 
         # Display image
-        for image_name in temp_using_img_names:
+        for image_name in using_img_names:
             image_displayer.plot_images([full_images[image_name]], labels=[image_name])
 
     @staticmethod

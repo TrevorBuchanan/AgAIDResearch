@@ -1,6 +1,11 @@
 
 # Project Notes:
 
+**NOTICE:**
+This project was originally intended to be a yield prediction program only. The image processing portions were part 
+of another project. The code for both is in this project because both took place during the same AgAID research 
+internship.
+
 * Spring wheat crop was planted on the 25th of April
 * The year the data was taken from (2022) held favorable conditions for all crops so crop conditions,
 including VI's, were more homogeneous than what is usually expected. The low variance in the VI from 2022's
@@ -1095,3 +1100,33 @@ Plot: Block 3 Variety 1
 Start date: 2022-05-12
 End date: 2022-07-30
 Date range: 80
+
+
+## Object Detection
+
+---
+
+### Image Processing
+**Approaches Taken**
+* Uniform values mask - Using the fact that the panels' pixel values should be uniform (checks immediate surrounding pixels )
+* Contour detection - Finding contours on different levels of processing to validate detection
+* Sequential time images - Using the fact that the panel should be located in similar 
+locations on the previous and next time points
+* Left and Right symmetry - The images have two halves, left NIR, and right RGB. The location of the panel should be
+similar for the left and right images because they are taken at the same time from the same location
+* Post detection - The panels are all help up by a post, so detecting the post should help show where the panel is
+* Edge detection - Using pixel difference of the panels' edges and outside the edges
+* Area, width, height - Used to filter possible detected panels to specified size range
+* Color channel splits - Using different color channels to find panels
+* Duplicate filter - Choosing possible panels found based off of how many bounding rectangles found at that location
+* Pixel range filter - Choosing the possible panels that have the lowest pixel range (should be very small because they should be uniform)
+* Layered search and filters - Combining panel rect searching levels and filtering levels to get best results
+
+**Usage Example:**
+
+
+
+### Machine Learning
+* RoboFlow Object Detection Fast
+* Custom YOLOv5 m
+

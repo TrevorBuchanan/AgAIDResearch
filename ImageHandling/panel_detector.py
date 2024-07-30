@@ -32,11 +32,11 @@ class PanelDetector:
         self.diff_length = 2
         self.same_tolerance = 8
         self.diff_tolerance = 7
-        # Temporary
+        # Temporary for color chanel visualization
         self.temp_color_channels_names = ['Reds', 'Greens', 'Blues', 'gray']
         self.temp_color_channel_index = 0
 
-    def get_panel_rect(self, image):
+    def get_panel_rects(self, image):
         """
 
         :param image:

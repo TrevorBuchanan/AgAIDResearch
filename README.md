@@ -75,8 +75,9 @@ different or stay the same *Discarded because was not pure image (meaning needed
 was inefficient, and was inaccurate), Filter by average pixel range, try running through 3 levels of edge detection, edge filter, remove similar (choose best) filter
 * 07/25/2024 - Annotating images for panels, train ML models on annotated data using YOLO v5, integrate panel detection machine learning models, make image 
 processing and time series modular so easier to run both
-* 07/25/2024 - Work on project presentation, set up to integrate object detection models Roboflow and Custom Yolo v5
+* 07/26/2024 - Work on project presentation, set up to integrate object detection models Roboflow Object Detection Fast and Custom Yolo v5 m
 document object detection content
+* 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

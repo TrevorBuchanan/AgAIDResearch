@@ -14,15 +14,15 @@ class RoboFlowDetector:
 
         try:
             workspace = rf.workspace()
-            print("Workspace loaded:", workspace)
+            # print("Workspace loaded:", workspace)
 
             # Use the correct project ID
             project_id = "agaid-object-detection"  # Update this to the correct project ID
             project = workspace.project(project_id)
-            print("Project loaded:", project)
+            # print("Project loaded:", project)
 
             model = project.version(self.version).model
-            print("Model loaded:", model)
+            # print("Model loaded:", model)
 
             # Infer on a local image
             prediction = model.predict(image_path, confidence=40, overlap=30).json()
@@ -37,7 +37,7 @@ class RoboFlowDetector:
                 rects.append((x, y, width, height))
 
             # Visualize your prediction
-            model.predict(image_path, confidence=40, overlap=30).save("prediction.jpg")
+            model.predict(image_path, confidence=40, overlap=30).save("ImageObjectDetectionResults/detected.jpg")
 
             return rects
 

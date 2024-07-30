@@ -34,7 +34,7 @@ def convert_str_to_int_date(str_date: str) -> int:
     """
 
     # Parse the input date string
-    date = datetime.datetime.strptime(str_date, "%Y-%m-%d")
+    date = datetime.strptime(str_date, "%Y-%m-%d")
     year = date.year
 
     # Determine if the year is a leap year

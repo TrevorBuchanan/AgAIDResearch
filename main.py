@@ -1,13 +1,10 @@
 # By: Trevor Buchanan
 
-from MachineLearningModule.ObjectDetecters.RoboFlowDetector import RoboFlowDetector
 from task_controller import TaskController
 
 
 if __name__ == '__main__':
     print("AgAID Project\n")
 
-    # task_controller = TaskController()
-    image_name = 'date_29-4-2024_10.0.10_1.png'
-    robo_flow_detector = RoboFlowDetector()
-    robo_flow_detector.get_rects(image_name)
+    task_controller = TaskController()
+    task_controller.run_image_processing_panel_detection_code('cam1', image_name='date_3-6-2024_15.0.11_1')
