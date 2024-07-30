@@ -18,6 +18,10 @@ By: **Trevor Buchanan**
 This project encompasses using convolutional neural networks to parse images for VIs (Vegetation Indices) and
 utilizing time series machine learning to predict wheat yield from VIs. 
 
+## Table of Contents:
+...
+
+
 ## Project Progress Summary:
 * 06/10/2024 - Familiarization with data and begin to parse
 * 06/11/2024 - Continue to parse data and begin create visualizations for it
@@ -78,6 +82,9 @@ processing and time series modular so easier to run both
 * 07/26/2024 - Work on project presentation, set up to integrate object detection models Roboflow Object Detection Fast and Custom Yolo v5 m
 document object detection content
 * 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
+* 07/30/2024 - Further progress on presentation, 
+
+
 
 # References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

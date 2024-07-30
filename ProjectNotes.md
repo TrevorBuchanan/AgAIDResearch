@@ -6,6 +6,27 @@ This project was originally intended to be a yield prediction program only. The 
 of another project. The code for both is in this project because both took place during the same AgAID research 
 internship.
 
+### Table of Contents:
+<!-- TOC -->
+* [Project Notes:](#project-notes)
+    * [Table of Contents:](#table-of-contents)
+  * [Time Series Yield Prediction](#time-series-yield-prediction)
+    * [Overview Notes:](#overview-notes)
+    * [Units and labels:](#units-and-labels)
+    * [Models' Results Notes:](#models-results-notes)
+    * [VI to Yield Correlation Notes:](#vi-to-yield-correlation-notes)
+    * [Missing Data Points Notes For Winter Wheat:](#missing-data-points-notes-for-winter-wheat)
+    * [Missing Data Points Notes For Sping Wheat:](#missing-data-points-notes-for-sping-wheat)
+    * [Missing Data Interpolation Techniques:](#missing-data-interpolation-techniques)
+    * [Date Ranges](#date-ranges)
+  * [Object Detection](#object-detection)
+    * [Image Processing](#image-processing)
+    * [Machine Learning](#machine-learning)
+<!-- TOC -->
+
+## Time Series Yield Prediction
+
+### Overview Notes:
 * Spring wheat crop was planted on the 25th of April
 * The year the data was taken from (2022) held favorable conditions for all crops so crop conditions,
 including VI's, were more homogeneous than what is usually expected. The low variance in the VI from 2022's
@@ -841,7 +862,7 @@ duration, in days, of how long the best correlation segment is.
 	* *2022-06-17
 	* *2022-06-21
 
-### Missing data interpolation techniques
+### Missing Data Interpolation Techniques:
 The first technique used to fill the missing data was to pull the data from 
 another plot of the same variety. If there was still missing data, then the next technique 
 was to pull data from external weather sources nearby (to the site location). If there was still
@@ -1104,10 +1125,8 @@ Date range: 80
 
 ## Object Detection
 
----
-
 ### Image Processing
-**Approaches Taken**
+**Approaches Taken:**
 * Uniform values mask - Using the fact that the panels' pixel values should be uniform (checks immediate surrounding pixels )
 * Contour detection - Finding contours on different levels of processing to validate detection
 * Sequential time images - Using the fact that the panel should be located in similar 
@@ -1122,9 +1141,30 @@ similar for the left and right images because they are taken at the same time fr
 * Pixel range filter - Choosing the possible panels that have the lowest pixel range (should be very small because they should be uniform)
 * Layered search and filters - Combining panel rect searching levels and filtering levels to get best results
 
-**Usage Example:**
+**Final Approach:**
+* Get working image (cut down size)
+* Split into color channels (RGB and gray)
+* For each color channel:
+  * Get uniform values mask
+  * Get contours 
+  * Filter lonelies (Get rid of random noisy pixels )
+  * Get valid areas
+  * Get bounding rectangles
+* Merge all valid rectangles
+* Remove duplicates
+* Filter rectangles for each color channel 
+  * Filter by uniform values (make sure values within rectangle are uniform)
+  * Filter by pixel range (panel rectangles should have low pixel range)
+  * Filter by edges (find difference between inside edge of rect and outside to make sure rectangle encompasses a panel)
+* Remove duplicates
+* Return remaining valid rectangles 
 
+**Usage Examples:**
+Correct Result Example:
+![ImageProcessingCorrect.png](ProjectDataImages%2FImageProcessingCorrect.png)
 
+Incorrect Result Example:
+![ImageProcessingIncorrect.png](ProjectDataImages%2FImageProcessingIncorrect.png)
 
 ### Machine Learning
 * RoboFlow Object Detection Fast

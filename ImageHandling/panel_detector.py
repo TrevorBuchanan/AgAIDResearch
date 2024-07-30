@@ -3,7 +3,6 @@ from math import sqrt
 
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
 from Helpers.utility import find_max_rectangle, calculate_subsection_areas, get_bounding_rects
 
 
@@ -32,9 +31,6 @@ class PanelDetector:
         self.diff_length = 2
         self.same_tolerance = 8
         self.diff_tolerance = 7
-        # Temporary for color chanel visualization
-        self.temp_color_channels_names = ['Reds', 'Greens', 'Blues', 'gray']
-        self.temp_color_channel_index = 0
 
     def get_panel_rects(self, image):
         """
@@ -48,14 +44,12 @@ class PanelDetector:
         gray_channel = self.image_processor.convert_to_gray(working_image)
         color_channels = [red_channel, green_channel, blue_channel, gray_channel]
         working_rects = set()
-        for i, c in enumerate(color_channels):  # TODO: Change back to normal
-            self.temp_color_channel_index = i
+        for c in color_channels:
             for rec in self.get_possible_rects(c):
                 working_rects.add(rec)
         working_rects = self.remove_duplicates(image, working_rects)
         good_rects = set()
-        for i, c in enumerate(color_channels):  # TODO: Change back to normal
-            self.temp_color_channel_index = i
+        for c in color_channels:
             filtered_rects = self.filter_rects(c, list(working_rects))
             for r in filtered_rects:
                 good_rects.add(r)
@@ -189,9 +183,6 @@ class PanelDetector:
         binary_contours_img[binary_contours_img != 255] = 0
         binary_contours_img[binary_contours_img == 255] = 1
         self.filter_lonelies(binary_contours_img, 5)
-        if binary_contours_img.dtype != np.uint8:
-            binary_contours_img = cv2.convertScaleAbs(binary_contours_img)
-        binary_contours, _ = cv2.findContours(binary_contours_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return binary_contours_img
 
     def check_edges(self, color_channel, rect):
@@ -403,23 +394,3 @@ class PanelDetector:
         max_pixel_value = np.max(rect)
 
         return max_pixel_value - min_pixel_value
-
-
-# Inserted into code to visualize image or rects at specific points in image processing:
-# TEMP to see image
-# plt.figure(figsize=(16, 8))
-# plt.imshow(color_channel, cmap=self.temp_color_channels_names[self.temp_color_channel_index])
-# plt.axis('off')
-# plt.tight_layout()
-# plt.show()
-# TEMP
-
-# TEMP to see rects
-# plt.figure(figsize=(16, 8))
-# temp = color_channel.copy()
-# self.image_processor.draw_rects_to_image(temp, [rect])
-# plt.imshow(temp, cmap=self.temp_color_channels_names[self.temp_color_channel_index])
-# plt.axis('off')
-# plt.tight_layout()
-# plt.show()
-# TEMP
