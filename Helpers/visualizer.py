@@ -72,7 +72,7 @@ class Visualizer:
         heading_date_patch = mpatches.Patch(color='blue', label='Heading date')
         plant_height_patch = mpatches.Patch(color='green', label='Plant height')
         test_pounds_per_bushel_patch = mpatches.Patch(color='coral', label='Lbs/bushel')
-        yield_patch = mpatches.Patch(color='olive', label='Yield')
+        yield_patch = mpatches.Patch(color='darkgreen', label='Yield')
         handles = []
         dates = []
         if self.show_prediction:
@@ -294,7 +294,7 @@ class Visualizer:
 
             # Yield
             if self.show_yield:
-                plt.bar(max_date + offset, plot.crop_yield, color='olive')
+                plt.bar(max_date + offset, plot.crop_yield, color='darkgreen')
                 print(f'Actual yield: {plot.crop_yield}')
                 offset += 1
             if self.show_prediction and predictions:

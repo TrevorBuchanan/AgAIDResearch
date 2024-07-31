@@ -92,7 +92,8 @@ processing and time series modular so easier to run both
 * 07/26/2024 - Work on project presentation, set up to integrate object detection models Roboflow Object Detection Fast and Custom Yolo v5 m
 document object detection content
 * 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
-* 07/30/2024 - Further progress on presentation, refactoring and organizing code and documentation, 
+* 07/30/2024 - Further progress on presentation, refactoring and organizing code and documentation
+* 07/31/2024 - Finishing presentation slides, additional documentation, 
 
 ## Tutorials:
 ### Time Series Yield Prediction:

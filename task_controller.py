@@ -190,7 +190,6 @@ class TaskController:
         visualizer.show_heading_date = True
         visualizer.show_yield = True
         visualizer.show_prediction = True
-        visualizer.show_ndvi = True
 
         if visualize_training:
             training_performance(visualize=True)

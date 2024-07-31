@@ -82,7 +82,8 @@ the plots.
  - IoT: Internet of Things
 
 ### Models' Results Notes:
-
+NOTE: For quick reference, the best winter wheat model is model 14 which was trained on dataset 8, and the best
+spring wheat model is model 1 which was trained on dataset 1. 
 
 **Saved data sets 1: Trained on raw training data**  
 Number of testing sets: 6, Number of training sets: 24
@@ -1170,11 +1171,11 @@ similar for the left and right images because they are taken at the same time fr
 * Return remaining valid rectangles 
 
 **Usage Examples:**
-Correct Result Example:
-![ImageProcessingCorrect.png](ProjectDataImages%2FImageProcessingCorrect.png)
+* Correct Result Example:
+  ![ImageProcessingCorrect.png](ProjectDataImages%2FImageProcessingCorrect.png)
 
-Incorrect Result Example:
-![ImageProcessingIncorrect.png](ProjectDataImages%2FImageProcessingIncorrect.png)
+* Incorrect Result Example:
+  ![ImageProcessingIncorrect.png](ProjectDataImages%2FImageProcessingIncorrect.png)
 
 
 ### Machine Learning
@@ -1182,8 +1183,10 @@ Incorrect Result Example:
 * Results:
   * 100% accurate on all test data
   * Example:
+	![RoboFlowDetectedEx.jpg](ProjectDataImages%2FRoboFlowDetectedEx.jpg)
 
 * **Custom YOLOv5 m**
 * Results:
   * 100% accurate on all test data
   * Example:
+	![CustomYOLODetectedEx.png](ProjectDataImages%2FCustomYOLODetectedEx.png)
