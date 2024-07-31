@@ -25,9 +25,6 @@ project and its details, see [ProjectNotes.md](ProjectNotes.md).
   * [Project Summary:](#project-summary)
   * [Table of Contents:](#table-of-contents)
   * [Project Progress Summary:](#project-progress-summary)
-  * [Tutorials:](#tutorials)
-    * [Time Series Yield Prediction:](#time-series-yield-prediction)
-    * [Object Detection:](#object-detection)
   * [References:](#references-)
 <!-- TOC -->
 
@@ -93,14 +90,7 @@ processing and time series modular so easier to run both
 document object detection content
 * 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
 * 07/30/2024 - Further progress on presentation, refactoring and organizing code and documentation
-* 07/31/2024 - Finishing presentation slides, additional documentation, 
-
-## Tutorials:
-### Time Series Yield Prediction:
-
-
-### Object Detection:
-
+* 07/31/2024 - Finishing presentation slides, additional documentation, fix task controller, integrate yolo and roboflow models fully
 
 ## References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/

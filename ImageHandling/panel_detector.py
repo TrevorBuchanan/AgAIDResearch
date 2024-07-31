@@ -1,3 +1,4 @@
+from ImageHandling.image_loader import ImageLoader
 from ImageHandling.image_processor import ImageProcessor
 from math import sqrt
 
@@ -8,6 +9,7 @@ from Helpers.utility import find_max_rectangle, calculate_subsection_areas, get_
 
 class PanelDetector:
     def __init__(self):
+        self.image_loader = ImageLoader()
         self.image_processor = ImageProcessor()
         # Initial mask tolerance
         self.same_value_tolerance = 3
@@ -32,13 +34,15 @@ class PanelDetector:
         self.same_tolerance = 8
         self.diff_tolerance = 7
 
-    def get_panel_rects(self, image):
+    def get_panel_rects(self, camera_name, image_name):
         """
 
-        :param image:
+        :param camera_name:
+        :param image_name:
         :return:
         """
         # TODO: Function def
+        image = self.image_loader.load_image(camera_name, image_name)
         working_image = self.get_working_image(image)
         red_channel, green_channel, blue_channel = self.image_processor.separate_colors(working_image)
         gray_channel = self.image_processor.convert_to_gray(working_image)
@@ -54,6 +58,9 @@ class PanelDetector:
             for r in filtered_rects:
                 good_rects.add(r)
         good_rects = self.remove_duplicates(image, list(good_rects))
+        self.image_processor.draw_rects_to_image(image, good_rects)
+        image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        cv2.imwrite('ImageObjectDetectionResults/detected.jpg', image_bgr)
         return good_rects
 
     def filter_rects(self, color_channel, rects):

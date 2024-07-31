@@ -1,3 +1,4 @@
+import csv
 
 from DataStructures.plot import Plot
 
@@ -7,7 +8,8 @@ from Helpers.parser import Parser
 
 from MachineLearningModule.LSTM.vanillaLSTM import VanillaLSTM
 from MachineLearningModule.LSTM.stackedLSTM import StackedLSTM
-from MachineLearningModule.ObjectDetecters.RoboFlowDetector import RoboFlowDetector
+from MachineLearningModule.ObjectDetectors.custom_YOLO_detector import CustomYOLODetector
+from MachineLearningModule.ObjectDetectors.robo_flow_detector import RoboFlowDetector
 from MachineLearningModule.data_handler import DataHandler
 
 from Helpers.utility import sort_list_by_datetime
@@ -21,58 +23,43 @@ from ImageHandling.panel_detector import PanelDetector
 
 class TaskController:
     @staticmethod
-    def run_machine_learning_panel_detection_code(camera_name, image_name):
-        robo_flow_detector = RoboFlowDetector()
-        rects = robo_flow_detector.get_rects(image_name)
-        print(rects)
-
-    @staticmethod
-    def run_image_processing_panel_detection_code(camera_name, find_max_amt=False, max_amt=1, image_name=""):
+    def panel_detection(method, camera_name, image_name=""):
         """
 
         :return:
         """
         # TODO: Write function def
-        image_loader = ImageLoader()
-        image_processor = ImageProcessor()
-        image_displayer = ImageDisplayer()
 
-        # Image loading
-        # Get an image
-        if not find_max_amt:
-            image = image_loader.load_image(camera_name, image_name)
-            images = [image]
-            image_names = [image_name]
-            max_amt = 1
-        else:
-            # Get all images
-            images, image_names = image_loader.load_all_images(camera_name)
+        def save_rects(rectangles, filename='ImageObjectDetectionResults/detected_rects.csv'):
+            # Define the header for the CSV file
+            header = ['x', 'y', 'width', 'height']
+            # Open the CSV file in write mode
+            with open(filename, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                # Write the header
+                writer.writerow(header)
+                # Write each rectangle to the CSV file
+                for rect in rectangles:
+                    writer.writerow(rect)
 
-        # Sort images
-        nir_images, rgb_images, full_images = {}, {}, {}
-        for name, image in zip(image_names, images):
-            nir_image, rgb_image = image_processor.vertical_image_split(image)
-            nir_images[name] = nir_image
-            rgb_images[name] = rgb_image
-            full_images[name] = image
-        sorted_names = sort_list_by_datetime(nir_images)
+        valid_methods = ['image_process', 'roboflow', 'yolo']
+        if method not in valid_methods:
+            raise Exception(f"Please select a valid method: {valid_methods}")
 
-        # Find reference panel
-        using_img_names = sorted_names[0:max_amt]
-        panel_detector = PanelDetector()
-        for i, image_name in enumerate(tqdm(using_img_names, desc="Detecting Panel in Images")):
-            nir_rects = panel_detector.get_panel_rects(nir_images[image_name])
-            rgb_rects = panel_detector.get_panel_rects(rgb_images[image_name])
-            image_processor.draw_rects_to_image(nir_images[image_name], nir_rects)
-            image_processor.draw_rects_to_image(rgb_images[image_name], rgb_rects)
-
-        # Display image
-        for image_name in using_img_names:
-            image_displayer.plot_images([full_images[image_name]], labels=[image_name])
+        rects = []
+        if method == 'image_process':
+            panel_detector = PanelDetector()
+            rects = panel_detector.get_panel_rects(camera_name, image_name)
+        if method == 'roboflow':
+            robo_flow_detector = RoboFlowDetector()
+            rects = robo_flow_detector.get_panel_rects(camera_name, image_name)
+        if method == 'yolo':
+            custom_yolo_detector = CustomYOLODetector()
+            rects = custom_yolo_detector.get_panel_rects(camera_name, image_name)
+        save_rects(rects)
 
     @staticmethod
-    def run_yield_prediction_code(model_num, saved_data_set_num, season="", visualize_test=False,
-                                  visualize_training=False):
+    def yield_prediction(model_num, saved_data_set_num, season="", visualize_test=False, visualize_training=False):
         """
 
         :return:

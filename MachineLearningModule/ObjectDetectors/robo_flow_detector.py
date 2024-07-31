@@ -8,8 +8,15 @@ class RoboFlowDetector:
         self.version = 1
         self.image_loader = ImageLoader()
 
-    def get_rects(self, image_name):
-        image_path = self.image_loader.get_image_path(image_name)
+    def get_panel_rects(self, camera_name, image_name):
+        """
+
+        :param camera_name:
+        :param image_name:
+        :return:
+        """
+        # TODO: Function def
+        image_path = self.image_loader.get_image_path(camera_name, image_name)
         rf = Roboflow(api_key="ubYr4GBtztqwxYsNZbqJ")
 
         try:
