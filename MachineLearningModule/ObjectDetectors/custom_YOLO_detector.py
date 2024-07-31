@@ -10,10 +10,11 @@ class CustomYOLODetector:
 
     def get_panel_rects(self, camera_name, image_name):
         """
+        Get bounding rectangles for detected panels in an image using a custom YOLOv5 model.
 
-        :param camera_name:
-        :param image_name:
-        :return:
+        :param camera_name: The name of the camera associated with the image.
+        :param image_name: The name of the image file to process.
+        :return: A list of rectangles (x, y, width, height) for detected panels.
         """
         image_path = self.image_loader.get_image_path(camera_name, image_name)
         img = cv2.imread(image_path)

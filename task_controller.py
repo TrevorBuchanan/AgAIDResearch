@@ -25,10 +25,13 @@ class TaskController:
     @staticmethod
     def panel_detection(method, camera_name, image_name=""):
         """
+        Detects panels in an image using the specified method and saves the result to an image and the detected
+        rectangles to a CSV file in ImageObjectDetectionResults.
 
-        :return:
+        :param method: The method to use for panel detection ('image_process', 'roboflow', or 'yolo').
+        :param camera_name: The name of the camera used to capture the image.
+        :param image_name: The name of the image file to process (default is an empty string).
         """
-        # TODO: Write function def
 
         def save_rects(rectangles, filename='ImageObjectDetectionResults/detected_rects.csv'):
             # Define the header for the CSV file
@@ -61,10 +64,14 @@ class TaskController:
     @staticmethod
     def yield_prediction(model_num, saved_data_set_num, season="", visualize_test=False, visualize_training=False):
         """
+        Calculates and shows yield prediction models' performance.
 
-        :return:
+        :param model_num: The model number to use for predictions.
+        :param saved_data_set_num: The saved dataset number to load.
+        :param season: The season for which to perform predictions ('winter' or 'spring').
+        :param visualize_test: Whether to visualize testing performance.
+        :param visualize_training: Whether to visualize training performance.
         """
-        # TODO: Write function def
         # Functions for calculating and showing yield prediction models
         def testing_performance(visualize=True):
             temp = learning_model.verbose

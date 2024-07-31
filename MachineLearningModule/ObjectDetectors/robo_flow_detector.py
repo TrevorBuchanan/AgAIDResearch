@@ -10,12 +10,13 @@ class RoboFlowDetector:
 
     def get_panel_rects(self, camera_name, image_name):
         """
+        Get bounding rectangles for detected objects in an image using the Roboflow model.
 
-        :param camera_name:
-        :param image_name:
-        :return:
+        :param camera_name: The name of the camera associated with the image.
+        :param image_name: The name of the image file to process.
+        :return: A list of tuples representing bounding rectangles (x, y, width, height) for detected objects,
+                 or None if an error occurs.
         """
-        # TODO: Function def
         image_path = self.image_loader.get_image_path(camera_name, image_name)
         rf = Roboflow(api_key="ubYr4GBtztqwxYsNZbqJ")
 

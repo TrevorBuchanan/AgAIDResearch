@@ -316,7 +316,11 @@ def get_plots_min_max_for_attr(plots: list[Plot], attr_name: str) -> tuple[float
 
 
 def get_min_date(plots: list[Plot]):
-    # TODO: Function def
+    """
+    Get the minimum date from a list of Plot objects.
+    :param plots: List of Plot objects.
+    :return: The minimum date found among all data points in the plots, or None if no data points are available.
+    """
     try:
         return min(dp.date for p in plots for dp in p.data_points)
     except ValueError:
@@ -324,7 +328,11 @@ def get_min_date(plots: list[Plot]):
 
 
 def get_max_date(plots: list[Plot]):
-    # TODO: Function def
+    """
+    Get the maximum date from a list of Plot objects.
+    :param plots: List of Plot objects.
+    :return: The maximum date found among all data points in the plots.
+    """
     max_date = 0
     for p in plots:
         for dp in p.data_points:
@@ -404,11 +412,9 @@ def find_max_rectangle(matrix):
 def sort_list_by_datetime(l):
     """
     Sort a list of strings containing datetime in the format date_3-6-2024_15.0.10_1.png.
-
     :param l: List of strings to sort
     :return: Sorted list of strings
     """
-
     def extract_datetime(key):
         # Extract the datetime part from the key
         date_part, time_part, _ = key.split('_')[1:4]
@@ -426,11 +432,10 @@ def sort_list_by_datetime(l):
 
 def calculate_subsection_areas(arr):
     """
-
-    :param arr:
-    :return:
+    Calculate the areas of connected components of 1s in the array.
+    :param arr: 2D numpy array containing binary values (0s and 1s).
+    :return: 2D numpy array where each position in a component is filled with the component's area.
     """
-    # TODO: Function def
     arr = arr.astype(np.float32)
 
     # Identify connected components of 1s in the array
@@ -451,11 +456,10 @@ def calculate_subsection_areas(arr):
 
 def get_bounding_rects(binary_array):
     """
-
-    :param binary_array:
-    :return:
+    Given a binary array, find the bounding rectangles of all connected components.
+    :param binary_array: 2D numpy array where non-zero elements are considered part of components.
+    :return: List of tuples representing bounding rectangles (x_min, y_min, width, height).
     """
-    # TODO: Func def
     # Label connected components
     labeled_array, num_features = label(binary_array)
 

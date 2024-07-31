@@ -36,12 +36,11 @@ class PanelDetector:
 
     def get_panel_rects(self, camera_name, image_name):
         """
-
-        :param camera_name:
-        :param image_name:
-        :return:
+        Detect and get bounding rectangles for panels in an image by image processing.
+        :param camera_name: The name of the camera associated with the image.
+        :param image_name: The name of the image file to process.
+        :return: A list of unique rectangles (x, y, width, height) for detected panels.
         """
-        # TODO: Function def
         image = self.image_loader.load_image(camera_name, image_name)
         working_image = self.get_working_image(image)
         red_channel, green_channel, blue_channel = self.image_processor.separate_colors(working_image)
@@ -65,12 +64,12 @@ class PanelDetector:
 
     def filter_rects(self, color_channel, rects):
         """
+        Filter rectangles based on uniformity, pixel range, and edge characteristics in a given color channel.
 
-        :param color_channel:
-        :param rects:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for filtering.
+        :param rects: A list of rectangles represented as (x, y, width, height).
+        :return: A list of filtered rectangles after applying the filtering criteria.
         """
-        # TODO: Function def
         filtered_rects = rects
         filtered_rects = self.filter_by_uniform_values(color_channel, filtered_rects)
         filtered_rects = self.filter_by_pixel_range(color_channel, filtered_rects)
@@ -79,10 +78,11 @@ class PanelDetector:
 
     def filter_by_pixel_range(self, color_channel, rects):
         """
+        Filter rectangles based on the range of pixel values in a specified color channel.
 
-        :param color_channel:
-        :param rects:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for filtering.
+        :param rects: A list of rectangles represented as (x, y, width, height).
+        :return: A list of filtered rectangles that have a pixel range within the maximum allowed range.
         """
         filtered_rects = []
         for r in rects:
@@ -95,12 +95,12 @@ class PanelDetector:
 
     def filter_by_uniform_values(self, color_channel, rects):
         """
+        Filter rectangles based on the uniformity of pixel values in a specified color channel.
 
-        :param color_channel:
-        :param rects:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for filtering.
+        :param rects: A list of rectangles represented as (x, y, width, height).
+        :return: A list of filtered rectangles with uniform pixel values.
         """
-        # TODO: Function def
         filtered_rects = []
         for rect in rects:
             scaled_image = color_channel[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
@@ -128,12 +128,12 @@ class PanelDetector:
 
     def filter_by_edges(self, color_channel, rects):
         """
+        Filter rectangles based on edge characteristics in a specified color channel.
 
-        :param color_channel:
-        :param rects:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for edge filtering.
+        :param rects: A list of rectangles represented as (x, y, width, height).
+        :return: A list of filtered rectangles that meet edge criteria.
         """
-        # TODO: Function def
         filtered_rects = []
         for rect in rects:
             if self.check_edges(color_channel, rect):
@@ -144,22 +144,22 @@ class PanelDetector:
 
     def get_possible_rects(self, color_channel):
         """
+        Get potential rectangles from a specified color channel by identifying areas of interest.
 
-        :param color_channel:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for rectangle detection.
+        :return: A list of bounding rectangles represented as (x, y, width, height).
         """
-        # TODO: Function def
         areas_img = self.get_possible_areas(color_channel)
         bounding_rects = get_bounding_rects(areas_img)
         return bounding_rects
 
     def get_possible_areas(self, color_channel):
         """
+        Identify potential areas of interest in a specified color channel by processing the binary contours.
 
-        :param color_channel:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for area detection.
+        :return: A binary image (or array) highlighting the identified areas of interest.
         """
-        # TODO: Function def
         bin_contours_img = self.get_binary_contours_img(color_channel)
         areas_img = calculate_subsection_areas(bin_contours_img)
         areas_img[areas_img < self.area_min] = 0
@@ -169,11 +169,11 @@ class PanelDetector:
 
     def get_binary_contours_img(self, color_channel):
         """
+        Generate a binary image highlighting contours based on similar pixel values in a specified color channel.
 
-        :param color_channel:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for contour detection.
+        :return: A binary image where contours are marked with 1 and the background with 0.
         """
-        # TODO: Function def
         similar_values_mask = np.zeros_like(color_channel, dtype=np.uint8)
         num_rows, num_cols = color_channel.shape
         for i in range(1, num_rows - 1):
@@ -194,12 +194,12 @@ class PanelDetector:
 
     def check_edges(self, color_channel, rect):
         """
+        Check the edges of a rectangle in the specified color channel to determine if they show significant differences.
 
-        :param color_channel:
-        :param rect:
-        :return:
+        :param color_channel: The color channel (e.g., red, green, blue, or gray) used for edge checking.
+        :param rect: The rectangle defined as (x, y, width, height).
+        :return: True if the rectangle's edges have sufficient good edge pixels, False otherwise.
         """
-        # TODO: Function def
         w = color_channel.shape[1]
         h = color_channel.shape[0]
         top_y = rect[1]
@@ -247,14 +247,14 @@ class PanelDetector:
         num_good_pixels = len(list(filter(lambda check: check is True, checks)))
         return num_good_pixels >= self.min_good_edge_pixels
 
-    def remove_duplicates(self, image, rects):  # Removes if within similar tolerances
+    def remove_duplicates(self, image, rects):
         """
+        Remove duplicate rectangles based on proximity and shape similarity.
 
-        :param image:
-        :param rects:
-        :return:
+        :param image: The image used to calculate pixel ranges for the rectangles.
+        :param rects: A list of rectangles defined as (x, y, width, height).
+        :return: A list of filtered rectangles with duplicates removed.
         """
-        # TODO: Function def
         filtered_rects = []
         similar_rects = -1
         remaining_rects = []
@@ -295,12 +295,12 @@ class PanelDetector:
     @staticmethod
     def filter_lonelies(image, max_length):
         """
+        Remove isolated segments of ones (1s) in a binary image that do not exceed the specified maximum length.
 
-        :param image:
-        :param max_length:
-        :return:
+        :param image: A binary image (2D NumPy array) where pixels are either 0 or 1.
+        :param max_length: The maximum length of isolated segments allowed to remain.
+        :return: The modified image with isolated segments of ones removed.
         """
-        # TODO: Function def
         for row in image:
             indices = []
             for i, col_val in enumerate(row):
@@ -326,11 +326,11 @@ class PanelDetector:
     @staticmethod
     def get_working_image(image):
         """
+        Get a working image by cropping the input image to a specified height.
 
-        :param image:
-        :return:
+        :param image: The input image (2D or 3D NumPy array).
+        :return: A cropped version of the input image.
         """
-        # TODO: Function def
         image_cpy = image.copy()
         w = image_cpy.shape[1]
         h = image_cpy.shape[0]
@@ -340,13 +340,13 @@ class PanelDetector:
     @staticmethod
     def is_shape_similar(rect1, rect2, tolerance):
         """
+        Determine if two rectangles are similar in shape based on width and height differences.
 
-        :param rect1:
-        :param rect2:
-        :param tolerance:
-        :return:
+        :param rect1: A tuple representing the first rectangle (x, y, width, height).
+        :param rect2: A tuple representing the second rectangle (x, y, width, height).
+        :param tolerance: The maximum allowable difference in width and height for the rectangles to be considered similar.
+        :return: True if the rectangles are similar, False otherwise.
         """
-        # TODO: Func def
         w1 = rect1[2]
         h1 = rect1[3]
         w2 = rect2[2]
@@ -358,13 +358,13 @@ class PanelDetector:
     @staticmethod
     def is_near(rect1, rect2, tolerance):
         """
+        Determine if the centers of two rectangles are within a specified distance tolerance.
 
-        :param rect1:
-        :param rect2:
-        :param tolerance:
-        :return:
+        :param rect1: A tuple representing the first rectangle (x, y, width, height).
+        :param rect2: A tuple representing the second rectangle (x, y, width, height).
+        :param tolerance: The maximum distance allowed between the centers of the rectangles.
+        :return: True if the rectangles are near each other, False otherwise.
         """
-        # TODO: Func def
         x1 = rect1[0]
         y1 = rect1[1]
         x2 = rect2[0]
@@ -375,12 +375,11 @@ class PanelDetector:
     @staticmethod
     def get_pixel_range_for_rect(image, rect):
         """
-        Finds the range from the darkest to the lightest pixel in a given rectangle portion of an image
-        :param image: The image to find pixel range from (in given rectangle)
-        :param rect:
-        :return: Range from the highest value pixel to the lowest value pixel in the given rectangle region
+        Finds the range from the darkest to the lightest pixel in a given rectangle portion of an image.
+        :param image: The image to find the pixel range from (in given rectangle).
+        :param rect: A tuple representing the rectangle (x, y, width, height).
+        :return: The range from the highest value pixel to the lowest value pixel in the given rectangle region.
         """
-        # TODO: Add function def
         x, y, width, height = rect
         # Ensure the provided rectangle coordinates are within the image bounds
         h, w = image.shape[:2]
