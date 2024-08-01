@@ -91,6 +91,7 @@ document object detection content
 * 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
 * 07/30/2024 - Further progress on presentation, refactoring and organizing code and documentation
 * 07/31/2024 - Finishing presentation slides, additional documentation, fix task controller, integrate yolo and roboflow models fully, complete all remaining TODO's
+* 08/01/2024 - Add requirements.txt
 
 ## References: 
 * [1] J. Brownlee, “How to Develop LSTM Models for Time Series Forecasting,” Machine Learning Mastery, Nov. 13, 2018. https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
