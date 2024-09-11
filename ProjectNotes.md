@@ -16,7 +16,7 @@ internship.
     * [Models' Results Notes:](#models-results-notes)
     * [VI to Yield Correlation Notes:](#vi-to-yield-correlation-notes)
     * [Missing Data Points Notes For Winter Wheat:](#missing-data-points-notes-for-winter-wheat)
-    * [Missing Data Points Notes For Sping Wheat:](#missing-data-points-notes-for-sping-wheat)
+    * [Missing Data Points Notes For Spring Wheat:](#missing-data-points-notes-for-sping-wheat)
     * [Missing Data Interpolation Techniques:](#missing-data-interpolation-techniques)
     * [Date Ranges](#date-ranges)
   * [Object Detection](#object-detection)
@@ -84,6 +84,18 @@ the plots.
 ### Models' Results Notes:
 NOTE: For quick reference, the best winter wheat model is model 14 which was trained on dataset 8, and the best
 spring wheat model is model 1 which was trained on dataset 1. 
+
+**Model statistics definitions**
+Each model tests a different configuration with the areas being varied being: Season (Spring or winter), variate
+(one or all of: cigreen0, cigreen, evi2, gndvi0, gndvi, ndvi, rdvi, savi, sr), Vanilla or stacked (one or multiple LSTM layers), 
+SMOTE (raw data, bulked to level data, cut to level data).
+
+Descriptions of model statistics:
+- Average percent error: Average of the averages of each plots's actual vs predicted percent error at each day
+- Average RMSE: Average of RMSE for each plot
+- Most accurate date: The average of all the most accurate prediction days
+- Average accuracy at the best date: The average of each plot's best prediction day
+
 
 **Saved data sets 1: Trained on raw training data**  
 Number of testing sets: 6, Number of training sets: 24
@@ -582,7 +594,7 @@ duration, in days, of how long the best correlation segment is.
 **Missing all data points for plot Block: 3, Entry: 6**
 
 
-### Missing Data Points Notes For Sping Wheat:
+### Missing Data Points Notes For Spring Wheat:
 (Dates with * marker are within 2 weeks of heading date)
 
 **Block: 1, Entry: 9 data points length: 49**
