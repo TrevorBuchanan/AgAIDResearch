@@ -33,19 +33,19 @@ AgAID Institute Project Presentation Video: https://youtu.be/NuxFh5s-5IU?si=hAxQ
 
 ## Project Progress Summary:
 * 06/10/2024 - Familiarization with data and begin to parse
-* 06/11/2024 - Continue to parse data and begin create visualizations for it
+* 06/11/2024 - Continue to parse data and begin creating visualizations for it
 * 06/12/2024 - Expand and refine visualizations and interpolate between missing 
 data with multiple techniques depending on the data type (e.i. vi and temperature 
 have very different trajectory paths, so the same interpolation cannot be used 
 for both. Furthermore, some information can be filled from other IoT units at the 
-site, and other online resources such as weather data)
+site and other online resources such as weather data)
 * 06/13/2024 - Refactor and begin to use time series learning models
 * 06/14/2024 - Apply uni-variate time series learning models and work on setting 
 * effective parameters for best results
 * 06/17/2024 - Attempt to refine parameters of LSTM models and add a stacked LSTM
 * 06/18/2024 - Run training tests to refine parameters and training strategy
 * 06/20/2024 - Fix issues: 
-  * Have training data a testing data be separate between all
+  * Have training data a testing data be separated between all
   executions (consistent training batch and testing batch)
   * Refactor for organization and clarity
   * Complete all unfinished TODO comments 
@@ -54,26 +54,26 @@ LSTM ML models, further data and ML performance visualizations, and record corre
 * 06/26/2024 - Measure accuracy for models, show variety with results, log training performance, and add correlation at heading date to correlation visualization
 * 07/01/2024 - Add winter data correlations to project notes, train winter ML models, add testing and training sizes to project notes
 * 07/02/2024 - Fix issues and make advancements:
-  * Improve saved model data and better model saving approach
+  * Improve saved model data and better model-saving approach
   * Work on weakness-target training
   * Bug and error search; bugs found:
     * Bug fetching predictions where only a few of the predictions would be made, and then the visualizer would fill 
     the rest of the data with the existing values; resulting in skewed accuracy. 
-    * Bug where the prediction data would be backwards (according to time, i.e. starting at end, whole data, and 
+    * Bug where the prediction data would be backward (according to time, i.e. starting at end, whole data, and 
     ending with beginning (one day of data))
-* 07/03/2024 - Log start and end dates of all plots, add ability to normalize any inputs, use r-squared and RMSE
+* 07/03/2024 - Log start and end dates of all plots, add the ability to normalize any inputs, use r-squared and RMSE
 when measuring performance (r-squared not used, but function exists), get all VIs when parsing data and add them
 to the visualization (used later for multivariate LSTM model), train models with new changes, further work on weakness-target training
-* 07/05/2024 - Bug fixes, train models, add ability to track the best accuracies in testing and training sets and the 
+* 07/05/2024 - Bug fixes, train models, add the ability to track the best accuracies in testing and training sets and the 
 corresponding average of those best accuracies
 * 07/07/2024 - Finished error logging and accuracy tracking
 * 07/08/2024 - Train models for each data set, model type, and season, start work on multivariate LSTM, fix variety names 
 not being right in visualization
-* 07/09/2024 - Further work on multivariate lstm
-* 07/10/2024 - Finish up implementing multivariate model, train model and log performance
+* 07/09/2024 - Further work on multivariate LSTM
+* 07/10/2024 - Finish up implementing multivariate model, train model, and log performance
 * 07/11/2024 - Fix bulk and cut sets functionality with multivariate changes, train additional multivariate models, remove 
 unused (ineffective) strategy of training on weak sets
-* 07/12/2024 - Fix best yield being shown to screen and their dates, add rmse units and description, begin working on image
+* 07/12/2024 - Fix best yield being shown to screen and their dates, add RMSE units and description, begin working on image
 processing
 * 07/15/2024 - Search for explanations for irregularities in VI to yield, make dates more readable in graphs, work on image processing directly (rather than with ML)
 * 07/16/2024 - Make advancements in image processing 
@@ -83,16 +83,15 @@ rectangles for better accuracy
 * 07/22/2024 - Parse NIR and RBG separately, use post (holding panel) search to isolate panel (too slow of algorithm), compare rects locations with other color channels
 * 07/23/2024 - Programmatically order images according to date and time, attempt to use time sequentiality to improve accuracy, 
 scrap much of the image processor and make new panel detector
-* 07/24/2024 - Set up yolo model and creating image annotations, compare previous photo and current best rects to see if should stay 
+* 07/24/2024 - Set up YOLO model and create image annotations, compare previous photo and current best rects to see if should stay 
 different or stay the same *Discarded because was not pure image (meaning needed more than just the given image)  filter algorithm (needed context in time, 
 was inefficient, and was inaccurate), Filter by average pixel range, try running through 3 levels of edge detection, edge filter, remove similar (choose best) filter
-* 07/25/2024 - Annotating images for panels, train ML models on annotated data using YOLO v5, integrate panel detection machine learning models, make image 
-processing and time series modular so easier to run both
+* 07/25/2024 - Annotate images for panels, train ML models on annotated data using YOLO v5, integrate panel detection machine learning models, make image processing and time series modular so easier to run both
 * 07/26/2024 - Work on project presentation, set up to integrate object detection models Roboflow Object Detection Fast and Custom Yolo v5 m
 document object detection content
-* 07/29/2024 - Further progress on presentation, add yolo model, organize code, improve task controller, log info to project notes
-* 07/30/2024 - Further progress on presentation, refactoring and organizing code and documentation
-* 07/31/2024 - Finishing presentation slides, additional documentation, fix task controller, integrate yolo and roboflow models fully, complete all remaining TODO's
+* 07/29/2024 - Further progress on presentation, add Yolo model, organize code, improve task controller, log info to project notes
+* 07/30/2024 - Further progress on presentation, refactoring, and organizing code and documentation
+* 07/31/2024 - Finishing presentation slides, additional documentation, fix task controller, integrate Yolo and RoboFlow models fully, complete all remaining TODO's
 * 08/01/2024 - Add requirements.txt
 
 ## References: 
