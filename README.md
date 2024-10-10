@@ -19,7 +19,7 @@ This project encompasses using convolutional neural networks to parse images for
 utilizing time series machine learning to predict wheat yield from VIs. For a more detailed description of the 
 project and its details, see [ProjectNotes.md](ProjectNotes.md).
 
-AgAID Institute Project Presentation Video: https://youtu.be/NuxFh5s-5IU?si=hAxQky-NidyFzawA
+[AgAID Institute Project Presentation Video](https://www.youtube.com/watch?v=NuxFh5s-5IU)
 
 ## Table of Contents:
 <!-- TOC -->
